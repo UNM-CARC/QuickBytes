@@ -14,7 +14,7 @@ NOTE: The program that interprets your commands on a Unix-based computer is call
 
 2.  Note that when you login to a Unix machine, there is always a prompt. The default prompt is %, but sometimes it will appear as the machine name, followed by a number which tells you how many commands you have entered up to that point in the session, e.g. nano-3, neptune-16>, or vega-3. All commands in Unix are issued sequentially, each at a new prompt (there are ways to combine commands, but we won’t worry about this for now).
 
-3.  If your password is new, you should change it immediately to one that is known only to you. If you have not done so already, type yppasswd at the Unix prompt, and follow the instructions. You can change your password as often as you like in this fashion.
+3.  If your password is new, you should change it immediately to one that is known only to you. If you have not done so already, type `passwd` at the Unix prompt, and follow the instructions. You can change your password as often as you like in this fashion.
 
 4.  Verify your username by typing whoami. This command is useful in computer labs if you come across an unoccupied terminal that appears to be in use, and would like to know who is logged in. Also, it gives you an idea of the current user load on the machine.
 
@@ -87,7 +87,7 @@ Also in text entry mode, type <Ctrl>-G (this is the Ctrl key on your keyboard, h
 
 33.  Change to your home directory and remove directory Lab1.
 
-34.  Just for fun, type xeyes &. This will invoke an amusing, albeit useless, X Windows application. The & means that Unix has put the program running xeyes into background, so that it doesn’t tie up your Unix prompt while it continues to run the program. To end the xeyes program, jobs at the Unix prompt to see what Unix jobs you are currently executing. Let’s say that the number next to xeyes is [1]. To kill the program, type kill %1. Another (more useful) X program is xcalc. Try typing this at the prompt (don’t forget to put it in background using the & again) and using the calculator that comes up. There are a large number of Unix X-windows programs that you can explore at your leisure; look in the directory /usr/bin/X11 and try playing around with some of them.
+34.  Just for fun, type xeyes & (do not work). This will invoke an amusing, albeit useless, X Windows application. The & means that Unix has put the program running xeyes into background, so that it doesn’t tie up your Unix prompt while it continues to run the program. To end the xeyes program, jobs at the Unix prompt to see what Unix jobs you are currently executing. Let’s say that the number next to xeyes is [1]. To kill the program, type kill %1. Another (more useful) X program is xcalc (do not work). Try typing this at the prompt (don’t forget to put it in background using the & again) and using the calculator that comes up. There are a large number of Unix X-windows programs that you can explore at your leisure; look in the directory /usr/bin/X11 and try playing around with some of them.
 
 35.  To logout, type exit at the prompt. You can kill any jobs executing before you logout, or they will get killed automatically when you logout. Note that Unix is a much more robust OS than Windows. There is virtually no way that you, as an ordinary user, can crash the operating system while others are using it. This is one of the many reasons why you will want to learn to use (and master) the Unix operating system environment, and why it is used on supercomputers and clusters at centers around the world.
 
