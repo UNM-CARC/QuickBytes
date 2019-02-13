@@ -1,0 +1,200 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>GNU Parallel.md</title><style></style></head><body id="preview">
+<h1><a id="Batch_Submission_Scripts_0"></a>Batch Submission Scripts</h1>
+<h2><a id="Bash_Hello_World_PBS_Script_1"></a>Bash Hello World PBS Script</h2>
+<p>This example uses the bash shell to print a simple “Hello World” message. Note that it specifies the shell with the “-S” option. If you do not specify a shell using the “-S” option (either inside the PBS script or as an argument to qsub), then your default shell will be used.</p>
+<pre><code>## Introductory PBS Example
+## Copyright (c) 2014 The Center for Advanced Research Computing 
+## at The University of New Mexico 
+#PBS -lnodes=1:ppn=4
+#PBS -lwalltime=1:00
+## Specify the shell to be bash
+#PBS -S /bin/bash
+# print out a hello message indicating the host that this is running on 
+export THIS_HOST=`hostname `
+echo Hello World from host $THIS_HOST
+</code></pre>
+<p>Note that the “ppn” value must always be less than or equal to the number of physical cores available on each node of the system on which you are running. For example, on the nano supercomputer, ppn should be &lt;=4; on pequena, ppn should be &lt;=8. See Systems for machine specifications.</p>
+<h2><a id="Submitting_the_PBS_Script_to_the_Batch_Scheduler_18"></a>Submitting the PBS Script to the Batch Scheduler</h2>
+<p>In order to run our simple PBS script, we will need to submit it to the batch scheduler using the command qsub followed by the name of the script we would like to run.</p>
+<p>In the following example, we submit our hello.pbs script to the batch scheduler using qsub. Note that it returns the job identifier when the job is successfully submitted. You can use this job identifier to query the status of your job from your shell.  For example:</p>
+<pre><code>shell&gt; qsub hello.pbs
+64811.nano.nano.alliance.unm.edu
+</code></pre>
+<h2><a id="Checking_on_the_Status_of_Your_Job_26"></a>Checking on the Status of Your Job</h2>
+<p>If you would like to check the status of your job, you can use the qstat command to do so. With the hello.pbs script, the job may run so quickly that you do not see your job using qstat. The “-a” option causes PBS to display more information about the jobs currently in the scheduler.</p>
+<p>If you would like to see the status of this job only, you would run the following from your shell:</p>
+<p><code>shell&gt; qstat 64811.nano.nano.alliance.unm.edu</code></p>
+<p>Or, the shorter version with just the numeric portion of the job identifier:</p>
+<p><code>shell&gt; qstat 64811</code></p>
+<p>In the example qstat output shown below, the username is “download” and the job identifier is</p>
+<p><code>64811.nano.nano.alliance.unm.edu</code>.</p>
+<p>Note that your job can be in one of three states while it is in the scheduler: Running, Queued, or Exiting, denoted by R, Q, and E respectively in the job State column (the column labeled “S”).</p>
+<pre><code>    shell&gt; qstat -a
+    nano.nano.alliance.unm.edu:
+
+    Req'd Req'd Elap Job ID Username Queue Jobname SessID NDS TSK Memory Time S Time
+    -------------------- -------- -------- ---------- ------ ----- --- ------ ----- - ----- 
+    64758.nano.nano.alli jruser one_long frob0001 1049 1 -- -- 160:0 R 46:27 
+    64760.nano.nano.alli jruser one_long frob-1000 2037 1 -- -- 160:0 R 46:22 
+    64761.nano.nano.alli jruser one_long frob-3000 9944 1 -- -- 160:0 R 46:18 
+    64762.nano.nano.alli jruser one_long frob-6000 21219 1 -- -- 160:0 R 46:14 
+    64763.nano.nano.alli jruser one_long frob-12000 -- 1 -- -- 160:0 Q -- 
+    64764.nano.nano.alli jruser one_long frob-18000 -- 1 -- -- 160:0 Q -- 
+    64765.nano.nano.alli jruser one_long frob-28000 -- 1 -- -- 160:0 Q -- 
+    64766.nano.nano.alli jruser one_long frob-38000 -- 1 -- -- 160:0 Q -- 
+    64770.nano.nano.alli alice defaultq abcd 32682 4 -- -- 60:00 R 28:24 
+    64797.nano.nano.alli bill one_node blub11234 18940 1 -- -- 48:00 R 16:09 
+    64811.nano.nano.alli download one_node hello.pbs -- 1 -- -- 00:01 Q --  
+</code></pre>
+<h2><a id="Determining_Which_Nodes_Your_Job_Is_Using_60"></a>Determining Which Nodes Your Job Is Using</h2>
+<p>If you would like to check which nodes your job is using, you can pass the “-n” option to qsub. Note that if you currently have a job running on a node of the machine, you may freely log into that node in order to check on the status of your job. When your job is finished, your processes on that node will all be killed by the system, and the node will be released back into the available resource pool.</p>
+<pre><code>    shell&gt; qstat -an
+    nano.nano.alliance.unm.edu:
+
+    Req'd Req'd Elap Job ID Username Queue Jobname SessID NDS TSK Memory Time S Time 
+    -------------------- -------- -------- ---------- ------ ----- --- ------ ----- - ----- 
+    64758.nano.nano.alli jruser one_long frob0001 1049 1 -- -- 160:0 R 46:27 
+    nano34+nano34+nano34+nano34 64760.nano.nano.alli jruser one_long frob-1000 2037 1 -- -- 160:0 R 46:22 
+    nano28+nano28+nano28+nano28 
+    64761.nano.nano.alli jruser one_long frob-3000 9944 1 -- -- 160:0 R 46:18 
+    nano12+nano12+nano12+nano12 64762.nano.nano.alli jruser one_long frob-6000 21219 1 -- -- 160:0 R 46:14 
+    nano11+nano11+nano11+nano11 64763.nano.nano.alli jruser one_long frob-12000 -- 1 -- -- 160:0 Q -- -- 
+    64764.nano.nano.alli jruser one_long frob-18000 -- 1 -- -- 160:0 Q -- -- 
+    64765.nano.nano.alli jruser one_long frob-28000 -- 1 -- -- 160:0 Q -- -- 
+    64766.nano.nano.alli jruser one_long frob-38000 -- 1 -- -- 160:0 Q -- -- 
+    64770.nano.nano.alli alice defaultq abcd 32682 4-- -- 60:00 R 28:24 
+    nano27+nano27+nano27+nano27+nano25+nano25+nano25+nano25+nano24+nano24+nano24 +nano24+nano23+nano23+nano23+nano23 
+    64797.nano.nano.alli fred one_node blub11234 18940 1 -- -- 48:00 R 16:09 
+    nano20+nano20+nano20+nano20 64811.nano.nano.alli download one_node hello.pbs -- 1 -- -- 00:01 Q -- --
+</code></pre>
+<h2><a id="Viewing_Output_and_Error_Files_83"></a>Viewing Output and Error Files</h2>
+<p>Once your job has completed, you should see two files in the directory from which you submitted the job: hello.pbs.oXXXXX and hello.pbs.eXXXXX (where the Xs are replaced by the numerical portion of the job identifier returned by qsub). Any output from the job sent to “standard output” will be written to the hello.pbs.oXXXXX file and any output sent to “standard error” will be written to the hello.pbs.eXXXXX file. These files are referred to as the “output file” and the “error file” respectively throughout this document. For the example job, the error file is empty, and the output file contains the following:</p>
+<pre><code>    Nano Portable Batch System Prologue 
+    Job Id: 64811.nano.nano.alliance.unm.edu 
+    Username: download 
+    prologue running on host: nano10 
+    Hello World from host nano10 
+    Nano Portable Batch System Epilogue
+</code></pre>
+<h2><a id="Multiprocess_Hello_World_Single_Node_93"></a>Multi-process Hello World (Single Node)</h2>
+<pre><code>    ## Introductory Example
+    ## Copyright (c) 2014 The Center for Advanced Research Computing 
+    ## at The University of New Mexico 
+    #PBS -lnodes=1:ppn=4
+    #PBS -lwalltime=1:00
+    ## Specify the shell to be bash
+    #PBS -S /bin/bash
+    # load the environment module to use OpenMPI built with the GNU compilers
+    source etc/profile.d/module.sh
+    module load openmpi/gnu
+    # print out a hello message from each of the processors on this host 
+    # indicating the host this is running on
+    export THIS_HOST=`hostname `
+    mpirun -np 4 -machinefile $PBS_NODEFILE /bin/sh \-c \
+    'echo Hello World from host $THIS_HOST '
+</code></pre>
+<p>In this job’s output file, you should see something like this:</p>
+<pre><code>    Nano Portable Batch System Prologue
+    Job Id: 28297.nano.nano.alliance.unm.edu
+    Username: download
+    Job 28297.nano.nano.alliance.unm.edu running on nodes:
+    nano14 
+    prologue running on host: nano14
+
+    Warning: no access to tty (Bad file descriptor).
+    Thus no job control in this shell.
+    Hello World from host nano14
+    Hello World from host nano14
+    Hello World from host nano14
+    Hello World from host nano14
+    Nano Portable Batch System Epilogue
+    Nano Portable Batch System Epilogue
+</code></pre>
+<h2><a id="Multinode_Hello_World_130"></a>Multi-node Hello World</h2>
+<pre><code>    ## Introductory Example
+    ## Copyright (c) 2014 The Center for Advanced Research Computing
+    #PBS -lnodes=4:ppn=4 
+    #PBS -lwalltime=1:00
+    ## Specify the shell to be bash
+    #PBS -S /bin/bash
+    # load the environment module to use OpenMPI built with the GNU 
+    # compilers
+    source etc/profile.d/module.sh
+    module load openmpi/gnu
+    # print out a hello message from each of the processors on this host 
+    # indicating the host this is running on
+    mpirun -np 16 -machinefile $PBS_NODEFILE /bin/sh \-c \
+    'echo Hello World from host ` hostname `'
+</code></pre>
+<h1><a id="Example_PBS_Scripts_148"></a>Example PBS Scripts</h1>
+<p>All parallel supercomputers and clusters at the Center for Advanced Research Computing use the Portable Batch System (PBS) for job submission. Below are three example scripts.</p>
+<h2><a id="PBS_Hello_World_152"></a>PBS Hello World:</h2>
+<pre><code>    ## Introductory Example
+    ## Copyright (c) 2014 The Center for Advanced Research Computing
+    ##  at The University of New Mexico
+    #PBS -lnodes=1:ppn=4
+    #PBS -lwalltime=1:00
+    ## Specify the shell to be tcsh
+    #PBS -S /bin/bash
+    # print out a hello message
+    # indicating the host this is running on
+    export THIS_HOST=`hostname`
+    echo Hello World from host $THIS_HOST
+</code></pre>
+<h3><a id="Multiprocessor_example_script_166"></a>Multi-processor example script:</h3>
+<pre><code>    ## Introductory Example
+    ## Copyright (c) 2014
+    ## The Center for Advanced Research Computing
+    ## at The University of New Mexico
+    #PBS -lnodes=1:ppn=2
+    #PBS -lwalltime=1:00
+    ## Specify the shell to be tcsh
+    #PBS -S /bin/bash
+    # load the environment module to use OpenMPI built with the GNU compilers
+    module load openmpi/gnu
+    # print out a hello message from each of the processors on this host
+    # indicating the host this is running on
+    export THIS_HOST=`hostname`
+    mpirun -np 4 -machinefile $PBS_NODEFILE /bin/sh \-c \
+      'echo Hello World from process \$MXMPI_ID of \$MXMPI_NP on host $THIS_HOST'
+    echo Hello World from host `hostname`
+</code></pre>
+<h3><a id="Multinode_example_script_185"></a>Multi-node example script:</h3>
+<pre><code>    ## Introductory Example
+    ## Copyright (c) 2014
+    ## The Center for Advanced Research Computing
+    ## at The University of New Mexico
+    #PBS -lnodes=4:ppn=2
+    #PBS -lwalltime=1:00
+    ## Specify the shell to be tcsh
+    #PBS -S /bin/tcsh
+    # load the environment module to use OpenMPI built with the GNU compilers
+    module load openmpi/gnu
+    # print out a hello message from each of the processors on this host
+    # indicating the host this is running on
+    mpirun -np 16 -machinefile $PBS_NODEFILE /bin/sh \-c \
+           'echo Hello World from process \$MXMPI_ID of \$MXMPI_NP on host `hostname`'
+</code></pre>
+<h1><a id="Interactive_PBS_Jobs_202"></a>Interactive PBS Jobs</h1>
+<p>Normally a job is submitted for execution on a cluster or supercomputer using the command qsub script.pbs. However, at times, such as when debugging, it can be useful to run a job interactively. To run a job in this way type qsub –I, and the batch manager will log you into a node where you can directly run your code. For example, here is the output from an interactive session running a “hello world” MPI program on four cores of a single physical node:</p>
+<pre><code>    ebryer@nano:~$ qsub -I -lnodes=1:ppn=4 -lwalltime=00:05:00
+    qsub: waiting for job 27304.nano.nano.alliance.unm.edu to start
+    qsub: job 27304.nano.nano.alliance.unm.edu ready
+
+    Nano Portable Batch System Prologue
+    Job Id: 27304.nano.nano.alliance.unm.edu
+    Username: ebryer
+    Job 27304.nano.nano.alliance.unm.edu running on nodes:
+    nano27 
+
+    prologue running on host: nano27
+    ebryer@nano27:~$ module load openmpi/gnu
+    ebryer@nano27:~$ mpiexec -np 4 ./helloworld 2&gt;/dev/null
+    hello_parallel.f: Number of tasks=  4 My rank=  0 My name=nano27
+    hello_parallel.f: Number of tasks=  4 My rank=  1 My name=nano27
+    hello_parallel.f: Number of tasks=  4 My rank=  2 My name=nano27
+    hello_parallel.f: Number of tasks=  4 My rank=  3 My name=nano27 
+</code></pre>
+<p>Three commands were executed here.  The first, <code>qsub -I -lnodes=1:ppn=4 -lwalltime=00:05:00</code> , asked the batch manager to provide one node of nano with all 4 of that node’s cores for use.  The walltime was specified as 5 minutes, since this was a simple code that would execute quickly.  The second command, <code>module load openmpi/gnu</code>, loaded the module used when compiling the “hello world” program; this ensures that the necessary MPI libraries would be available during execution.  The third command, <code>mpiexec -np 4 ./helloworld 2&gt;/dev/null</code>, ran the “hello world” program.  (The standard error was directed to null to remove a spurious message that appears sometimes on the machine.)</p>
+
+</body></html>
