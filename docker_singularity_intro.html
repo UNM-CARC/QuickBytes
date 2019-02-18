@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Docker and Singularity</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+</style>
+
+
+</head>
+
+<body>
+
+<h1>Docker and Singularity</h1>
+
+<h2>Introduction</h2>
+
+<p>Have you ever installed software on your own system to process data, but then find it is not so easy to setup the same environment on a CARC cluster when you want to process larger data sets? CARC staff will work with you to get your software running, but occasionally we run across fundamental incompatabilities. Docker allows us to circumvent those incompatabilities.</p>
+
+<p>Docker and Singularity are free tools that allow you to run software with dependencies on its environment that are difficult to satisfy natively on the CARC clusters. For example, your software might depend on a particular flavor of linux that differs from the one installed on the cluster you want to use. Perhaps your software needs to make global changes to the operating system that are incompatible with the needs of the center or other users. Docker allows us to deploy software with these requirements.</p>
+
+<p>In this guide you will learn how to setup your software to run in a docker container, and how to convert the container to singularity and run it at CARC. The R software package .</p>
+
+<p>
+In the example below command to enter are given in <tt><font color="Green">green</font></tt> and the resulting output is given in  <tt><font color="Navy">Navy</font></tt>.
+</p>
+<h2>What is Docker?</h2>
+
+<p>
+Docker allows you to setup a virtual environment for your program that you can configure however you like. You can choose the underlying operating system (so long as it is linux based), install any packages you need, and make any other changes the root user could make. The custom OS environment is stored in a <i>docker image</i> file that can be loaded by any docker installation. Docker has online repositories with many pre-built images available to download.
+</p>
+
+<p>When loaded, a docker image provide a <i>container</i> that allows the software to have complete control of its environment without effecting the host operating system.</p>
+
+<p>If you have used a virtual machine (such as virtualbox, or vmware) the description of docker images will sound familiar. The main difference is that docker just containerizes the environment but still uses the host operating system's kernel. This means there is very little performance impact.
+
+<h2>What is Singularity?</h2>
+
+<p>Singularity is able to convert and run docker images into a secure form suitable for multiuser machines such as the CARC clusters.</p>
+
+<h2>Installing Docker</h2>
+
+<p>Docker runs on Microsoft Windows, Apple OS X, and Linux. All the systems at CARC are linux based so you will need to create and configure a linux based docker container. OS X and Linux will allow you to do this. Windows 10 can as well but you need to install the Windows Subsystem for Linux and a linux distribution.</p>
+
+<p>
+Docker can be downloaded from <a href="https://www.docker.com">www.docker.com</a>.
+</p>
+
+<h2>Running Docker</h2>
+
+<p>To start docker under Windows or OS X just launch the program like you would any other. To start the docker daemon under linux enter:</p>
+<p>
+<tt><font color="Green">sudo systemctl start docker</font></tt>
+</p>
+
+<h2>Creating a Docker Image</h2>
+
+<h3>Pulling an existing base docker image</h3>
+
+For this example we are going to use an existing docker image that has the CentOS linux distribution preconfigured. We could just as easily use Ubuntu by replacing <q>centos</q> with <q>ubuntu</q> below.
+
+<p>
+<tt><font color="Green">
+docker pull centos
+</font></tt>
+</p>
+
+<p>
+<tt><font color="Maroon">
+
+Using default tag: latest
+Trying to pull repository docker.io/library/centos ... <br>
+latest: Pulling from docker.io/library/centos<br>
+a02a4930cb5d: Pull complete<br>
+Digest: sha256:184e5f35598e333bfa7de10d8fb1cebb5ee4df5bc0f970bf2b1e7c7345136426<br>
+Status: Downloaded newer image for docker.io/centos:latest</br>
+
+</font></tt>
+</p>
+
+<p>
+We can now issue a command that runs inside the docker container and returns output. Below we run the <q>ls -la</q> command to get a file listing inside the container.
+</p>
+
+<p>
+<tt><font color="Green">
+docker run centos ls
+</font></tt>
+</p>
+
+<p>
+<tt><font color="Maroon">
+
+anaconda-post.log<br>
+bin<br>
+dev<br>
+etc<br>
+home<br>
+lib<br>
+lib64<br>
+media<br>
+mnt<br>
+opt<br>
+proc<br>
+root<br>
+run<br>
+sbin<br>
+srv<br>
+sys<br>
+tmp<br>
+usr<br>
+var<br>
+
+</font></tt>
+</p>
+
+<h3>Customizing the docker image</h3>
+
+<p>Now we can install the program we need inside the docker container and any dependencies it needs. It is convenient to do this interactively inside the container. Configuring the container in interactive mode allows us to do everything we need to do before saving the changes to a docker image. If we issued commands one-by-one with <q>run</q> we would lose the state of the container after each command.</p>
+
+<p>
+<tt><font color="Green">
+docker pull centos
+</font></tt>
+</p>
+
+<p>
+<tt><font color="Maroon">
+
+[root@a264d0f7b8c9 /]#
+
+</font></tt>
+
+</p>
+
+<p>
+The long string after <q>@</q> is the name of the container we are running in. Notice it is not the same name as the docker image.
+</p>
+
+<p>
+In a <i>new</i> terminal we can list the running docker containers and see that our container is running.
+</p>
+<p>
+<tt><font color="Green">
+docker containers list
+</font></tt>
+</p>
+
+<tt><font color="Maroon">
+
+CONTAINER ID&nbsp;     IMAGE&nbsp;               COMMAND&nbsp;             CREATED&nbsp;              STATUS&nbsp;              PORTS&nbsp;               NAMES<br>
+a264d0f7b8c9&nbsp;        centos&nbsp;              <q>/bin/bash</q>&nbsp;         About a minute ago&nbsp;   Up About a minute&nbsp;                       striking_mahavira<br>
+
+</font></tt>
+</p>
+
+<h3>Example: Installing the <q>party</q> R package</h3>
+
+<p>As an example, we will install party. Party is an R package for recursive partitioning. It produces regression trees for machine learning. But you can install whatever tools you wish. This is the beauty of docker, it gives you control over your environment.</p>
+
+<p>
+<tt><font color="Maroon">
+[root@a264d0f7b8c9 /]# <font color="Green">yum install R</font>
+</font></tt>
+</p>
+<p>
+Once R has finished installing:
+</p>
+<p>
+<tt><font color="Maroon">
+[root@a264d0f7b8c9 /]# <font color="Green">R</font>
+</font></tt>
+</p>
+<p>
+<tt><font color="Maroon">
+R version 3.5.0 (2018-04-23) -- "Joy in Playing"<br>
+Copyright (C) 2018 The R Foundation for Statistical Computing<br>
+Platform: x86_64-pc-linux-gnu (64-bit)<br>
+<br>
+R is free software and comes with ABSOLUTELY NO WARRANTY.<br>
+You are welcome to redistribute it under certain conditions.<br>
+Type 'license()' or 'licence()' for distribution details.<br>
+<br>
+  Natural language support but running in an English locale<br>
+<br>
+R is a collaborative project with many contributors.<br>
+Type 'contributors()' for more information and<br>
+'citation()' on how to cite R or R packages in publications.<br>
+<br>
+Type 'demo()' for some demos, 'help()' for on-line help, or<br>
+'help.start()' for an HTML browser interface to help.<br>
+Type 'q()' to quit R.<br>
+<br>
+></font><font color="Green">install.packages("party",deps=YES)</font>
+</p>
+<\tt>
+
+<h2>Commit customised container to image file</h2>
+<p>Once party has finished installing, our Docker <i>container</i> is ready. Now we need to commit those changes to a docker <i>image file</i> so we can load the image that has R and party installed for future use.</p>
+<p>
+Exit R:
+</p>
+<p>
+<tt><font color="Maroon">
+[root@a264d0f7b8c9 /]# > <font color="Green">quit()</font>
+</font></tt>
+</p>
+<p>
+Exit the docker container:
+</p>
+<p>In general:</p>
+</p>
+<tt><font color="Maroon">
+[root@a264d0f7b8c9 /]#</font> <font color="Green">exit</font><br>
+<font color="Maroon">$</font> <font color="Green">sudo docker commit <container id> <new image name></font>
+</tt>
+</p>
+<p>
+  For our example:
+</p>
+<p>
+<tt><font color="Maroon">
+[root@a264d0f7b8c9 /]#</font> <font color="Green">exit</font><br>
+<font color="Maroon">$</font> <font color="Green">sudo docker commit a264d0f7b8c9 r_party</font>
+</tt>
+</p>
+<p>Now we have a docker image saved.</p>
+
+<h2>Running Commands using the Docker Image</h2>
+<p>Now that we have a docker image we can run it on our own machines as before with:</p>
+
+<p>
+<tt><font color="Green">
+docker run r_party ls
+</font></tt>
+</p>
+<p>
+But now we can also execute R commands such as <q>Rscript</q>.
+</p>
+<p>
+<tt><font color="Green">
+docker run r_party Rscript
+</font></tt>
+</p>
+<h3></h3>
+<p>For our party example we can write the following R script and save it to a file called test_party.R:</p>
+<tt><font color="Green">
+set.seed(290875)<br>
+### honest (i.e., out-of-bag) cross-classification of<br>
+### true vs. predicted classes<br>
+data("mammoexp", package = "TH.data")<br>
+table(mammoexp$ME, predict(cforest(ME ~ ., data = mammoexp,<br>
+control = cforest_unbiased(ntree = 50)),<br>
+OOB = TRUE))<br>
+### fit forest to censored response<br>
+if (require("TH.data") && require("survival")) {<br>
+data("GBSG2", package = "TH.data")<br>
+bst <- cforest(Surv(time, cens) ~ ., data = GBSG2,<br>
+control = cforest_unbiased(ntree = 50))<br>
+### estimate conditional Kaplan-Meier curves<br>
+treeresponse(bst, newdata = GBSG2[1:2,], OOB = TRUE)<br>
+party:::prettytree(bst@ensemble[[1]], names(bst@data@get("input")))<br>
+</tt></font></p>
+
+<p>
+  And run it using the docker image with:
+</p>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">docker run r_party.R Rscript test_party.R</font>
+</font></tt>
+</p>
+
+<h1>Singularity</h1>
+
+<h2>Converting Docker Images to Singularty Images</h2>
+
+<p>Once we are happy with the docker image we created we will convert it to a singularity image so we can use it on the CARC clusters.</p>
+
+
+<p>We do the conversion by using a docker image provided to us that contains the necessary tools:</p>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">docker pull singularityware/docker2singularity</font>
+</font></tt>
+</p>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">docker run -v /var/run/docker.sock:/var/run/docker.sock \ -v /tmp/:/output \ --privileged -t --rm \ singularityware/docker2singularity \ r_party</font>
+</font></tt>
+</p>
+
+<p>This will produce a singularity image in the /tmp directory that we can upload to a CARC cluster using our favorite file transfer program.</p>
+
+<h2>Running a Singularity Image at CARC</h2>
+<p>First login to a CARC cluster head node.</p>
+<p>Next we will load the singularity module:</p>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">module load singularity-2.4.1-intel-17.0.4-sjwoqj4</font>
+<font color="Maroon">
+$ </font></tt>
+</p>
+<p>The syntax for executing Singularity images are similar to those we used for docker:</p>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">singularity exec r_party.simg Rscript test_party.R
+</font></tt>
+</p>
+
+<h2>Mapping Directories</h2>
+<p>
+<tt><font color="Maroon">
+$ </font> <font color="Green">singularity -B $PBS_O_WORKDIR:/mnt exec r_.simg Rscript /mnt/$CODE_DIR/process_lidar.R {} /mnt/$ORTHO_DATA_DIR/{/.}.img /mnt/$OUTPUT_DIR</font>
+</font></tt>
+</p>
+</body>
+
+</html>
