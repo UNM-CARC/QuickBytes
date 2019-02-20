@@ -4,14 +4,14 @@
 <p>The goal of this tutorial is to familiarize you with the minimal set of commands needed to effectively negotiate the Unix operating system and file management system in an X11 windowing environment such as cygwin. At the end of this tutorial you will find a list of more advanced tools that you may wish to explore as you become familiar with Unix and its various flavors. These include the text editors vi and emacs, plotting packages (xmgr, gnuplot, xgrace), and image/file display packages (ghostscript, for postscript; acroread, for PDF files; and xv, for displaying .gif, .jpeg, and other image formats.)</p>
 <p>In this tutorial, we use the generic term Unix to refer to any operating system (OS) based on the original Unix OS developed in the 1970s (1969 is typically cited as the year that Unix was “born.”) Although numerous flavors and variants of the OS have appeared in the intervening years, they are all based on the same underlying design, and preserve a core set of commands in common. What this means is that if you are familiar with any contemporary Unix-like system, you will be able to immediately work on any other Unix-like system, and it will be very easy for you to come up to speed on the idiosyncrasies of the new environment. Examples of Unix-based systems that you may have heard of include Linux, SGI IRIX, Mac OS X, Sun Solaris, and SunOS.</p>
 <p>This tutorial provides step-by-step instructions for exploring the Unix-like operating systems running on UNM IT and CARC machines, such as <a href="http://linux.unm.edu">linux.unm.edu</a> and <a href="http://wheeler.alliance.unm.edu">wheeler.alliance.unm.edu</a>.</p>
-<p>Commands that you should enter at the prompt (also file, directory, and application names) will appear in boldface. You may wish to take a look at the IT documentation for Linux and X Windows available at <a href="http://it.unm.edu/quickrefs/unix.html">http://it.unm.edu/quickrefs/unix.html</a>. Numerous “cheat sheets” for Linux and for editors such as vi (see below) can also be found online.</p>
+<p>Commands that you should enter at the prompt (also file, directory, and application names) will appear as a code block, while names of files will appear in <strong>bold</strong>. You may wish to take a look at the IT documentation for Linux and X Windows available at <a href="http://it.unm.edu/quickrefs/unix.html">http://it.unm.edu/quickrefs/unix.html</a>. Numerous “cheat sheets” for Linux and for editors such as vi (see below) can also be found online.</p>
 <p>NOTE: The program that interprets your commands on a Unix-based computer is called the shell. Shells come in different varieties, such as csh (C shell), tsch (Tenex C shell), ksh (Korn shell), and bash (Bourne-Again Shell). Many of the basic commands are the same across shells, but there are also some important differences.</p>
 <ol>
 <li>
 <p>Begin by ssh-ing into <a href="http://wheeler.alliance.unm.edu">wheeler.alliance.unm.edu</a> from an XTerm. Type in your username, followed by your wheeler password. (Note: you can also ssh into IT Linux machines by connecting to <a href="http://linux.unm.edu">linux.unm.edu</a> and using your UNM IT password (different from your CARC wheeler password).</p>
 </li>
 <li>
-<p>Note that when you login to a Unix machine, there is always a prompt. The default prompt is %, but sometimes it will appear as the machine name, followed by a number which tells you how many commands you have entered up to that point in the session, e.g. (username) wheeler-sn:~$, (username) xena-sn:~$ or (username) gibbs-sn:~$. All commands in Unix are issued sequentially, each at a new prompt (there are ways to combine commands, but we won’t worry about this for now).</p>
+<p>Note that when you login to a Unix machine, there is always a prompt. The default prompt is <code>$</code>, but sometimes it will appear as the machine name, followed by a number which tells you how many commands you have entered up to that point in the session, e.g. <code>username@wheeler-sn:~$</code>, <code>username@xena:~$</code> or <code>username@gibbs:~$</code>. All commands in Unix are issued sequentially, each at a new prompt (there are ways to combine commands, but we won’t worry about this for now).</p>
 </li>
 <li>
 <p>If your password is new, you should change it immediately to one that is known only to you. If you have not done so already, type <code>passwd</code> at the Unix prompt, and follow the instructions. You can change your password as often as you like in this fashion.</p>
@@ -38,37 +38,35 @@
 <p>Create two subdirectories, take1 and take2, and change directories to take1.  (NOTE: Any files or directories that you create remain on the Linux filesystem until you specifically choose to delete them. For example, if you login to <a href="http://linux.unm.edu">linux.unm.edu</a> from a second XTerm while still connected via the first, you will be able to see (and manipulate) all of your directories and files stored on the filesystem.)</p>
 </li>
 <li>
-<p>Brief text editor review. Two editors that are commonly used in the Unix environment are <strong>vi</strong> and   <strong>emacs</strong>. emacs is more sophisticated, but requires more effort to master. If you want to try it out, type emacs at the Unix prompt, and follow the instructions to work through the tutorial. For right now, we will use vi. (Note: there are a number of useful online quick-references for vi. See, for example: <a href="http://it.unm.edu/quickrefs/vi.html">http://it.unm.edu/quickrefs/vi.html</a>).<br>
-To invoke the editor, type <code>vi &lt;filename&gt;</code>. (The notation “&lt;filename&gt;” just means “any filename you like.” For example, you might type <code>vi genomes.txt</code>). Note that in Unix, long filenames are deprecated; it is customary to use the suffix .txt to denote plain text files, and file- names may not include spaces. In lieu of spaces, it is common to use the underscore character “_”, or strategically placed capitals, thus: MyLongFilename.txt. Once you are in the editor, you can use the following commands:<br>
-<strong>i</strong> to insert text at cursor location. type i and then type your text; hit &lt;Esc&gt; (the “Esc” key on your keyboard) to stop entering text<br>
-<strong>a</strong> to add text at location of cursor (&lt;Esc&gt; to end text entry)<br>
-<strong>o</strong> to open a new line and begin inserting text (&lt;Esc&gt; to end text entry).<br>
-If you are not sure what state vi is in, it’s always safe to type <strong>&lt;Esc&gt;</strong> to reset. &lt;br /&gt;<br>
+<p>Brief text editor review. Two editors that are commonly used in the Unix environment are <strong>vi</strong> and   <strong>emacs</strong>. <strong>emacs</strong> is more sophisticated, but requires more effort to master. If you want to try it out, type <code>emacs</code> at the Unix prompt, and follow the instructions to work through the tutorial. For right now, we will use <strong>vi</strong>. (Note: there are a number of useful online quick-references for vi. See, for example: <a href="http://it.unm.edu/quickrefs/vi.html">http://it.unm.edu/quickrefs/vi.html</a>).<br>
+To invoke the editor, type <code>vi &lt;filename&gt;</code>. (The notation “&lt;filename&gt;” just means “any filename you like.” For example, you might type <code>vi genomes.txt</code>). Note that in Unix, long filenames are deprecated; it is customary to use the suffix <strong>.txt</strong> to denote plain text files, and filenames may not include spaces. In lieu of spaces, it is common to use the underscore character “_”, or strategically placed capitals, thus: <strong>MyLongFilename.txt</strong>. Once you are in the editor, you can use the following commands indicated in <strong>boldface</strong> to differentiate commands within the editor versus those at the command prompt:<br>
+<strong>i</strong> to insert text at cursor location. type <strong>i</strong> and then type your text; hit <strong>&lt;Esc&gt;</strong> (the “Esc” key on your keyboard) to stop entering text<br>
+<strong>a</strong> to add text at location of cursor (<strong>&lt;Esc&gt;</strong> to end text entry)<br>
+<strong>o</strong> to open a new line and begin inserting text (<strong>&lt;Esc&gt;</strong> to end text entry).<br>
+If you are not sure what state <strong>vi</strong> is in, it’s always safe to type <strong>&lt;Esc&gt;</strong> to reset.<br>
 <strong>j</strong> to move down a line<br>
-&lt;br /&gt;<br>
 <strong>k</strong> to move up a line<br>
-&lt;br /&gt;<br>
-<strong>D</strong> to delete from cursor location to end of line &lt;br /&gt;<br>
-dd to delete entire line &lt;br /&gt;<br>
-<strong>:</strong> to get into editor mode. From here you can type w (followed by the Enter key) to write your file (this will overwrite whatever file you said you were editing when you invoked <strong>vi</strong>),&lt;br /&gt;<br>
-<strong>q</strong> to quit <strong>vi</strong>; and <strong>q!</strong>** to exit without writing over your file. Another very useful editor-mode command is to type <strong>u</strong> at the colon; this undoes your last command in case you made a mess of your editing.&lt;br /&gt;<br>
-Type <strong>&lt;number&gt;G</strong> in text-entry mode to go to line number <strong>&lt;number&gt;</strong>. <strong>$</strong> refers to the last line in your file, so <strong>$G</strong> will take you to the last line in your file.&lt;br /&gt;<br>
-Also in text entry mode, type <strong>&lt;Ctrl&gt;-G</strong> (this is the <strong>Ctrl</strong> key on your keyboard, held down at the same time as the <strong>G</strong> key) to find out what line you are at.&lt;br /&gt;</p>
+<strong>D</strong> to delete from cursor location to end of line<br>
+<strong>dd</strong> to delete entire line<br>
+<strong>:</strong> to get into editor mode. From here you can type <strong>w</strong> (followed by the <strong>Enter</strong> key) to write your file (this will overwrite whatever file you said you were editing when you invoked <strong>vi</strong>),<br>
+<strong>q</strong> to quit <strong>vi</strong>; and <strong>q!</strong> to exit without writing over your file. Another very useful editor-mode command is to type <strong>u</strong> at the colon; this undoes your last command in case you made a mess of your editing.<br>
+Type <strong>&lt;number&gt;G</strong> in text-entry mode to go to line number <strong>&lt;number&gt;</strong>. <strong>$</strong> refers to the last line in your file, so <strong>$G</strong> will take you to the last line in your<br>
+Also in text entry mode, type <strong>&lt;Ctrl&gt;-G</strong> (this is the <strong>Ctrl</strong> key on your keyboard, held down at the same time as the <strong>G</strong> key) to find out what line you are at.</p>
 </li>
 <li>
-<p>Now that you are expert at editing, create a new file called junk.txt containing the single line hello world. You may use <strong>vi</strong> or the Unix editor of your choice in order to do this.</p>
+<p>Now that you are an expert at editing, create a new file called <strong>junk.txt</strong> containing the single line "Hello World." You may use <strong>vi</strong> or the Unix editor of your choice in order to do this.</p>
 </li>
 <li>
-<p>Copy junk.txt to junk2.txt using the <strong>cp</strong> command: <code>cp junk.txt junk2.txt</code>.</p>
+  <p>Copy <strong>junk.txt</strong> to <strong>junk2.txt</strong> using the <code>cp</code> command: <code>cp junk.txt junk2.txt</code>.</p>
 </li>
 <li>
-<p>Edit junk2.txt and add the line: <code>Now is the time for all good men to come to the aid of their PARTY.</code> (Yes, PARTY should be capitalized).</p>
+<p>Edit <strong>junk2.txt</strong> and add the line: "Now is the time for all good men to come to the aid of their PARTY." (Yes, PARTY should be capitalized).</p>
 </li>
 <li>
 <p>Save the file and exit to the Unix prompt by typing :<code>wq</code>.</p>
 </li>
 <li>
-<p>Check which file contains the word party by doing a case-insensitive grep; <code>type grep -i party *.txt</code>. The asterisk is a wild-card character that matches both junk and junk2.</p>
+<p>Check which file contains the word party by doing a case-insensitive <code>grep</code>; <code>type grep -i party *.txt</code>. The asterisk is a wild-card character that matches both <strong>junk</strong> and <strong>junk2</strong>.</p>
 </li>
 <li>
 <p>Do a <code>pwd</code>; then get a listing of the files in the current directory by typing <code>ls .</code> where  ‘.’ is a shorthand for “the current directory.”</p>
@@ -80,61 +78,61 @@ Also in text entry mode, type <strong>&lt;Ctrl&gt;-G</strong> (this is the <stro
 <p>Type <code>man ls</code> to access the Unix on-line manual page for the <code>ls</code> command. Find the option that will produce a long listing, and re-type the <code>ls</code> command using this option.</p>
 </li>
 <li>
-<p>One of the most important features of Unix is the ability to re-direct output. You can re-direct the output of your <code>ls</code> command to a file named list.txt by typing &gt;list.txt on the same line as the <code>ls</code> command, and immediately afterwards. Try this now.</p>
+<p>One of the most important features of Unix is the ability to re-direct output. You can re-direct the output of your <code>ls</code> command to a file named <strong>list.txt</strong> by typing <code>&gt; list.txt</code> on the same line as the <code>ls</code> command, and immediately afterwards. Try this now.</p>
 </li>
 <li>
-<p>Make sure that your re-direction worked by typing <code>cat list.txt</code> to look at the contents of list.txt.</p>
+<p>Make sure that your re-direction worked by typing <code>cat list.txt</code> to look at the contents of <strong>list.txt</strong>.</p>
 </li>
 <li>
-<p>Another useful tool is the diff command, which allows you to compare the contents of two files, line by line. Do a <code>diff junk.txt junk2.txt</code>.</p>
+<p>Another useful tool is the <code>diff</code> command, which allows you to compare the contents of two files, line by line. Do a <code>diff junk.txt junk2.txt</code>.</p>
 </li>
 <li>
-<p>The &gt;&gt; symbol allows you to append output to the end of a file. Repeat the diff command, followed by &gt;&gt;list.txt to append the output of diff to the list.txt file. Use <code>cat list.txt</code> to verify that the results are what you expected.</p>
+<p>The <code>&gt;&gt;</code> symbol allows you to append output to the end of a file. Repeat the <code>diff</code> command, followed by <code>&gt;&gt; list.txt</code> to append the output of <code>diff</code> to the <strong>list.txt</strong> file. Use <code>cat list.txt</code> to verify that the results are what you expected.</p>
 </li>
 <li>
-<p>Move junk2.txt one directory up by typing <code>mv junk2.txt ..</code> where  ‘…’ is shorthand for “one directory up from where I am now.”</p>
+<p>Move <strong>junk2.txt</strong> one directory up by typing <code>mv junk2.txt ..</code> where "..’ is shorthand for “one directory up from where I am now.”</p>
 </li>
 <li>
-<p>Jump to your home directory by typing cd without any arguments.</p>
+<p>Jump to your home directory by typing <code>cd</code> without any arguments.</p>
 </li>
 <li>
-<p>Go back to directory take1 by typing cd Lab1/take1.</p>
+<p>Go back to directory <strong>take1</strong> by typing <code>cd Lab1/take1</code>.</p>
 </li>
 <li>
 <p>Now go back to your home directory by typing <code>cd ../..</code></p>
 </li>
 <li>
-<p>Use the man page for ls again to find out how to display hidden (‘dot’) files, and do a long listing, including dotfiles, in your home directory.</p>
+<p>Use the <code>man</code> page for <code>ls</code> again to find out how to display hidden (‘dot’) files, and do a long listing, including dotfiles, in your home directory.</p>
 </li>
 <li>
-<p>Change to directory Lab1, and remove directory take2 by typing by <code>rmdir take2</code>.</p>
+<p>Change to directory <strong>Lab1</strong>, and remove directory <strong>take2</strong> by typing by <code>rmdir take2</code>.</p>
 </li>
 <li>
-<p>Now try to remove directory take1 in the same way.</p>
+<p>Now try to remove directory <strong>take1</strong> in the same way.</p>
 </li>
 <li>
-<p>The reason take1 could not be removed is that it still has a file in it. Change directories to take1 and do a <code>rm junk.txt</code>. Notice the different command for removing a file vs. removing a directory.</p>
+<p>The reason <strong>take1</strong> could not be removed is that it still has a file in it. Change directories to <strong>take1</strong> and do a <code>rm junk.txt</code>. Notice the different command for removing a file vs. removing a directory.</p>
 </li>
 <li>
-<p>Go back up one directory and remove directory take1.</p>
+<p>Go back up one directory and remove directory <strong>take1</strong>.</p>
 </li>
 <li>
-<p>Change to your home directory and remove directory Lab1.</p>
+<p>Change to your home directory and remove directory <strong>Lab1</strong>.</p>
 </li>
 <li>
-<p>To logout, type exit at the prompt. You can kill any jobs executing before you logout, or they will get killed automatically when you logout. Note that Unix is a much more robust OS than Windows. There is virtually no way that you, as an ordinary user, can crash the operating system while others are using it. This is one of the many reasons why you will want to learn to use (and master) the Unix operating system environment, and why it is used on supercomputers and clusters at centers around the world.</p>
+<p>To logout, type <code>exit</code> at the prompt. You can kill any jobs executing before you logout, or they will get killed automatically when you logout. Note that Unix is a much more robust OS than Windows. There is virtually no way that you, as an ordinary user, can crash the operating system while others are using it. This is one of the many reasons why you will want to learn to use (and master) the Unix operating system environment, and why it is used on supercomputers and clusters at centers around the world.</p>
 </li>
 </ol>
 <p>Congratulations! You’ve survived the Unix tutorial. Here is a list of some particularly useful X windows tools included on many (not necessarily all, however) Unix installations. These are listed according to the Unix command used to invoke them. At your leisure, please take the time to explore some of them, and see that the appropriate GUI (Graphical User Interface) comes up correctly when they are invoked. Many of these applications are self-explanatory; simply start them up and try them out.</p>
-<p><strong>xmgr:</strong> plotting program<br>
-<strong>gnuplot:</strong> plotting program<br>
-<strong>xwd:</strong> X window dump (man xwd).<br>
-<strong>xv:</strong> Useful visualizer that can handle a wide range of graphics formats, and convert between them (.rgb, .xwd, .tiff, etc.).<br>
-<strong>xgrace:</strong> more advanced (sophisticated) plotting program<br>
-<strong>ghostview:</strong> postscript previewer.<br>
-<strong>acroread:</strong> Acrobat (PDF) previewer.<br>
-<strong>LaTeX:</strong> Scientific text formatting language, including previewing package. Far superior to Word for heavily mathematical documents. A LaTeX tutorial/reference book such as the one by Leslie Lamport is useful for getting started.<br>
-<strong>vi</strong>: Standard Unix line-editor. An introduction to vi was included as part of this Lab; see online reference there.<br>
-<strong>emacs, xemacs:</strong> A highly flexible editing environment, with special editing modes for particular file types (.F Fortran source code, .tex LaTeX files, etc.), facilities for multiple buffers, and much, much more. See Learning GNU Emacs (O’Reilly and Associates) or the emacs online help for a detailed tutorial.</p>
+<p><code>xmgr</code>: plotting program<br>
+<code>gnuplot</code> plotting program<br>
+<code>xwd</code>: X window dump (man xwd).<br>
+<code>xv</code> Useful visualizer that can handle a wide range of graphics formats, and convert between them (.rgb, .xwd, .tiff, etc.).<br>
+<code>xgrace</code>: more advanced (sophisticated) plotting program<br>
+<code>ghostview</code>: postscript previewer.<br>
+<code>acroread</code>: Acrobat (PDF) previewer.<br>
+<code>LaTeX:</code>: Scientific text formatting language, including previewing package. Far superior to Word for heavily mathematical documents. A LaTeX tutorial/reference book such as the one by Leslie Lamport is useful for getting started.<br>
+<code>vi</code>: Standard Unix line-editor. An introduction to vi was included as part of this Lab; see online reference there.<br>
+<code>emacs, xemacs</code>: A highly flexible editing environment, with special editing modes for particular file types (.F Fortran source code, .tex LaTeX files, etc.), facilities for multiple buffers, and much, much more. See Learning GNU Emacs (O’Reilly and Associates) or the emacs online help for a detailed tutorial.</p>
 
 </body></html>
