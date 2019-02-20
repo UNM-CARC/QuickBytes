@@ -1,5 +1,5 @@
-#Checking on running jobs
-###Checking on the status of your Job:
+# Checking on running jobs
+### Checking on the status of your Job:
 If you would like to check the status of your job, you can use the `qstat` command to do so. Typing `qstat` without any options will output all currently running or queued jobs to your terminal window, but there are many options to help display relevant information. To find more of these options type `man qstat` when logged in to a CARC machine. To see which jobs are running and queued in the standard output type the following in a terminal window:
 
 ```bash
@@ -95,7 +95,7 @@ Example
     66908.xena.xena.allian  ceodspsp    dualGPU  smoke_1_5        103419     2     32       --   48:00:00 R  21:50:33
     67438.xena.xena.allian  ceodspsp    dualGPU  smoke_5_10        66632     2     32       --   48:00:00 R  09:39:00
 
-###Determining which nodes your Job is using:
+### Determining which nodes your Job is using:
 If you would like to check which nodes your job is using, you can pass the `-n` option to qstat. When your job is finished, your processes on each node will be killed by the system, and the node will be released back into the available resource pool.
 
 ```bash
@@ -108,7 +108,7 @@ Job ID                           Username  Queue      Jobname     SessID   NDS  
 ```
 Here,  the nodes that this job is running on are wheeler296, wheeler295, wheeler282, and wheeler280, with 8 processors per node.
  
-###Viewing Output and Error Files:
+### Viewing Output and Error Files:
 Once your job has completed, you should see two files, one output file and one error file, in the directory from which you submitted the Job: Jobname.oJobID and Jobname.eJobID (where Jobname refers to the name of the Job returned by `qstat`, and JobID refers to the numerical portion of the job identifier returned by `qstat`).  
 For the example job above, these two files would be named `B19F_re5E4.o55811` and `B19F_re5E4.e55811` respectively.  
 Any output from the job sent to “standard output” will be written to the output file, and any output sent to “standard error” will be written to the error file. The amount of information in the output and error files varies depending on the program being run and how the PBS batch script was set up. 
