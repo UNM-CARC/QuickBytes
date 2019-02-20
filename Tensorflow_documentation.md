@@ -7,12 +7,12 @@ The enormous gains in computation time should give researchers a valid reason to
 
 The CPU version was deployed on a multicore processor with 16 cores and 64GB RAM memory with Numpy arrays in python. The GPU Version was deployed on NVIDIA Tesla K40 with 11GB GPU memory with Tensorflow.  Here the cpu implementations were carried with two different types of numpy compilations. mkl_mul stands for multiplication operation carried with numpy compiled with math kernel library. Nomkl_mul stands for the numpy without math kernel library. mkl based numpy was installed in anaconda enviroment with conda install numpy whereas the numpy installed with pip doesn't integrate math kernel library. Xena has nodes with single GPU and dual GPU. Dual GPU node offers users 2x11GB of computational GPU memory which allows to use a larger batch size and double the size of cores for faster implementation of highly complex  models which has a large number of parameters. the GPU_mul corresponds to multiplication operations carried with single GPU nodes and dualgpu_mul corresonds to the one carried with dual  GPU node. Another interesting benchmarking is carried for inversion operation for the similar cases as done for multiplication
 
-![](https://github.com/ceodspspectrum/CARC_WORK/blob/master/download2.png)
+![](https://raw.githubusercontent.com/ceodspspectrum/CARC_WORK/master/download2.png)
 
 Fig 1. Time for Matrix Inversion vs size of Matrix N
 
 
-![](https://github.com/ceodspspectrum/CARC_WORK/blob/master/download1.png)
+![](https://raw.githubusercontent.com/ceodspspectrum/CARC_WORK/master/download1.png)
 
 Fig 2. Time for Matrix Multiplication vs size of Matrix N
 
