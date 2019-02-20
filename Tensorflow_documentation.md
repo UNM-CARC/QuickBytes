@@ -63,7 +63,7 @@ immediately gives value of a .
 However for tensorflow
 
 		a=tf.zeros((2,2))
-		print(ta)
+		print(a)
 
 doesn't return the value until
 
@@ -78,7 +78,7 @@ A tf session for performing multiplication is demonstrated below:
 		a= tf.constant(9999999)
 		b=tf.constant(111111111)
 		c=a*b
-		with tf.session() as sess:
+		with tf.Session() as sess:
 		     print(sess.run(c))
 		     print(c.eval())
 
@@ -89,8 +89,8 @@ Similar to other programming language variables, tensorflow uses a varaible obje
 		W=tf.Variable(tf.zeros((2,2)), name="weights")
 		R=tf.Variable(tf.random_normal((2,2)), name="Random_weights")
 
-		with tf.session() as sess:
-		       sess.run(tf.initialize_all_variables())
+		with tf.Session() as sess:
+		        sess.run(tf.initialize_all_variables())
 			print(sess.run(W))
 			print(sess.run(R))
 
@@ -98,7 +98,7 @@ Converting numpy data to tensor
 
 		a=np.zeros((3,3))
 		t_a=tf.convert_to_tensor(a)
-		with tf.session() as sess:
+		with tf.Session() as sess:
 			print(sess.run(t_a))
 
 For scalable variables for performing operations we can use `tf.placeholder` which defines a placeholder and provides entry points for the data to be viewed in a computational graph.  `feed_dict` is used in the below example to map from tf.placeholder vars to data(np arrays,list,etc)
@@ -106,6 +106,6 @@ For scalable variables for performing operations we can use `tf.placeholder` whi
 
 		input1= tf.placeholder(tf.float32)
 		input2 = tf.placeholder(tf.float32)
-		output = tf.mul(input1, input2)
+		output = tf.multiply(input1, input2)
 		with tf.Session() as sess:
 			print(sess.run([output], feed_dict={input1:[7.], input2:[2.]}))
