@@ -283,7 +283,7 @@ party:::prettytree(bst@ensemble[[1]], names(bst@data@get("input")))<br>
 </p>
 <p>
 <code><font color="Navy">
-$ </font> <font color="Green">docker run -v &lt; path to test_party.R folder &gt; :/mnt Rscript /mnt/test_party.R</font>
+$ </font> <font color="Green">docker run -v &lt; path to test_party.R folder &gt; :/mnt r_party Rscript /mnt/test_party.R</font>
 </font></code>
 </p>
 
@@ -302,7 +302,7 @@ $ </font> <font color="Green">docker pull singularityware/docker2singularity</fo
 </p>
 <p>
 <code><font color="Navy">
-$ </font> <font color="Green">docker run -v /var/run/docker.sock:/var/run/docker.sock \ -v /tmp/:/output \ --privileged -t --rm \ singularityware/docker2singularity \ r_party</font>
+$ </font> <font color="Green">docker run -v /var/run/docker.sock:/var/run/docker.sock  -v /tmp:/output  --privileged -t --rm  singularityware/docker2singularity  r_party</font>
 </font></code>
 </p>
 
