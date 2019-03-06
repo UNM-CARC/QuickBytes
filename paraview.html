@@ -1,0 +1,57 @@
+<h1 id="how-to-remote-visualization-using-paraview-5-4-1-in-parallel-">How to: Remote Visualization using ParaView 5.4.1 in parallel.</h1>
+<p>ParaView is an open-source, multi-platform data analysis and visualization application. ParaView users can quickly build visualizations to analyze their data using qualitative and quantitative techniques. The data exploration can be done interactively in 3D or programmatically using ParaView&#39;s batch processing capabilities.</p>
+<p>ParaView was developed to analyze extremely large datasets using distributed memory computing resources. It can be run on supercomputers to analyze datasets of petascale size.</p>
+<h2 id="paraview-5-4-1-opengl">ParaView 5.4.1 OpenGL</h2>
+<ul>
+<li><p>Downloads &amp; Documentation: <a href="https://www.paraview.org/download/">https://www.paraview.org/download/</a> </p>
+</li>
+<li><p>Wiki Page: <a href="https://www.paraview.org/Wiki/ParaView">https://www.paraview.org/Wiki/ParaView</a> </p>
+</li>
+</ul>
+<p>NOTE: Be sure that the paraview client installed on your machine is the same version that is installed on the CARC cluster you are using. </p>
+<h2 id="client-server-methods">Client - Server Methods</h2>
+<p>The most common approach to use ParaView on Wheeler is through the Client-Server mode support by ParaView, which requires an installation of ParaView on your local machine. These is a two-step process, requesting a compute node via SSH and creating an SSH tunnel to Wheeler&#39;s service node. </p>
+<h3 id="overview">Overview</h3>
+<p>In one terminal you will ask Wheeler to give you compute nodes where you will run the paraview server. Once the paraview server is listening for connections you will create an ssh tunnel in another terminal from your machine to one of the compute nodes you were assigned. Then you will tell the paraview client on your machine to connect to the tunnel and so to the compute nodes at CARC, where it will perform the rendering.</p>
+<p>The following examples assume you are using the Wheeler cluster.</p>
+<h3 id="terminal-1-ssh-to-wheeler">Terminal 1: SSH to Wheeler</h3>
+<p>Accessing Wheeler and requesting 2 nodes with 8 cores each.</p>
+<p><code>ssh <span style=color:red>username</span>@wheeler.alliance.unm.edu</code> </p>
+<p><code>qsub -I -l nodes=2:ppn=8</code></p>
+<p>NOTE: Wait until wheeler assigns you two compute nodes. </p>
+<h3 id="load-paraview-module">Load ParaView Module</h3>
+<p><code>module load paraview-5.4.1-gcc-4.8.5-python2-impi-wulnuwu</code> </p>
+<h3 id="run-paraview-pvserver-on-compute-nodes">Run ParaView PVServer on Compute Nodes</h3>
+<p><code>mpirun -n 16 pvserver --use-offscreen-rendering --server-port=11111</code> </p>
+<h3 id="terminal-2-ssh-tunnel-to-a-wheeler-compute-node">Terminal 2: SSH Tunnel to a Wheeler Compute node</h3>
+<p>From local machine to wheeler&#39;s compute node. Use the name of one of the compute nodes you were assigned by <code>qsub</code> above.</p>
+<p><code>ssh -L 11111:<span style="color:red">compute_node_name</span>:11111 <span style="color:red">username</span>@wheeler.alliance.unm.edu</code> </p>
+<h3 id="opening-paraview-5-4-1-and-setup-server-configuration">Opening ParaView 5.4.1 and Setup Server Configuration</h3>
+<p>File  --&gt; Connect (Choose Server Configuration) </p>
+<p>Click on &quot;Add Server&quot;</p>
+<p>Name: Wheeler<br>Server Type: &quot;Client / Server&quot;<br>Host: localhost<br>Port: 11111 </p>
+<p>Click on &quot;Configure&quot;</p>
+<p>Startup Type: Manual </p> 
+<p>Click on &quot;Save&quot; </p>
+<p>Note: To Verify, Client - Server setup, go to &quot;View&quot; and select &quot;Memory Inspector&quot; </p>
+<p>NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this with the qdel command on the cluster head node.</p>
+<h2 id="client-server-mode-reverse-connection-method-">Client - Server Mode (Reverse Connection Method)</h2>
+<p>This process allows you to connect to wheeler service node, if you have firewall connectivity issues and requires to know your localhost IP address &quot;local_host_IP&quot;.</p>
+<h3 id="terminal-1-ssh-to-wheeler">Terminal 1: SSH to Wheeler</h3>
+<p>Accessing Wheeler and requesting 2 nodes with 8 cores each.</p>
+<p><code>ssh <span style="color:red">username</span>@wheeler.alliance.unm.edu</code></p>
+<p><code>qsub -I -l nodes=2:ppn=8</code> </p>
+<p>NOTE: Wait until wheeler assigns you two compute nodes. </p>
+<h3 id="load-paraview-module">Load ParaView Module</h3>
+<p><code>module load paraview-5.4.1-gcc-4.8.5-python2-impi-wulnuwu</code></p>
+<h3 id="run-paraview-pvserver-on-the-compute-nodes">Run ParaView PVServer on the Compute Nodes</h3>
+<p><code>$ mpirun -n 16 pvserver --use-offscreen-rendering -rc --client-host=local_host_IP</code> </p>
+<h3 id="opening-paraview-5-4-1-and-setup-server-configuration">Opening ParaView 5.4.1 and Setup Server Configuration</h3>
+<p>File --&gt; Connect (Choose Server Configuration) </p>
+<p>Click on &quot;Add Server&quot;</p>
+<p>Name: Wheeler RC<br>Server Type: &quot;Client / Server (Reverse Connection)&quot;<br>Port: 11111 </p>
+<p>Click on &quot;Configure&quot; </p>
+<p>Startup Type: Manual </p>
+<p>Click on &quot;Save&quot;</p>
+<p>NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this with the qdel command on the cluster head node.</p>
+
