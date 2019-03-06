@@ -54,14 +54,4 @@
 <p>Startup Type: Manual </p>
 <p>Click on &quot;Save&quot;</p>
 <p>NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this with the qdel command on the cluster head node.</p>
-<h2 id="x-forwarding-method">X Forwarding Method</h2>
-<p>Parallel Rendering implies that many processors have some context to render their pixels into. Even though X11 forwarding might be available, you should not run the client remotely and forward its X calls. ParaView will be far more efficient if you let it directly handle the data transfer between local and remote machines. X11 forwarding will be the slowest graphically of the three methods since all the graphical interface information has to be sent over the network to your machine.</p>
-<h3 id="accessing-wheeler-and-requesting-2-nodes-with-8-cores-each-">Accessing Wheeler and requesting 2 nodes with 8 cores each.</h3>
-<p><code>ssh -X <span style="color:red">username</span>@wheeler.alliance.unm.edu</code></p>
-<p><code>qsub -I -X -l nodes=1:ppn=8</code> </p>
-<p>NOTE: Wait until wheeler assigns you two compute nodes </p>
-<h3 id="load-paraview-modules">Load ParaView Modules</h3>
-<p><code>module load paraview-5.4.1-gcc-4.8.5-python2-impi-wulnuwu</code> </p>
-<h3 id="run-paraview-on-a-compute-node">Run ParaView on a Compute Node</h3>
-<p><code>paraview</code></p>
-<p>NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this with the qdel command on the cluster head node.</p>
+
