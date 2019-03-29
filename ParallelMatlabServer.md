@@ -57,7 +57,7 @@ It will ask for your CARC username, and here you can also select your ssh keyfil
 
 MATLAB will now validate your setup. If you run into trouble please contact CARC support at help@carc.unm.edu
 
-Now we will have to set the hostname of your local machine:
+Now we will have to set the hostname of your local machine with pctconfig (Parallel Config Toolbox):
 
 ```
 %% set hostname for a Mac
@@ -71,3 +71,8 @@ pctconfig('hostname',name);
 %% set hostname for a Windows machine
 % need to add this
 ```
+
+This completes the install and configuration.
+
+The sample program that follows demonstrates how to run parallel code using MATLAB.
+
