@@ -59,4 +59,15 @@ MATLAB will now validate your setup. If you run into trouble please contact CARC
 
 Now we will have to set the hostname of your local machine:
 
+```
+%% set hostname for a Mac
+[~,name]=system('ipconfig getifaddr en0');
+pctconfig('hostname',name);
 
+%% set hostname for a linux machine
+[~,name]=system('hostname -i');
+pctconfig('hostname',name);
+
+%% set hostname for a Windows machine
+% need to add this
+```
