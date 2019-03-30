@@ -21,7 +21,7 @@ Screenshot 3
 
 Enter the address of the cluster you would like to use: for example, wheeler.alliance.unm.edu.
 
-Enter /users/<your username> for the path to the PBS scripts that MATLAB will create on the cluster. Choosing will work.
+Enter /users/<your username> for the path to the PBS scripts that MATLAB will create on the cluster.
 
 Screenshot 4
 
@@ -39,7 +39,7 @@ Choose flexnet for the license
 
 Screenshot 7
 
-Name your profile. For example "Xena_workers32"
+Name your profile. For example "Xena"
 
 Screenshot 8
 
@@ -63,11 +63,15 @@ Now we will have to set the hostname of your local machine with pctconfig (Paral
 %% set hostname for a Mac
 [~,name]=system('ipconfig getifaddr en0');
 pctconfig('hostname',name);
+```
 
+```
 %% set hostname for a linux machine
 [~,name]=system('hostname -i');
 pctconfig('hostname',name);
+```
 
+```
 %% set hostname for a Windows machine
 % need to add this
 ```
@@ -76,3 +80,11 @@ This completes the install and configuration.
 
 The sample program that follows demonstrates how to run parallel code using MATLAB.
 
+```
+n_worker = 10;                  % We will request 10 workers to run in parallel
+p = parpool('Xena', n_workers); % Create the pool of workers using the profile created earlier with 10 workers.
+parfor i = 1:100                % Define a parallel loop that will be distributed accross the 10 workers.
+i                               % Print the value of i for this iteration.
+end                   
+delete(p);                      % Clean up the worker pool
+```
