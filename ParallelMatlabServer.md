@@ -68,6 +68,8 @@ MATLAB will now validate your setup. If you run into trouble please contact CARC
 
 This completes the install and configuration.
 
+We have found it best to restart MATLAB at this point, otherwise setting the hostname in the next step may not work.
+
 ### Writing Parallel Matlab Code
 
 You will likely have to tell the system the IP address or hostname of your local machine. This is so the CARC cluster can communicate with your laptop or desktop. You will set the hostname with pctconfig (Parallel Config Toolbox). You can either type the hostname in directly or attempt to have MATLAB find it for you with the following commands:
