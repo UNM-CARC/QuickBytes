@@ -56,7 +56,7 @@ Select "parallel" then create/manage clusters.
 
 ![Validating1](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate1.png)
 
-Select the profile you just created and select the validation tab.
+Select the profile you just created and select the validation tab. Press the validate button.
 
 ![Validating2](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate2.png)
 
