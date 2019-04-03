@@ -52,7 +52,9 @@ You can create multiple profiles for different CARC clusters and numbers of work
 
 ### Validating the Configuration
 
-Select "parallel" then create/manage clusters.
+Select "parallel" then create/manage clusters. 
+
+Choose the profile you just created. In this example, the profile name is "xena-distri"
 
 ![Validating1](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate1.png)
 
@@ -87,7 +89,7 @@ Once you have set the hostname you can run your parallel MATLAB code. Mathworks 
 The very simple program that follows demonstrates how to run parallel code using MATLAB. The code uses parfor, which can often be used to replace a for loop in serial MATLAB code, to distibute the work across 10 parallel workers.
 
 ```
-n_worker = 10;                  % We will request 10 workers to run in parallel
+n_workers = 10;                  % We will request 10 workers to run in parallel
 p = parpool('xena-distributed', n_workers); % Create the pool of workers using the profile created earlier with 10 workers.
 parfor i = 1:100                % Define a parallel loop that will be distributed accross the 10 workers.
 i                               % Print the value of i for this iteration.
