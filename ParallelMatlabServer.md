@@ -24,7 +24,7 @@ Select no for shared job location.
 
 Enter the address of the cluster you would like to use: for example, wheeler.alliance.unm.edu or xena.alliance.unm.edu.
 
-Enter /users/<your username> for the path to the PBS scripts (remote job storage location) that MATLAB will create on the cluster.
+Enter /users/\<your username\> for the path to the PBS scripts (remote job storage location) that MATLAB will create on the cluster.
 
 Select unique subfolders.
   
