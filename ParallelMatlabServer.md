@@ -1,6 +1,8 @@
 ## Parallel MATLAB Server
 MATLAB supports parallelization on desktop computers which can be used to increase the speed of analysis drastically. MATLAB also provides the MATLAB Parallel Server (previously the MATLAB Distributed Computing Server) which allows you to write MATLAB code on your local desktop or laptop computer and perform the computation using the CARC high-performance clusters. This QuickByte leads you through the steps needed to set this up. If you run into problems please send an email to help@carc.unm.edu and we will be happy to help.
 
+Please ensure you have the MATLAB Parallel Toolbox installed on your local comnputer.
+
 ### MATLAB Parallel Server Client Configuration
 
 Once MATLAB is installed on your local machine (the MATLAB version on your local machine must match the version on the CARC cluster) click "add-ons" to open Add-on explorer. Search for PBS. 
