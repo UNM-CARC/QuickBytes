@@ -72,6 +72,8 @@ We have found it best to restart MATLAB at this point, otherwise setting the hos
 
 ### Writing Parallel Matlab Code
 
+When your program runs you may be prompted to allow incoming/outgoing connections on your computer.
+
 You will likely have to tell the system the IP address or hostname of your local machine. This is so the CARC cluster can communicate with your laptop or desktop. You will set the hostname with pctconfig (Parallel Config Toolbox). You can either type the hostname in directly or attempt to have MATLAB find it for you with the following commands:
 
 OS X
@@ -88,10 +90,12 @@ pctconfig('hostname',name);
 ```
 
 Windows 10
+
+Look up your computers IP address and enter:
+
 ```
-%% set hostname for a linux machine
-[~,name]=system('%COMPUTERNAME%');
-pctconfig('hostname',name);
+%%
+pctconfig('hostname',"<your IP address>");
 ```
 
 Once you have set the hostname you can run your parallel MATLAB code. Mathworks provides extensive documentation on using parallelism in MATLAB: [Mathworks Docs](https://www.mathworks.com/help/parallel-computing/getting-started-with-parallel-computing-toolbox.html)
