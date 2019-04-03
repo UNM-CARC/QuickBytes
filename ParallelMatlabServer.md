@@ -74,15 +74,23 @@ We have found it best to restart MATLAB at this point, otherwise setting the hos
 
 You will likely have to tell the system the IP address or hostname of your local machine. This is so the CARC cluster can communicate with your laptop or desktop. You will set the hostname with pctconfig (Parallel Config Toolbox). You can either type the hostname in directly or attempt to have MATLAB find it for you with the following commands:
 
+OS X
 ```
-%% set hostname for a Mac
 [~,name]=system('ipconfig getifaddr en0');
 pctconfig('hostname',name);
 ```
 
+Linux
+```
+%%
+[~,name]=system('hostname -i');
+pctconfig('hostname',name);
+```
+
+Windows 10
 ```
 %% set hostname for a linux machine
-[~,name]=system('hostname -i');
+[~,name]=system('%COMPUTERNAME%');
 pctconfig('hostname',name);
 ```
 
