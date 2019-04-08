@@ -2,7 +2,7 @@ Conversion of PBS script to Slurm script
 ===================================
 
  
- Most of the machines in the UNM CARC uses PBS/TORQUE for scheduling jobs in HPC. However, Taos machine uses the Simple Linux Utility for Resource Management or SLURM for scheduling jobs. Slurm is little different from PBS in terms of syntax, commands used for resource allocation, job submission and monitoring and setting the environment variables. Detailed documentation of Slurm can be found in this [link](https://slurm.schedmd.com/documentation.html). For submitting a job in Taos, you have to submit a Slurm script. If you already have a PBS script, it can be easily converted to a Slurm without worrying about the technical details of Slurm. More details of submitting a [PBS](http://carc.unm.edu/user-support-2/using-carc-systems1/running-jobs/submitting-jobs.html) and [Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md) can be found in their quickbytes links.
+ Most of the machines at CARC uses PBS/TORQUE for scheduling jobs in HPC. However, Taos uses the Simple Linux Utility for Resource Management, or SLURM, for scheduling jobs. Slurm is a little different from PBS in terms of syntax, commands used for resource allocation, job submission and monitoring, and setting of environment variables. Detailed documentation of Slurm can be found in this [link](https://slurm.schedmd.com/documentation.html). For submitting a job on Taos, you have to submit a Slurm script. If you already have a PBS script, it can be easily converted to Slurm without worrying about the technical details of Slurm. More details of submitting a [PBS](http://carc.unm.edu/user-support-2/using-carc-systems1/running-jobs/submitting-jobs.html) and [Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md) can be found in their quickbytes links.
  
 ## Conversion of PBS to Slurm
 
@@ -15,7 +15,7 @@ For this purpose, we can use the cheet sheet tables below. The first table lists
 |qstat -u \<user>    |   squeue -u \<user> | Status of jobs submitted by \<user> |
 | qstat -f \<job-id> | scontrol show job \<job-id\> | Display details of \<job-id> |
 | qdel \<job-id>     | scancel \<job-id> | Delete the listed \<job-id>|
-|pbsnodes \<options> | sinfo | Display all nodes with thier information|
+|pbsnodes \<options> | sinfo | Display all nodes with their information|
 
 Now let's take a look at the commands used for resource allocation which goes into the PBS/SLURM script. In both cases, the script has to be initialized by the shell interpreter. Bash shell can be initialized in both PBS and SLURM by `#!/bin/bash/`
 The resource allocation in PBS is precceded by `#PBS`
@@ -23,7 +23,7 @@ The resource allocation in PBS is precceded by `#PBS`
  
 |  PBS Command        |  Slurm Command   | Command definition                  |
 |  ------------       |  -------------   | ------------------                  |
-|-N <name> | --job-name= \<name>| Name of the job about to submit|
+|-N <name> | --job-name= \<name>| Name of the job to submit|
 |-l procs= \<N> |--ntasks= \<N> | N processes to run|
 |-l nodes=a:ppn=b | --ntasks= \<product of a and b> | a*b processes to run |
 |-l walltime=\<HH:MM:SS>|--time=\<HH:MM:SS> | Maximum time required to finish the job|
