@@ -32,7 +32,7 @@ Select unique subfolders.
 
 Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. Leave the threads per worker at 1 unless your software requires more threads.
 
-Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2018b
+Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2018b for the Xena cluster, and /opt/local/matlab/R2018b for the Wheeler cluster.
 
 ![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard6.png)
 
