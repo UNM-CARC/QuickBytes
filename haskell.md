@@ -1,27 +1,32 @@
+## Haskell at CARC
+
 Haskell is a strongly typed functional language. In this QuickByte you will learn how to setup Haskell at CARC and create a simple matrix multiplication project using stack.
 
 On Wheeler:
 
-First we will install and load the stack environment
+First we will install and load the stack environment:
 
-1) module load anaconda
-2) conda create -n haskell stack
-3) source activate haskell
+1) `module load anaconda`
+
+2) `conda create -n haskell stack`
+
+3) `source activate haskell`
 
 Now create a new stack project:
 
-4) stack new matmul new-template
-5) cd matmul
+4) `stack new matmul new-template`
 
-Edit the main source file:
+5) `cd matmul`
 
-6) emacs app/Main.hs
+Edit the main source file with your preferred text editor:
+
+6) `emacs app/Main.hs`
 
 The following code creates and multiplies two 4x4 matrices:
 
 
 --------------------------
-
+``` haskell
 module Main where
 
 import Lib
@@ -36,25 +41,29 @@ test = multStd m1 m2
 
 main = do
      putStrLn (show test)
+```
 --------------------------
 
 
 Add the dependency on the matrix package to the project:
 
+7) `emacs package.yaml`
 
-7) emacs package.yaml
 8) Add "- matrix" under dependencies in the executables section so it reads:
 
-    dependencies:
-    - matmul
-    - matrix
+```	
+	dependencies:		
+		- matmul
+		- matrix
+```
 
 Build your project:
 
-9) stack build
+9) `stack build`
 
 Run your compiled program:
 
+```
 (haskell) mfricke@wheeler-sn:~/matmul$
 .stack-work/install/x86_64-linux/lts-13.17/8.6.4/bin/matmul-exe
 ┌                 ┐
@@ -63,3 +72,4 @@ Run your compiled program:
 │  46  32  18   4 │
 │  78  56  34  12 │
 └                 ┘
+```
