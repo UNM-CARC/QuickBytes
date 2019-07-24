@@ -240,8 +240,14 @@ The Above command maps the directory that that PBS script was submitted from, `$
 
 # Version Issues
 
-If you recieve the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. We have several signularity modules with different versions for you to try. Enter module avail singularity to see them all. 
+If you recieve the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. 
 
 ERROR  : Failed to mount image in (read only): Invalid argument
+
 ABORT  : Retval = 255
+
+We have several modules with different singularity versions. Enter the following command to see them all: 
+```module avail singularity```
+
+
 
