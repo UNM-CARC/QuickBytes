@@ -238,3 +238,10 @@ $ singularity -B $PBS_O_WORKDIR:/mnt exec r_party.simg Rscript test_party.R
 ```
 The Above command maps the directory that that PBS script was submitted from, `$PBS_O_WORKDIR`, to the `/mnt` location within the `r_party.simg` singularity image and then executes the `test_party.R` script. 
 
+# Version Issues
+
+If you recieve the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. We have several signularity modules with different versions for you to try. Enter module avail singularity to see them all. 
+
+ERROR  : Failed to mount image in (read only): Invalid argument
+ABORT  : Retval = 255
+
