@@ -8,7 +8,7 @@ First we will install and load the stack environment:
 
 1) `module load anaconda`
 
-2) `conda create -n haskell stack`
+2) `conda create -n haskell stack -c conda-forge`
 
 3) `source activate haskell`
 
