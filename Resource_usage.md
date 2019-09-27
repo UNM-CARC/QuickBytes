@@ -15,16 +15,20 @@ Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources 
 --- | ---
 
 
+
 ## Wheeler Configuration
 
-Parameters |	Soft Limit  |	Hardlimit
---- | --- | ---
-Number of Processors |	160 |	400
-Number of Nodes	|20 | 50
-Processors per Node |	8  | 8
+Queue      |           default          |            debug           |
+Parameters | Soft Limit  |  Hardlimit  |  Soft Limit  |  Hardlimit  |
+--- | --- | --- | --- | --- |
+Number of Processors | 160 | 400 | 32 | 32 |
+Number of Nodes |20 | 50 | 4 | 4 |
+Processors per Node | 8  | 8 | 8 | 8 |
+Walltime | 48:00:00 | 48:00:00 | 10:00 | 10:00 |
 
-Node Access Policy |	Multi Job/Node ie (Multiple users may share resources across same node)
+Node Access Policy | Multi Job/Node ie (Multiple users may share resources across same node)
 --- | ---
+
 
 
 ## Gibbs Configuration
