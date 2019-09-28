@@ -32,7 +32,7 @@ Select unique subfolders.
 
 Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. For set up and validation leave the number of workers at 1. Leave the threads per worker at 1 unless your software requires more threads.
 
-Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2018b for the Xena cluster, and /opt/local/MATLAB/R2018b for the Wheeler cluster.
+Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2018b for the Xena cluster, and /opt/local/MATLAB/R2018b or /opt/local/MATLAB/R2019a for the Wheeler cluster.
 
 ![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard6.png)
 
@@ -40,7 +40,7 @@ Choose flexnet for the license
 
 ![Wizard7](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard7.png)
 
-Name your profile. For example "xena-distributed"
+Name your profile. For example "R2019a_Wheeler_PBS"
 
 ![Wizard8](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard8.png)
 
@@ -54,7 +54,7 @@ You can create multiple profiles for different CARC clusters and numbers of work
 
 Select "parallel" then create/manage clusters. 
 
-Choose the profile you just created. In this example, the profile name is "xena-distri"
+Choose the profile you just created. In this example, the profile name is "R2019a_Wheeler_PBS"
 
 ![Validating1](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate1.png)
 
@@ -104,7 +104,7 @@ The very simple program that follows demonstrates how to run parallel code using
 
 ```
 n_workers = 10;                  % We will request 10 workers to run in parallel
-p = parpool('xena-distributed', n_workers); % Create the pool of workers using the profile created earlier with 10 workers.
+p = parpool('R2019a_Wheeler_PBS', n_workers); % Create the pool of workers using the profile created earlier with 10 workers.
 parfor i = 1:100                % Define a parallel loop that will be distributed accross the 10 workers.
 i                               % Print the value of i for this iteration.
 end                   
