@@ -18,13 +18,15 @@ Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources 
 
 ## Wheeler Configuration
 
-Queue      |           default          |            debug           |
-Parameters | Soft Limit  |  Hardlimit  |  Soft Limit  |  Hardlimit  |
---- | --- | --- | --- | --- |
-Number of Processors | 160 | 400 | 32 | 32 |
-Number of Nodes |20 | 50 | 4 | 4 |
-Processors per Node | 8  | 8 | 8 | 8 |
-Walltime | 48:00:00 | 48:00:00 | 10:00 | 10:00 |
+
+
+|                Queue: |   Default  |   Default  |    Debug   |   Debug    |
+|----------------------:|:----------:|:----------:|:----------:|:----------:|
+|             parameter | soft limit | hard limit | soft limit | hard limit |
+| Number of Processors  |     160    |     400    |     32     |     32     |
+|      Number of Nodes  |     20     |     50     |      4     |      4     |
+|   Processors per Node |      8     |      8     |      8     |      8     |
+|              Walltime |  48:00:00  |  48:00:00  |    10:00   |    10:00   |
 
 Node Access Policy | Multi Job/Node ie (Multiple users may share resources across same node)
 --- | ---
