@@ -19,7 +19,6 @@ Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources 
 ## Wheeler Configuration
 
 
-
 |                Queue: |   Default  |   Default  |    Debug   |   Debug    |
 |----------------------:|:----------:|:----------:|:----------:|:----------:|
 |             parameter | soft limit | hard limit | soft limit | hard limit |
