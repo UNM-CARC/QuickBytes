@@ -24,7 +24,6 @@ Once a .xml file is generated, beast can be easily on CARC. an example .pbs scri
 #PBS -l nodes=1:ppn=1
 #PBS -l walltime=24:00:00
 #PBS -j oe
-#PBS -V
 
 cd $PBS_O_WORKDIR
 
