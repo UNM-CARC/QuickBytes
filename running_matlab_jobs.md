@@ -37,13 +37,13 @@ cd $PBS_O_WORKDIR
 module load matlab/R2017a
 
 # Calling MATLAB in batch mode to run your program. 
-matlab -r -nojvm -nodisplay my_program > /dev/null
+matlab -r -nojvm -nodisplay < my_program.m > /dev/null
 ```
 
 There are a couple of additions to our batch mode command when calling MATLAB on our program. Remember that the `-r` flag is telling MATLAB to run in batch mode. The `-nojvm` flag turns off Java Virtual Machine since this is only necessary when running the MATLAB GUI. The `-nodisplay` turns off all graphical output from MATLAB since we do not support visual display at CARC. At the end of our command we then redirect what would normally be written to `stdout`, or your MATLAB console when running interactively, to a special file called `null`. We do this because MATLAB normally writes all output to `stdout` which is stored in memory (RAM). If your program generates enough output to `stdout` this can overload local memory and crash the compute node that your program is running on. If you wish to keep what is printed to `stdout` you can redirect to a file instead using the following syntax and replacing the name with whatever you would like to call your file:
 
 ```bash
-matlab -r -nojvm -nodisplay my_program > my_program.output
+matlab -r -nojvm -nodisplay < my_program.m > my_program.output
 ```
 Now that you have your program and your PBS script you can submit your job to the job scheduler using the `qsub` command:
 
