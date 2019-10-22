@@ -14,16 +14,17 @@ cp -r profile_pbs ~/.python/
 Then check the files copied. 
 
 ```
-cd ~/ipython
+cd ~/ipython/profile_pbs
 ```
 
 Now on Jupyter hub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. 
-You can start a job by setting number of engins to 8 and clicking start under actions. Check that the job is running in terminal with 
+You can start a job by setting number of engines to 8 and clicking start under actions. Check that the job is running in terminal with 
 
 ```
 watch qstat -tn -u <username>
 ```
 
+To change the walltime of your profile, in the ~/ipython/profile_pbs directory edit the pbs.engine.template and the pbs.controller.template to fit the requirments for your job. By editing these files you can also change from the default to debug queue as you are testing your program. 
 
 ### In a Jupyter notebook
 
