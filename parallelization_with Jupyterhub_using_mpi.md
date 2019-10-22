@@ -127,6 +127,7 @@ view['size']
     [8, 8, 8, 8, 8, 8, 8, 8]
     
 ## Run the external python code in ´psum.py´ on all the engines.
+Recall that psum.py just loads the MPI libraries and defines the distributed sum function, psum. We are not actually calling the psum function yet.
 
 ```python
 status_psum_run=view.run('psum.py')
