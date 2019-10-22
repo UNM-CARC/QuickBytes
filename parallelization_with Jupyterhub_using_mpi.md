@@ -129,7 +129,7 @@ view['size']
 ## Run the external python code in ´psum.py´ on all the engines.
 
 ```python
-#status_psum_run=view.run('psum.py')
+status_psum_run=view.run('psum.py')
 ```
 
 status_psum_run.wait_interactive()
