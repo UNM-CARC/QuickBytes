@@ -132,11 +132,15 @@ Recall that psum.py just loads the MPI libraries and defines the distributed sum
 ```python
 status_psum_run=view.run('psum.py')
 ```
-
+```python
 status_psum_run.wait_interactive()
+```
+```python
+done
+```
 
 ## Send data to all nodes to by summed
-The scatter command sends 32 values from 1 to 32 to the 8 compute engines. Each compute engine gets 32/8=4 values. This is the ipyparallel scatter command, not an MPI scatter command.
+The scatter command sends 32 values from 0 to 31 to the 8 compute engines. Each compute engine gets 32/8=4 values. This is the ipyparallel scatter command, not an MPI scatter command.
 ```python
 status_scatter=view.scatter('a',np.arange(32,dtype='float'))
 ```
