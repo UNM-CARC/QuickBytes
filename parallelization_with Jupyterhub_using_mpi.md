@@ -8,13 +8,13 @@ Once you are logged in at carc run these steps:
 
 ```
 cd /projects/systems/shared
-cp -r profile_pbs ~/.python/
+cp -r profile_pbs ~/.ipython/
 ```
 
 Then check the files copied. 
 
 ```
-cd ~/ipython/profile_pbs
+cd ~/.ipython/profile_pbs
 ```
 
 Now on Jupyter hub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. 
@@ -24,7 +24,7 @@ You can start a job by setting number of engines to 8 and clicking start under a
 watch qstat -tn -u <username>
 ```
 
-To exit the watch command use control c 
+To exit the watch command use control-C 
 
 To change the walltime of your profile, in the ~/.ipython/profile_pbs directory edit the pbs.engine.template and the pbs.controller.template to fit the requirments for your job. By editing these files you can also change from the default to debug queue as you are testing your program. 
 
