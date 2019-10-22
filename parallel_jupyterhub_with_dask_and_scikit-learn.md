@@ -4,7 +4,7 @@
 
 ### Log in to Jupyter hub
 
-In an internet browser go to https://wheeler.alliance.unm.edu:8000 where you will be asked to log in. Use your carc username and password. This logs you into a compute node where your programs in Jupyter notebook will be running. Because it is beginning an interactive job it may not be instant depending on resources available at the time. Once logged in, you can see all the files in your home directory. 
+On a computer connected to ethernet on main campus, open an internet browser go to https://wheeler.alliance.unm.edu:8000 where you will be asked to log in. Use your carc username and password. This logs you into a compute node where your programs in Jupyter notebook will be running. Because it is beginning an interactive job it may not be instant depending on resources available at the time. Once logged in, you can see all the files in your home directory. 
 
 To be kind to other users when you are finished with Jupyter notbook for the day, please be sure to go to "control panel" in the top righthand corner and click "stop my server". This will free up the node for other users. Otherwise, the default walltime is 12 hours. 
 
