@@ -28,7 +28,7 @@ To exit the watch command use control c
 
 To change the walltime of your profile, in the ~/.ipython/profile_pbs directory edit the pbs.engine.template and the pbs.controller.template to fit the requirments for your job. By editing these files you can also change from the default to debug queue as you are testing your program. 
 
-### In a Jupyter notebook
+Now you can open a Jupyter notebook and follow this tutorial. 
 
 ## Load required packages for ipyparallel and MPI
 
