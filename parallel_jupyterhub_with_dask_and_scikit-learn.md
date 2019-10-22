@@ -1,6 +1,6 @@
 ## Example of parallelization with Jupyter hub using dask and scikit-learn
 
-[Dask](https://dask.org/) uses existing Python APIs and data structures to make it easy to switch between Numpy, Pandas, Scikit-learn to their Dask-powered equivalents. [scikit-learn](https://scikit-learn.org/stable/) is a machine learning tool for python
+[Dask](https://dask.org/) uses existing Python APIs and data structures to make it easy to switch between Numpy, Pandas, Scikit-learn to their Dask-powered equivalents. [scikit-learn](https://scikit-learn.org/stable/) is a machine learning tool for python.
 
 ### Log in to Jupyter hub
 
