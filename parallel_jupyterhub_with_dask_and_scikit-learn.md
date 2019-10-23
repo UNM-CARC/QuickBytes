@@ -1,15 +1,15 @@
-## Example of Parallelization with Jupyter Hub using Dask and scikit-learn
+## Example of Parallelization with JupyterHub using Dask and SciKit-learn
 
-[Dask](https://dask.org/) uses existing Python APIs and data structures to make it easy to switch between Numpy, Pandas, Scikit-learn to their Dask-powered equivalents. [scikit-learn](https://scikit-learn.org/stable/) is a machine learning tool for python.
+[Dask](https://dask.org/) uses existing Python APIs and data structures to make it easy to switch between Numpy, Pandas, Scikit-learn to their Dask-powered equivalents. [SciKit-learn](https://scikit-learn.org/stable/) is a machine learning tool for Python.
 
-### Log in to Jupyter hub
+### Log in to JupyterHub
 
 On a computer connected to ethernet on main campus, open an internet browser go to https://wheeler.alliance.unm.edu:8000 where you will be asked to log in. Use your carc username and password. This logs you into a compute node where your programs in Jupyter notebook will be running. Because it is beginning an interactive job it may not be instant depending on resources available at the time. Once logged in, you can see all the files in your home directory. 
 
-To be kind to other users when you are finished with Jupyter notbook for the day, please be sure to go to "control panel" in the top righthand corner and click "stop my server". This will free up the node for other users. Otherwise, the default walltime is 12 hours. 
+To be kind to other users when you are finished with JupyterHub for the day, please be sure to go to "control panel" in the top righthand corner and click "stop my server". This will free up the node for other users. Otherwise, the default walltime is 12 hours. 
 
 
-## Setup cluster resources with dask-jobqueue
+## Setup cluster resources with Dask-jobqueue
 
 
 ```python
