@@ -205,3 +205,45 @@ view['totalsum']
      array(496.)]
 
 Each compute engine calculated the sum of all the values. Since we ran this MPI function on all the compute engines they report the same value.
+
+## Defining functions in the notebook
+Rather than loading psum from file we can define it in the notebook using the ipython function decorator '@'. 
+
+```python
+@view.remote(block = True)
+def inlinesum():
+    from mpi4py import MPI
+    import numpy as np
+    locsum = np.sum(a)
+    rcvBuf = np.array(0.0,'d')
+    MPI.COMM_WORLD.Allreduce([locsum, MPI.DOUBLE],
+        [rcvBuf, MPI.DOUBLE],
+        op=MPI.SUM)    
+    return rcvBuf
+```
+
+Now we can call inlinesum and it is automatically run on every compute engine. The call is through ipyparallels but the computation is still using MPI.
+
+```python
+inlinesum()
+```
+    [array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.)]
+
+```python
+
+```
