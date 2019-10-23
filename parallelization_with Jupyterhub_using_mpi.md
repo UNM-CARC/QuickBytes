@@ -119,7 +119,7 @@ view.activate()
 
 ## Check to see if the MPI communication world is of the expected size. It should be size 8 since we have 8 engines.
 
-Note we are running the Get_size command on each engine to make sure they all see the same MPI comm world
+Note we are running the Get_size command on each engine to make sure they all see the same MPI comm world. %px simply executes the code following it on each compute engine in parallel.
 
 
 ```python
@@ -152,9 +152,8 @@ status_psum_run=view.run('psum.py')
 ```python
 status_psum_run.wait_interactive()
 ```
-```python
+
 done
-```
 
 ## Send data to all nodes to by summed
 The scatter command sends 32 values from 0 to 31 to the 8 compute engines. Each compute engine gets 32/8=4 values. This is the ipyparallel scatter command, not an MPI scatter command.
@@ -162,10 +161,9 @@ The scatter command sends 32 values from 0 to 31 to the 8 compute engines. Each 
 status_scatter=view.scatter('a',np.arange(32,dtype='float'))
 ```
 
-```python
-status_scatter.wait_interactive()
-```   
-    done
+done
+
+We can view the variable 'a' on all the compute engines. The value of 'a' for each compute engine is an element of the return array. In this case each value is itself an array.
 
 ```python
 view['a']
@@ -179,6 +177,8 @@ view['a']
      array([24., 25., 26., 27.]),
      array([28., 29., 30., 31.])]
 
+## Execute the psum function on all the compute engines and store the result in totalsum
+MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by running calling the psum function on all the compute engines simultaniosly. MPI will allow them to communicate with each other to calculate the sum. 
 ```python
 status_psum_call=%px totalsum = psum(a)
 ```
