@@ -6,14 +6,14 @@ The following steps will show you the steps to use MPI through ipython's ipypara
 
 Once you are logged in at carc run these steps:
 
-```
+```console
 cd /projects/systems/shared/ipython_cluster_profiles
 cp -r profile_pbs ~/.ipython/
 ```
 
 Then check the files copied. 
 
-```
+```console
 cd ~/.ipython/profile_pbs
 ```
 
@@ -24,9 +24,9 @@ You can start a job by setting number of engine in the 'pbs' cluster profile and
 [Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run 
 code on them. Check that the job is running in terminal with 
 
-```
+```console
 watch qstat -tn -u <username>
-```
+
 
 You should see something like the following:
 
@@ -41,6 +41,7 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
    wheeler291/2
 258372.wheeler-sn.alli  mfricke     default  ipython_engine	3213     2     16	--   01:00:00 R  00:06:11
    wheeler176/0-7+wheeler175/0-7
+```
 
 Notice the ipython engines are running with status 'R'. You can also check to see whether the compute engines are ready in your python notebook (see below).
 
