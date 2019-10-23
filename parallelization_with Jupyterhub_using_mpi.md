@@ -98,12 +98,12 @@ Engines in ipparallel parlence are the same as processes or workers in other par
 ```python
 cluster.ids
 ```
-    [0, 1, 2, 3, 4, 5, 6, 7]
+[0, 1, 2, 3, 4, 5, 6, 7]
 
 ```python
 len(cluster[:])
 ```
-    8
+8
 
 ## Assign the engines to a variable named "view" to allow us to interact with them
 
@@ -131,9 +131,7 @@ status_mpi_size=%px size = MPI.COMM_WORLD.Get_size()
 ```python
 status_mpi_size.wait_interactive()
 ```
-
-   
-    done
+done
 
 
 The output of viewing the size variable should be an array with the same number of entries as engines, and each entry should be the number of engines requested.
@@ -142,7 +140,7 @@ The output of viewing the size variable should be an array with the same number 
 ```python
 view['size']
 ```
-    [8, 8, 8, 8, 8, 8, 8, 8]
+[8, 8, 8, 8, 8, 8, 8, 8]
     
 ## Run the external python code in ´psum.py´ on all the engines.
 Recall that psum.py just loads the MPI libraries and defines the distributed sum function, psum. We are not actually calling the psum function yet.
@@ -161,7 +159,6 @@ The scatter command sends 32 values from 0 to 31 to the 8 compute engines. Each 
 ```python
 status_scatter=view.scatter('a',np.arange(32,dtype='float'))
 ```
-
 done
 
 We can view the variable 'a' on all the compute engines. The value of 'a' for each compute engine is an element of the return array. In this case each value is itself an array.
@@ -169,7 +166,7 @@ We can view the variable 'a' on all the compute engines. The value of 'a' for ea
 ```python
 view['a']
 ```
-    [array([0., 1., 2., 3.]),
+[array([0., 1., 2., 3.]),
      array([4., 5., 6., 7.]),
      array([ 8.,  9., 10., 11.]),
      array([12., 13., 14., 15.]),
@@ -187,7 +184,7 @@ status_psum_call=%px totalsum = psum(a)
 ```python
 status_psum_call.wait_interactive()
 ```   
-    done
+done
 
 ## Check the value of totalsum on each node
 Total should be equal to 31(31+1)/2=496
@@ -196,7 +193,7 @@ Total should be equal to 31(31+1)/2=496
 view['totalsum']
 ```
 
-    [array(496.),
+[array(496.),
      array(496.),
      array(496.),
      array(496.),
@@ -228,7 +225,7 @@ Now we can call inlinesum and it is automatically run on every compute engine. T
 ```python
 inlinesum()
 ```
-    [array(496.),
+ [array(496.),
      array(496.),
      array(496.),
      array(496.),
@@ -245,6 +242,3 @@ inlinesum()
      array(496.),
      array(496.)]
 
-```python
-
-```
