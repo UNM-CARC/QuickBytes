@@ -1,6 +1,6 @@
 ## Parallelization with JupyterHub using MPI
 
-The following steps will show you the steps to use mpi through ipython to parallelize your code. 
+The following steps will show you the steps to use MPI through ipython's ipyparallel interface. 
 
 ### Create a PBS profile on CARC 
 
@@ -21,7 +21,8 @@ Now on JupyterHub go to the IPython Clusters tab (refresh if already open) and y
 
 You can start a job by setting number of engine in the 'pbs' cluster profile and clicking start under actions. For this example we will request 8 ipython compute engines.
 
-[Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run MPI code on them. Check that the job is running in terminal with 
+[Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run 
+code on them. Check that the job is running in terminal with 
 
 ```
 watch qstat -tn -u <username>
