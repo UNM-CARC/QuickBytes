@@ -1,8 +1,8 @@
-## Parallelization with Jupyter hub using MPI
+## Parallelization with JupyterHub using MPI
 
 The following steps will show you the steps to use mpi through ipython to parallelize your code. 
 
-### Create a pbs profile on carc 
+### Create a PBS profile on CARC 
 
 Once you are logged in at carc run these steps:
 
@@ -17,15 +17,31 @@ Then check the files copied.
 cd ~/.ipython/profile_pbs
 ```
 
-Now on Jupyter hub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. Click the JupyterHub icon in the upper left of your screen if you can't see the clusters tab.
+Now on JupyterHub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. Click the JupyterHub icon in the upper left of your screen if you can't see the clusters tab.
 
 You can start a job by setting number of engine in the 'pbs' cluster profile and clicking start under actions. For this example we will request 8 ipython compute engines.
 
-[Optional] Check that the job is running in terminal with 
+[Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run MPI code on them. Check that the job is running in terminal with 
 
 ```
 watch qstat -tn -u <username>
 ```
+
+You should see something like the following:
+
+Every 2.0s: qstat -t -n -u $USER     Wed Oct 23 09:15:14 2019                                                                                      
+wheeler-sn.alliance.unm.edu:
+                                                                                  Req'd       Req'd	  Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+258370.wheeler-sn.alli  mfricke     default  jupyterhub        21730     1	1	--   08:00:00 R  00:06:45
+   wheeler291/1
+258371.wheeler-sn.alli  mfricke     default  ipython_controll  22553     1	1	--   01:00:00 R  00:06:11
+   wheeler291/2
+258372.wheeler-sn.alli  mfricke     default  ipython_engine	3213     2     16	--   01:00:00 R  00:06:11
+   wheeler176/0-7+wheeler175/0-7
+
+Notice the ipython engines are running with status 'R'. You can also check to see whether the compute engines are ready in your python notebook (see below).
 
 To exit the watch command use control-C 
 
@@ -170,6 +186,9 @@ status_psum_call=%px totalsum = psum(a)
 status_psum_call.wait_interactive()
 ```   
     done
+
+## Check the value of totalsum on each node
+Total should be equal to 31(31+1)/2=496
 
 ```python
 view['totalsum']
