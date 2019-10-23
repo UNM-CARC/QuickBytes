@@ -7,7 +7,7 @@ The following steps will show you the steps to use MPI through ipython's ipypara
 Once you are logged in at carc run these steps:
 
 ```
-cd /projects/systems/shared
+cd /projects/systems/shared/ipython_cluster_profiles
 cp -r profile_pbs ~/.ipython/
 ```
 
