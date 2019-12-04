@@ -1,31 +1,49 @@
-## Parallelization with Jupyter hub using MPI
+## Parallelization with JupyterHub using MPI
 
-The following steps will show you the steps to use mpi through ipython to parallelize your code. 
+The following steps will show you the steps to use MPI through ipython's ipyparallel interface. 
 
-### Create a pbs profile on carc 
+### Create a PBS profile on CARC 
 
 Once you are logged in at carc run these steps:
 
-```
-cd /projects/systems/shared
+```console
+cd /projects/systems/shared/ipython_cluster_profiles
 cp -r profile_pbs ~/.ipython/
 ```
 
 Then check the files copied. 
 
-```
+```console
 cd ~/.ipython/profile_pbs
 ```
 
-Now on Jupyter hub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. Click the JupyterHub icon in the upper left of your screen if you can't see the clusters tab.
+Now on JupyterHub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. Click the JupyterHub icon in the upper left of your screen if you can't see the clusters tab.
 
 You can start a job by setting number of engine in the 'pbs' cluster profile and clicking start under actions. For this example we will request 8 ipython compute engines.
 
-[Optional] Check that the job is running in terminal with 
+[Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run 
+code on them. Check that the job is running in terminal with 
 
-```
+```console
 watch qstat -tn -u <username>
+
+
+You should see something like the following:
+
+Every 2.0s: qstat -t -n -u $USER     Wed Oct 23 09:15:14 2019                                                                                      
+wheeler-sn.alliance.unm.edu:
+                                                                                  Req'd       Req'd	  Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+258370.wheeler-sn.alli  mfricke     default  jupyterhub        21730     1	1	--   08:00:00 R  00:06:45
+   wheeler291/1
+258371.wheeler-sn.alli  mfricke     default  ipython_controll  22553     1	1	--   01:00:00 R  00:06:11
+   wheeler291/2
+258372.wheeler-sn.alli  mfricke     default  ipython_engine	3213     2     16	--   01:00:00 R  00:06:11
+   wheeler176/0-7+wheeler175/0-7
 ```
+
+Notice the ipython engines are running with status 'R'. You can also check to see whether the compute engines are ready in your python notebook (see below).
 
 To exit the watch command use control-C 
 
@@ -80,12 +98,12 @@ Engines in ipparallel parlence are the same as processes or workers in other par
 ```python
 cluster.ids
 ```
-    [0, 1, 2, 3, 4, 5, 6, 7]
+[0, 1, 2, 3, 4, 5, 6, 7]
 
 ```python
 len(cluster[:])
 ```
-    8
+8
 
 ## Assign the engines to a variable named "view" to allow us to interact with them
 
@@ -102,7 +120,7 @@ view.activate()
 
 ## Check to see if the MPI communication world is of the expected size. It should be size 8 since we have 8 engines.
 
-Note we are running the Get_size command on each engine to make sure they all see the same MPI comm world
+Note we are running the Get_size command on each engine to make sure they all see the same MPI comm world. %px simply executes the code following it on each compute engine in parallel.
 
 
 ```python
@@ -113,9 +131,7 @@ status_mpi_size=%px size = MPI.COMM_WORLD.Get_size()
 ```python
 status_mpi_size.wait_interactive()
 ```
-
-   
-    done
+done
 
 
 The output of viewing the size variable should be an array with the same number of entries as engines, and each entry should be the number of engines requested.
@@ -124,7 +140,7 @@ The output of viewing the size variable should be an array with the same number 
 ```python
 view['size']
 ```
-    [8, 8, 8, 8, 8, 8, 8, 8]
+[8, 8, 8, 8, 8, 8, 8, 8]
     
 ## Run the external python code in ´psum.py´ on all the engines.
 Recall that psum.py just loads the MPI libraries and defines the distributed sum function, psum. We are not actually calling the psum function yet.
@@ -135,25 +151,22 @@ status_psum_run=view.run('psum.py')
 ```python
 status_psum_run.wait_interactive()
 ```
-```python
+
 done
-```
 
 ## Send data to all nodes to by summed
 The scatter command sends 32 values from 0 to 31 to the 8 compute engines. Each compute engine gets 32/8=4 values. This is the ipyparallel scatter command, not an MPI scatter command.
 ```python
 status_scatter=view.scatter('a',np.arange(32,dtype='float'))
 ```
+done
 
-```python
-status_scatter.wait_interactive()
-```   
-    done
+We can view the variable 'a' on all the compute engines. The value of 'a' for each compute engine is an element of the return array. In this case each value is itself an array.
 
 ```python
 view['a']
 ```
-    [array([0., 1., 2., 3.]),
+[array([0., 1., 2., 3.]),
      array([4., 5., 6., 7.]),
      array([ 8.,  9., 10., 11.]),
      array([12., 13., 14., 15.]),
@@ -162,6 +175,8 @@ view['a']
      array([24., 25., 26., 27.]),
      array([28., 29., 30., 31.])]
 
+## Execute the psum function on all the compute engines and store the result in totalsum
+MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by running calling the psum function on all the compute engines simultaniosly. MPI will allow them to communicate with each other to calculate the sum. 
 ```python
 status_psum_call=%px totalsum = psum(a)
 ```
@@ -169,13 +184,16 @@ status_psum_call=%px totalsum = psum(a)
 ```python
 status_psum_call.wait_interactive()
 ```   
-    done
+done
+
+## Check the value of totalsum on each node
+Total should be equal to 31(31+1)/2=496
 
 ```python
 view['totalsum']
 ```
 
-    [array(496.),
+[array(496.),
      array(496.),
      array(496.),
      array(496.),
@@ -185,3 +203,42 @@ view['totalsum']
      array(496.)]
 
 Each compute engine calculated the sum of all the values. Since we ran this MPI function on all the compute engines they report the same value.
+
+## Defining functions in the notebook
+Rather than loading psum from file we can define it in the notebook using the ipython function decorator '@'. 
+
+```python
+@view.remote(block = True)
+def inlinesum():
+    from mpi4py import MPI
+    import numpy as np
+    locsum = np.sum(a)
+    rcvBuf = np.array(0.0,'d')
+    MPI.COMM_WORLD.Allreduce([locsum, MPI.DOUBLE],
+        [rcvBuf, MPI.DOUBLE],
+        op=MPI.SUM)    
+    return rcvBuf
+```
+
+Now we can call inlinesum and it is automatically run on every compute engine. The call is through ipyparallels but the computation is still using MPI.
+
+```python
+inlinesum()
+```
+ [array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.),
+     array(496.)]
+
