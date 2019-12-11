@@ -1,7 +1,7 @@
 # Gurobi optimizer with R
 
 [Gurobi optimizer](https://www.gurobi.com/products/gurobi-optimizer/) is a problem solving software that can be used within R. It can solve integer, linear, and quadratic
-programming optimizations. These techniques can help to find the best, most efficient answers to complex models. 
+programming optimizations. These techniques can help to find the answers to complex models. 
 
 
 ## Example of running Gurobi optimizer with R at CARC
