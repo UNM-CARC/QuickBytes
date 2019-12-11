@@ -2,7 +2,7 @@
 
 ## Installing interactively
 
-This is the way that most of us are probably comfortable with installing packages with R since it is exactly the same way you install packages on your laptop. However, because the head node of CARC systems it is best practice to not be compiling binaries for R for an extended period of time if there is any significant overhead. To avoid this we can request a compute node for interactive use, or even better, one of our debug nodes. The actual call to Torque, or job scheduler, will be explained in more depth later, but for now to request an interactive node typ the following at the command prompt on Wheeler:
+This is the way that most of us are probably comfortable with installing packages with R since it is exactly the same way you install packages on your laptop. However, because the head node of CARC systems is a shared resource it is best practice to not compile binaries for R for an extended period of time because it can result in overhead on the head node. To avoid this we can request a compute node for interactive use, or even better, one of our debug nodes. The actual call to Torque, our job scheduler, will be explained in more depth later, but for now to request an interactive node type the following at the command prompt on Wheeler:
 
 ```
 yourusername@wheeler-sn$ qsub -I -l walltime=01:00:00 -l nodes=1:ppn=8
@@ -53,7 +53,7 @@ Go ahead and say `yes` to both questions and install packages normally. You only
 
 Installing packages in a script is a little more complicated so it might be easier to just do it interactively. However, it is possible. 
 
-So if you haven't created a personal library yet either interactively or through a script you first need to do that. The following commands in an R script will take care of this for you (it should...):
+If you haven't created a personal library yet either interactively or through a script you first need to do that. The following commands in an R script will take care of this for you:
 
 ```
 # First create the directory, .libPaths() will not append your library list unless the directory exists. 
@@ -68,4 +68,4 @@ dir.create(Sys.getenv("R_LIBS_USER", recursive=T, mode="0777"))
 > install.packages("ape", dependencies=T, lib=Sys.getenv("R_LIBS_USER"), repos="http://cran.r-project.org")
 ```
 
-The first two lines are only necessary when you have not created a personal library for that major version of R yet, otherwise you just need to specify the repos you are downloading packages from and specify your personal library as the install location. Actually, you shouldn't need to specify the library since you appended your library path, but it doesn't hurt to be explicit.
+The first two lines are only necessary when you have not created a personal library for that major version of R yet, otherwise you just need to specify the repos you are downloading packages from and specify your personal library as the install location. You shouldn't need to specify the library since you have appended your library path, but it doesn't hurt to be explicit.
