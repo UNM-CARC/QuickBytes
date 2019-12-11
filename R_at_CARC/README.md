@@ -8,6 +8,7 @@ The "tutorials" go basically in this order:
 2. [Installing packages](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/installing_packages.md)
 3. [PBS job submission](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/PBS_job_submission.md)
 4. A GNU parallel tutorial
+    * The following files demonstrate parallellization of R code on a CARC system: 
     * [sequential_r.pbs](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/sequential_r.pbs) is a job submission script to submit the [super simple sequential.R](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/sequential.R) job
     * [parallel_r.pbs](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/parallel_r.pbs) is a job submission script to submit the [parallel.r](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/parallel.r) 
     * [parameters](https://github.com/UNM-CARC/QuickBytes/blob/R_at_CARC/R_at_CARC/parameters) 
