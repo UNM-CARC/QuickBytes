@@ -1,13 +1,11 @@
 ## Parallel MATLAB Server
 MATLAB supports parallelization on desktop computers which can be used to increase the speed of analysis drastically. MATLAB also provides the MATLAB Parallel Server (previously the MATLAB Distributed Computing Server) which allows you to write MATLAB code on your local desktop or laptop computer and perform the computation using the CARC high-performance clusters. This QuickByte leads you through the steps needed to set this up. If you run into problems please send an email to help@carc.unm.edu and we will be happy to help.
 
-## How MATLAB Parallel Works Behind the Scenes
-
--- how PBS is used behind the scenes
--- how workers are allocated to nodes (makes no sense at the moment)
-
-
 Please ensure you have the MATLAB Parallel Toolbox installed on your local comnputer.
+
+## How MATLAB Parallel Works Behind the Scenes
+MATLAB parallel allows the MATLAB session you interact with on your local computer, also known as the MATLAB client, with the PBS scheduler at CARC to create jobs that run on a core, also known as the MATLAB worker. The PBS (Portable BAtch system) scheduler allocates resources requested to users. One of the advantages of using MATLAB at CARC is the ability to scale up, or use many nodes for data intensive and/or computationally complex computations. To do this, you will request more workers from the PBS scheduler by following the tutorial bellow (Workers window). If you request multiple workers, it is important to keep in mind that one worker will be running the batch script you have sent from your MATLAB client. This worker is sending your scripts to the other workers that will perform your computations. You can think about this lead MATLAB worker as a mirror of your MATLAB client that communicates with the PBS scheduler and your scripts to accomplish your job. For more help on how to alter your scripts to take advantage of the scaleing up abilities at CARC please visit the Mathworks [tutorials](https://www.mathworks.com/help/parallel-computing/what-is-parallel-computing.html).
+
 
 ### MATLAB Parallel Server Client Configuration
 
@@ -38,7 +36,8 @@ Select unique subfolders.
 
 Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. For set up and validation leave the number of workers at 1. Leave the threads per worker at 1 unless your software requires more threads.
 
-Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2019a for the Xena cluster, and /opt/local/MATLAB/R2019a for the Wheeler cluster.
+Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2019a for the Xena cluster, and /opt/local/MATLAB/R2019a for the Wheeler cluster. It is important that you are running the same version of MATLAB as you are 
+running on the wheeler cluster. 
 
 ![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard6.png)
 
@@ -122,6 +121,12 @@ delete(p);                      % Clean up the worker pool
 ```
 
 ## Monitoring MATLAB Jobs
+To check that your jobs are indeed running at CARC, you can log in (ssh) to the cluster you have submitted your job to and check your job status. The command bellow shows only your jobs. 
 
---- qgrok, qstat, qdel 
--- matlab does a bad job monitoring running jobs
+```
+ssh username@wheeler.alliance.unm.edu 
+
+qstat -u <username>
+```
+
+If you are testing small scripts, they may run before you can type qstat. To watch your jobs, you can type watch before the qstat (or anyother) command and it will re-run the command every 2sec. This is a good way to watch progress. 
