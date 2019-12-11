@@ -4,7 +4,7 @@
 library(TreeSim)
 library(phangorn)
 
-# read in command line arguments and set vairables
+# read in command line arguments and set variables
 args<-commandArgs(trailingOnly=T)
 lamb_var<-as.numeric(args[1])
 mu_var<-as.numeric(args[2])
