@@ -38,4 +38,4 @@ median_distance<-median(unlist(branch_distances))
 
 write(paste("for", num_taxa,"taxa, the mean distance for lambda", lamb_var, "and mu", mu_var, "is", mean_distance, sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
 write(paste("for", num_taxa, "taxa, the median distance for lambda", lamb_var, "and mu", mu_var, "is", median_distance, sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
-# now repeat the same code but in parellel
+
