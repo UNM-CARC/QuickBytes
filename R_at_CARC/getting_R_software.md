@@ -2,7 +2,7 @@
 
 ## Getting R in the first place
 
-There are two options for accessing R at Carc and I will run through both approaches since there are pros and cons to each.
+There are three options for accessing R at Carc and I will run through both approaches since there are pros and cons to each.
 ### Option 1
 The first option is to activate an installed R module. When logged in to a CARC system you can use the `module avail` command to see which R versions are available. If you have a CARC account open a terminal and log in to follow along. 
 
@@ -252,3 +252,6 @@ Type 'q()' to quit R.
 
 > 
 ```
+### Option 3
+
+The third option is to user JupyterHub. To do so direct your browser to https://wheeler.alliance.unm.edu:8000 and log in with your CARC credentials. Click on the "New" drop down menu and select "R". Now you have a R session running on Wheeler through JupyterHub. 
