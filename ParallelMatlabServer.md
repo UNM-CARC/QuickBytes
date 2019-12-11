@@ -55,6 +55,8 @@ Review your profile settings and create the profile.
 
 You can create multiple profiles for different CARC clusters and numbers of workers.
 
+parallel.cluster.generic.runProfileWizard()
+
 ## Setting your IP Address
 
 In the next steps MATLAB will need to know your local IP address to allow incoming/outgoing connections on your computer.
