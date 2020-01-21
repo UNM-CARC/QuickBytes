@@ -36,12 +36,12 @@ The resource allocation in PBS is precceded by `#PBS`
 
 Let's look at different ways to set environment variable within the PBS/Slurm job.
 
-|  PBS Command        |  Slurm Command   | Command definition                  |
+|  PBS Variable        |  Slurm Variable   | Variable definition                  |
 |  ------------       |  -------------   | ------------------                  |
 |$PBS\_O_HOST | $SLURM\_SUBMIT_HOST | Hostname from which job was submitted|
 |$PBS\_JOBID | $SLURM\_JOB_ID | ID of the job sumitted|
 |$PBS\_O_WORKDIR | $SLURM\_SUBMIT_DIR| Name of the directory from which job was submited|
-|$PBS\_NODEFILE | $SLURM\_JOB_NODELIST| File containing allocated nodes/hostnames|
+|cat $PBS\_NODEFILE | $SLURM\_JOB_NODELIST| In PBS, a file containing allocated nodes/hostnames. In Slurm, a variable containing allocated nodes/hostnames.|
 
 Now using the commands in the above tables,  we can easily convert a PBS script to a Slurm script. First let us look at a sample PBS script to run a python script test.py.
 
