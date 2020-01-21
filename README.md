@@ -18,7 +18,7 @@ This table of contents will contain links to all the quickbytes, providing a sin
          * [Parallel MATLAB Server](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabServer.md)
          * [Parallel MATLAB batch submission](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_profile_creation/Parallel%20MATLAB%20profile%20setup%20and%20batch%20submission.md)
       * JupyterHub
-         * [JupyterHub: Parallel Processing with MP](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
+         * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * [Paraview](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
       * [Installing Deep Learning Library in Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
@@ -28,8 +28,7 @@ This table of contents will contain links to all the quickbytes, providing a sin
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
       * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
-      * [Installing Deep Learning Library in Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
-      
+     
   
       
       
