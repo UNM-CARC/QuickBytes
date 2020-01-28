@@ -103,6 +103,7 @@ As mentioned above and on other CARC web pages, we suggest that users use Anacon
 ```wheeler-sn> module load anaconda3-4.4.0-gcc-4.8.5-ubgzkkv
 wheeler-sn> conda create –n spark python=27 numpy scipy pandas matplotlib
 ```
+![SparkLogo](https://github.com/UNM-CARC/QuickBytes/blob/master/apache_spark_logo.jpeg) 
 
 Once this is done, we just activate that environment and can add new things to it as needed after we launch our Spark cluster, to interactively look at a lot of data. First, we bring up Spark with this customized environment:
 
@@ -114,8 +115,6 @@ wheeler263> source activate spark
 (spark) wheeler263> ./pbs-spark-submit
 (spark) wheeler263> pyspark –-master spark://wheeler263:7077
 ```
-
-PLACEHOLDER FOR SPARK LOGO
 
 Once we have this running, we can simply load and analyze our data, first converting it into Spark Parquet format so that we can load and save it more quickly later:
 
@@ -173,7 +172,7 @@ plt.xticks(size = 18)
 plt.yticks(size = 18)
 plt.savefig("crimes-by-month.pdf")
 ```
-## CRIMES IMAGE
+![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image1.jpg) 
 
 Similarly, this code generates a file which charts Chicago crime by location type:
 
@@ -193,7 +192,8 @@ plt.xticks(size = 24)
 plt.yticks(size = 24)
 plt.savefig("crimes-by-location.pdf")
 ```
-NUMBER OF CRIMES IMAGE
+![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image2.jpg) 
+
 
 ## More Information
 In addition to all of this, there are a wide range of other things you can do with Spark.
