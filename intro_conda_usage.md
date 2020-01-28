@@ -1,5 +1,5 @@
-#Working with Conda
-###Using Conda to create a new environment
+# Working with Conda
+### Using Conda to create a new environment
 
 Let's start by logging in to Wheeler and create an empty environment. After creating a new environment we will then install Python 2.7 our newly created environment and explore what Conda is doing. To do this we must first load the module for Anaconda, in this case we will be using Anaconda3 which uses Python 3 by default. If you know that you are going to be using a lot of code written in Python 2 then you can load Anaconda instead of Anaconda3. 
 
@@ -28,7 +28,7 @@ Executing transaction: done
 #     $ conda deactivate
 ```
 We now have a new Conda environment that we can populate with whatever software we require for the analyses we wish to run.
-###Installing packages with Conda
+### Installing packages with Conda
 Now that we have our empty environment let's install Python 2.7 in it. Make sure you have the Anaconda3 module loaded and then type the following command:
 
 ```bash
@@ -107,7 +107,7 @@ $ conda create --name py-2.7 python=2.7
 ```
 These all accomplish the same goal of populating an environment with software, but what exactly is a Conda environment and what is it doing?
 
-###What is a Conda environment?
+### What is a Conda environment?
 
 What Conda does when it creates an environment is generate an isolated directory where software packages are installed, then, upon activation of that environment, it prepends our `PATH` to direct the computer to search in that environment directory first. To help visualize and understand what Conda is doing when it is creating an environment let's run a couple of Bash commands. Run the following commands, `which python`, `python --version`, and `echo $PATH` while you have the anaconda3 module loaded, but no environment activated. You should see the following print to `stdout`:
 
