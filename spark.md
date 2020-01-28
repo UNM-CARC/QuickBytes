@@ -30,9 +30,12 @@ When you read Spark tutorials, you’ll see that it is generally run on dedicate
 
 Have a CARC project/account, for which you can find directions on the CARC website:
 Log into a CARC shared cluster (we’ll be using wheeler.carc.unm.edu) using ssh or a similar tool (XXX This should link to our documentation on how to do that)
+
 Use the PBS queueing system to request a set of nodes for your use (XXX This should link to our PBS information)
 Run pbs-spark-submit on those nodes to start your personal spark instance (see below)
+
 Talk to the spark workers using pyspark or spark-submit
+
 Basically, pbs-submit-spark starts your personal Spark cluster (and optionally one job) using batch queueing information from PBS queueing system, and after that’s done you can use pyspark to talk to interactively or submit-spark to submit new Spark jobs to it. pbs-spark-submit is available at http://lobogit.unm.edu/carc/tutorials/spark/pbs-spark-submit.
 
 ## Simple CARC Spark Examples
