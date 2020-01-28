@@ -26,7 +26,8 @@ Quickbytes are tutorials designed to help CARC users.
          * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * Anaconda
-         * [Intro to Anaconda]()
+         * [General intro to Anaconda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
+         * [Intro to Anaconda with example](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
          * [Anaconda pip channels](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_pip_channels.md)
       * R
          * [R Programming in HPC](https://github.com/UNM-CARC/QuickBytes/blob/master/R_usage.md)
@@ -38,8 +39,8 @@ Quickbytes are tutorials designed to help CARC users.
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
       * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
-      * [X11 Forwarding]()
-      * [Spark]()
+      * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
+      * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
      
   
       
