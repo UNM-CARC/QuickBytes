@@ -1,5 +1,5 @@
-#Installing with pip and adding channels
-####Installing packages with pip
+# Installing with pip and adding channels
+#### Installing packages with pip
 
 Not all versions of all software have Conda packages available however, especially for some python libraries. Pip, the python package manager, is automatically installed by default in all environments created by Conda, and can install packages alongside those installed by Conda without conflict.  
 For example, say you need the library psutil, but you specifically need version 5.3.0. When you search for psutil using `conda` you get the following:
@@ -54,11 +54,11 @@ wheel                     0.31.1                   py27_0
 zlib                      1.2.11               ha838bed_2
 ```
 When installing packages using `pip` it is important to first activate the Conda environment that you want to install the package in since pip is strictly a package manager and cannot modify Conda environments from outside that environment. You can see that our psutil package, marked with a double asterisk, is version 5.3.0, just like we wanted. Under the 'build' column however you will see that `conda` is not sure which build it is since it was installed with `pip`, as indicated by the `<pip>` designator.
-####Performance with Conda versus Pip
+#### Performance with Conda versus Pip
 One thing to note when installing packages is that it is always preferable to first install necessary packages with `conda` first, only then use `pip` to install only those packages that were not available through Anaconda repositories. 
 It is usually best practice to install needed packages and dependencies with `conda` and use `pip` to install any remaining packages that were not available instead of vice versa.
 
-####Adding package repositories (channels)
+#### Adding package repositories (channels)
 
 Sometimes the default repositories, or channels for Conda, do not have the package you are looking for, but that does not mean that it is necessarily unavailable entirely. Say you are working with some Illumina sequence data and need the Burrows-Wheeler Aligner (bwa) in your pipeline, so you activate your bioinformatics environment and type `conda install bwa` which prints the following:
 
