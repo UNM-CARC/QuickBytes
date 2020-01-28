@@ -1,11 +1,11 @@
-#Managing software models
+# Managing software models
 
-###Modules
+### Modules
 
 There are many software packages installed on CARC systems, as well as standard built-in functions native to Unix. In order to manage these additional software packages, the CARC systems use modules. These modules set the appropriate environment variables and dependencies for software optimization and to avoid conflicts with other software.  
 For more information, visit [this page](https://lmod.readthedocs.io/en/latest/010_user.html), or use the command `module man`.
 
-###Using modules for setting application environments
+### Using modules for setting application environments
 
 Modules are used to set environment variables and dependencies for the purpose of managing access to applications and libraries on CARC systems. The command `module avail` lists all the modules available on the system you are logged in to. To load a module, use the `module load` command. For example, to load the module for the Intel compiler, use the command:
 
