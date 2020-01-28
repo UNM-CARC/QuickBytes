@@ -1,7 +1,7 @@
 # X11 Forwarding 
 
 X11 Forwarding allows any graphical user interface to open on your client machine while the software itself is being run on a 
-CARC machine. This QuickByte will show you how to do X11 forwarding yourself. 
+CARC cluster compute node. This QuickByte will show you how to do X11 forwarding yourself. 
 
 
 ## On a Mac
