@@ -1,8 +1,7 @@
-# X11 Forwarding for Add-ons on MATLAB
+# X11 Forwarding 
 
-X11 Forwarding allows the MATLAB graphical user interface to open on your client machine while MATLAB itself is being run on a 
-CARC machine. This is necessary to select add-ons that may be necessary for your computations. This QuickByte will show you how 
-to do this yourself. 
+X11 Forwarding allows any graphical user interface to open on your client machine while the software itself is being run on a 
+CARC machine. This QuickByte will show you how to do X11 forwarding yourself. 
 
 
 ## On a Mac
@@ -13,11 +12,10 @@ forwarding.
 
 ## On a PC
 
-Before getting started, download [MobaXterm](https://mobaxterm.mobatek.net) and install. This has a built in xserver, that will 
-connect your computer to CARC. 
+Before getting started, download [MobaXterm](https://mobaxterm.mobatek.net) and install. This has a built in xserver, that will connect your computer to CARC. 
 
 
-## Step by Step X11 forwarding with MATLAB
+## Step by Step Example of X11 forwarding with MATLAB
 
 1. In terminal sign into the CARC system using secure system connection. However, use a -X flag to enable X11 forwarding. 
 
