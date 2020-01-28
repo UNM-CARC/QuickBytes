@@ -1,6 +1,6 @@
-#Example PBS Scripts
+# Example PBS Scripts
 
-###PBS Hello World:
+### PBS Hello World:
 
 This example uses the "Bash” shell to print a simple “Hello World”
 message. Note that it specifies the shell with the `-S` option. If you
@@ -37,7 +37,7 @@ the maximum number of processors per node to avoid multiple jobs on one
 node that have to share memory. For more information see CARC systems
 information.
 
-###Multi-processor example script:
+### Multi-processor example script:
 
 ```bash
 #!/bin/bash
@@ -59,7 +59,7 @@ mpirun -np 8 -machinefile $PBS_NODEFILE echo Hello World from host $THIS_HOST
 ####################################################
 ```
 
-###Multi-node example script:
+### Multi-node example script:
 
 ```bash
 #!/bin/bash
