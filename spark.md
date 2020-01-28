@@ -103,7 +103,7 @@ As mentioned above and on other CARC web pages, we suggest that users use Anacon
 ```wheeler-sn> module load anaconda3-4.4.0-gcc-4.8.5-ubgzkkv
 wheeler-sn> conda create –n spark python=27 numpy scipy pandas matplotlib
 ```
-![SparkLogo](https://github.com/UNM-CARC/QuickBytes/blob/apache_spark_logo.jpeg) 
+![SparkLogo](https://github.com/UNM-CARC/QuickBytes/blob/master/apache_spark_logo.jpeg) 
 
 Once this is done, we just activate that environment and can add new things to it as needed after we launch our Spark cluster, to interactively look at a lot of data. First, we bring up Spark with this customized environment:
 
