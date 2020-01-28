@@ -115,6 +115,8 @@ wheeler263> source activate spark
 (spark) wheeler263> pyspark –-master spark://wheeler263:7077
 ```
 
+PLACEHOLDER FOR SPARK LOGO
+
 Once we have this running, we can simply load and analyze our data, first converting it into Spark Parquet format so that we can load and save it more quickly later:
 
 ```>>> crimes_schema = ... # available in source code files
