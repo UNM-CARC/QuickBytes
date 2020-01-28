@@ -2,9 +2,7 @@
 Quickbytes are tutorials designed to help CARC users.  
 
    * [Linux-Intro](https://github.com/UNM-CARC/QuickBytes/blob/master/linux_intro.md)
-   
-   * [Research Usage Policy](https://github.com/UNM-CARC/QuickBytes/blob/master/Resource_usage.md)
-   
+
    * Running jobs
       * [Logging in](https://github.com/UNM-CARC/QuickBytes/blob/master/logging_in.md)
       * [Transerring data](https://github.com/UNM-CARC/QuickBytes/blob/master/transfer_data.md)
