@@ -1,5 +1,5 @@
-#Anaconda
-###What is Anaconda?
+# Anaconda
+### What is Anaconda?
 
 At a basic level Anaconda is a distribution of Python and R, although there is an emphasis on working with python, that provides access collections of associated packages optimized specifically for data science maintained in repositories. The installation and management of these packages is handled with the Anaconda package manager Conda. While initially focused mainly on python packages the repositories hosted by Anaconda and others now house a large collection of non-python packages.  
 
