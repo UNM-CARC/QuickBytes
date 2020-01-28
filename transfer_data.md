@@ -1,10 +1,10 @@
-#Transferring data
+# Transferring data
 
-###Where is your data?
+### Where is your data?
 
 Your home directory, `/users/your-user-name/`, is shared across all CARC machines, meaning that once your data has been uploaded to your home directory it is accessible regardless of which machine you are logged in to. Refer to our documentation page on CARC for details on CARC systems.
 
-###Graphical User Interface (GUI) options
+### Graphical User Interface (GUI) options
 
 There are several options available for data transfer that employ a GUI for ease of use. Several options are listed below and are linked to the homepage for the software with documentation on how to use it.
 
@@ -14,11 +14,11 @@ There are several options available for data transfer that employ a GUI for ease
 
 FileZilla is available for both Windows and Unix systems, whereas WinSCP is Windows only, and Fetch is MacOS only. GUI-based programs are very user friendly and well-suited to those that are less comfortable in Linux Command-line interface. Unfortunately, the programs listed above, and other GUI-based programs, employ File Transfer Protocol (FTP), which has a relatively low transfer speed and is suitable for smaller file sizes.
 
-###Command-line interface (CLI) options
+### Command-line interface (CLI) options
 
 For larger files it is recommended you use one of several programs implemented in a command-line interface. These programs have several benefits over their GUI-based counterparts, including higher transfer speeds and the ability to continue a transfer if it is interrupted without having to restart from the beginning. Below are several popular options with example commands and links for more advanced usage.
 
-####Secure Copy (SCP)
+#### Secure Copy (SCP)
 
 Transfer from local machine to CARC:
 
@@ -32,7 +32,7 @@ Transfer from CARC to local machine:
 scp your-username@wheeler.alliance.unm.edu:your-file /target-directory/
 ```
 
-####Remote Sync (RSYNC)
+#### Remote Sync (RSYNC)
 
 Transfer from local machine to CARC
 
@@ -47,7 +47,7 @@ rsync -vhatP your-username@wheeler.alliance.unm.edu:your-file /target-directory/
 
 The `-vhatP` flag are instructions to rsync print out the progress of the transfer verbosely and human-readable.
 
-####BaBar Copy (BBCP)
+#### BaBar Copy (BBCP)
 
 Transfer from local machine to CARC
 
