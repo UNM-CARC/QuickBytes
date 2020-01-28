@@ -103,6 +103,7 @@ As mentioned above and on other CARC web pages, we suggest that users use Anacon
 ```wheeler-sn> module load anaconda3-4.4.0-gcc-4.8.5-ubgzkkv
 wheeler-sn> conda create –n spark python=27 numpy scipy pandas matplotlib
 ```
+![SparkLogo](https://github.com/UNM-CARC/QuickBytes/blob/apache_spark_logo.jpeg) 
 
 Once this is done, we just activate that environment and can add new things to it as needed after we launch our Spark cluster, to interactively look at a lot of data. First, we bring up Spark with this customized environment:
 
@@ -114,8 +115,6 @@ wheeler263> source activate spark
 (spark) wheeler263> ./pbs-spark-submit
 (spark) wheeler263> pyspark –-master spark://wheeler263:7077
 ```
-
-PLACEHOLDER FOR SPARK LOGO
 
 Once we have this running, we can simply load and analyze our data, first converting it into Spark Parquet format so that we can load and save it more quickly later:
 
