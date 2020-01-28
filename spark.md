@@ -172,7 +172,7 @@ plt.xticks(size = 18)
 plt.yticks(size = 18)
 plt.savefig("crimes-by-month.pdf")
 ```
-## CRIMES IMAGE
+![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image1.jpg) 
 
 Similarly, this code generates a file which charts Chicago crime by location type:
 
@@ -192,7 +192,8 @@ plt.xticks(size = 24)
 plt.yticks(size = 24)
 plt.savefig("crimes-by-location.pdf")
 ```
-NUMBER OF CRIMES IMAGE
+![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image2.jpg) 
+
 
 ## More Information
 In addition to all of this, there are a wide range of other things you can do with Spark.
