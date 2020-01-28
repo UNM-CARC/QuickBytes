@@ -1,13 +1,13 @@
-# Running MATLAB Jobs at CARC
+#Running MATLAB Jobs at CARC
 
-### MATLAB
+###MATLAB
 MATLAB is a powerful software environment and language especially for matrix manipulation and calculations, whence the name __MAT__rix__LAB__oratory. if you are unfamiliar with MATLAB please visit there website for more information at this [link](https://www.mathworks.com/products/matlab.html). For a list of which versions of MATLAB are available on a certain system use the command `module avail matlab` on the head node. MATLAB is installed on all CARC systems, however, it can only be accessed on the compute nodes and is not available on the head node. In order to run MATLAB jobs at CARC it is necessary to call the MATLAB software in batch mode to run on a script/program supplied by the user. 
 
-### Batch mode
+###Batch mode
 
 Many users are likely familiar with using the MATLAB GUI to run their code either in the interactive console or by launching a script. However, it is often useful to run a Matlab program from the command line in batch mode, as though it were a shell script. MATLAB can be run non-interactively using a built in function called batch mode. All MATLAB jobs should be run using batch mode when using CARC systems. 
 
-### Submitting a job with batch mode
+###Submitting a job with batch mode
 
 Say you have a small program named `my_program.m` that generates a 3x3 matrix of random numbers and writes the results to a .csv file. Your code for such a program might look like this:
 
@@ -37,13 +37,13 @@ cd $PBS_O_WORKDIR
 module load matlab/R2017a
 
 # Calling MATLAB in batch mode to run your program. 
-matlab -r -nojvm -nodisplay < my_program.m > /dev/null
+matlab -r -nojvm -nodisplay my_program > /dev/null
 ```
 
 There are a couple of additions to our batch mode command when calling MATLAB on our program. Remember that the `-r` flag is telling MATLAB to run in batch mode. The `-nojvm` flag turns off Java Virtual Machine since this is only necessary when running the MATLAB GUI. The `-nodisplay` turns off all graphical output from MATLAB since we do not support visual display at CARC. At the end of our command we then redirect what would normally be written to `stdout`, or your MATLAB console when running interactively, to a special file called `null`. We do this because MATLAB normally writes all output to `stdout` which is stored in memory (RAM). If your program generates enough output to `stdout` this can overload local memory and crash the compute node that your program is running on. If you wish to keep what is printed to `stdout` you can redirect to a file instead using the following syntax and replacing the name with whatever you would like to call your file:
 
 ```bash
-matlab -r -nojvm -nodisplay < my_program.m > my_program.output
+matlab -r -nojvm -nodisplay my_program > my_program.output
 ```
 Now that you have your program and your PBS script you can submit your job to the job scheduler using the `qsub` command:
 
