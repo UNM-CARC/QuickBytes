@@ -11,6 +11,7 @@ There are several options available for data transfer that employ a GUI for ease
 * [FileZilla](https://filezilla-project.org/)
 * [WinSCP](https://winscp.net/eng/index.php)
 * [Fetch](https://fetchsoftworks.com/)
+* [CyberDuck](https://cyberduck.io/)
 
 FileZilla is available for both Windows and Unix systems, whereas WinSCP is Windows only, and Fetch is MacOS only. GUI-based programs are very user friendly and well-suited to those that are less comfortable in Linux Command-line interface. Unfortunately, the programs listed above, and other GUI-based programs, employ File Transfer Protocol (FTP), which has a relatively low transfer speed and is suitable for smaller file sizes.
 
