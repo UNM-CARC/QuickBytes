@@ -6,7 +6,7 @@ Quickbytes are tutorials designed to help CARC users.
    * Running jobs
       * [Logging in](https://github.com/UNM-CARC/QuickBytes/blob/master/logging_in.md)
       * [SSH keys and Config file](https://github.com/UNM-CARC/QuickBytes/blob/table-of-contents-readme/ssh_keygen_config.md)
-      * [Transerring data](https://github.com/UNM-CARC/QuickBytes/blob/master/transfer_data.md)
+      * [Transferring data](https://github.com/UNM-CARC/QuickBytes/blob/master/transfer_data.md)
       * [PBS/TORQUE](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs-torque.md)
       * [Sample PBS script](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs_scripts2.md)
       * [Submitting jobs](https://github.com/UNM-CARC/QuickBytes/blob/master/submitting_jobs.md)
