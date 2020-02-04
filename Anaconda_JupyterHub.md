@@ -10,7 +10,7 @@ For example, if you were making a natural language processing libraries environm
 
 ``` 
 module load anaconda
-conda create -n npl npl ipykernel
+conda create -n nptk nptk ipykernel
 ```
 
 Alternatively, if you already have an environment created and would like it to be available on JupyterHub, then add the ipykernal. 
