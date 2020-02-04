@@ -20,10 +20,10 @@ conda install ipykernel
 
 Remember that you can also access the terminal though JupyterHub. To do this click Terminal under the New dropdown menu. 
 
-PLACE FOR PIC
+![term_Jup](https://github.com/UNM-CARC/QuickBytes/blob/master/JuphuB_terminal.png)
 
 ## On JupyterHub
 
 After your environments have been modified to include the ipykernal, you can open notebooks on JupyterHub by opening a New Notebook under File and selecting the environment. 
 
-PLACE FOR PIC
+![term_Jup](https://github.com/UNM-CARC/QuickBytes/blob/master/JupHub_envi.png)
