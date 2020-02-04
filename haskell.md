@@ -12,6 +12,13 @@ First we will install and load the stack environment:
 
 3) `source activate haskell`
 
+Or, alternatively, load the spack module:
+
+`module load haskell-stack-stable-gcc-4.8.5-exczvin`
+
+*Please note* that you should choose one method for using Haskell-Stack, Anaconda or the installed module, as you can run into
+compatability issues switching between methods.
+
 Now create a new stack project:
 
 4) `stack new matmul new-template`
