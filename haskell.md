@@ -12,6 +12,10 @@ First we will install and load the stack environment:
 
 3) `source activate haskell`
 
+Or, alternatively, load the spack module:
+
+`module load haskell-stack-stable-gcc-4.8.5-exczvin`
+
 Now create a new stack project:
 
 4) `stack new matmul new-template`
