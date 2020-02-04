@@ -1,14 +1,16 @@
-# Using Custom Anaconda Environments in JupyterHub
+# Using Custom Anaconda python Environments in JupyterHub
 
-Custom environments created by users can also be used on JupyterHub. This QuickByte shows you how to make them accessible on JupyterHub.
+Custom environments created by users can also be used on JupyterHub. This QuickByte shows you how to make python environments  accessible on JupyterHub. 
 
 ## In Terminal 
 
 If you are creating an anaconda environment from scrach that you know you will want to use on JupyterHub, as you are creating the environment add the ipykernel to the packages you want included.
 
+For example, if you were making a natural language processing libraries environment, you could create an environment like this:
+
 ``` 
 module load anaconda
-conda create -npl npl ipykernel
+conda create -n npl npl ipykernel
 ```
 
 Alternatively, if you already have an environment created and would like it to be available on JupyterHub, then add the ipykernal. 
