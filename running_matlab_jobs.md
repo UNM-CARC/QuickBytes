@@ -1,13 +1,13 @@
-#Running MATLAB Jobs at CARC
+# Running MATLAB Jobs at CARC
 
-###MATLAB
+### MATLAB
 MATLAB is a powerful software environment and language especially for matrix manipulation and calculations, whence the name __MAT__rix__LAB__oratory. if you are unfamiliar with MATLAB please visit there website for more information at this [link](https://www.mathworks.com/products/matlab.html). For a list of which versions of MATLAB are available on a certain system use the command `module avail matlab` on the head node. MATLAB is installed on all CARC systems, however, it can only be accessed on the compute nodes and is not available on the head node. In order to run MATLAB jobs at CARC it is necessary to call the MATLAB software in batch mode to run on a script/program supplied by the user. 
 
-###Batch mode
+### Batch mode
 
 Many users are likely familiar with using the MATLAB GUI to run their code either in the interactive console or by launching a script. However, it is often useful to run a Matlab program from the command line in batch mode, as though it were a shell script. MATLAB can be run non-interactively using a built in function called batch mode. All MATLAB jobs should be run using batch mode when using CARC systems. 
 
-###Submitting a job with batch mode
+### Submitting a job with batch mode
 
 Say you have a small program named `my_program.m` that generates a 3x3 matrix of random numbers and writes the results to a .csv file. Your code for such a program might look like this:
 
