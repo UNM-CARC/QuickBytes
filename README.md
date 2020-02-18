@@ -24,6 +24,7 @@ Quickbytes are tutorials designed to help CARC users.
       * JupyterHub
          * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
+         * [Anaconda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Anaconda_JupyterHub.md)
       * Anaconda
          * [General intro to Anaconda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
          * [Intro to Anaconda with example](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
