@@ -15,16 +15,16 @@ Click on the link "Parallel Computing Toolbox plugin for MATLAB Parallel Server 
 
 Click the "install" button and the plugin will install and a wizard is started.
 
-![Install](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabInstall.png)
+![Install](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabInstall.png)
 
-![Wizard1](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard1.png)
+![Wizard1](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard1.png)
 Choose UNIX in the cluster type
 
-![Wizard2](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard2.png)
+![Wizard2](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard2.png)
 
 Select no for shared job location.
 
-![Wizard3](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard3.png)
+![Wizard3](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard3.png)
 
 Enter the address of the cluster you would like to use: for example, wheeler.alliance.unm.edu or xena.alliance.unm.edu.
 
@@ -32,26 +32,26 @@ Enter </users/> for the path to the PBS scripts (remote job storage location) th
 
 Select unique subfolders.
   
-![Wizard4](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard4.png)
+![Wizard4](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard4.png)
 
 Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. For set up and validation leave the number of workers at 1. Leave the threads per worker at 1 unless your software requires more threads.
 
 Specify the path to the matlab installation on the compute nodes: /opt/matlab/R2019a for the Xena cluster, and /opt/local/MATLAB/R2019a for the Wheeler cluster. It is important that you are running the same version of MATLAB as you are 
 running on the wheeler cluster. 
 
-![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard6.png)
+![Wizard6](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard6.png)
 
 Choose flexnet for the license
 
-![Wizard7](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard7.png)
+![Wizard7](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard7.png)
 
 Name your profile. For example "R2019a_Wheeler_PBS"
 
-![Wizard8](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard8.png)
+![Wizard8](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard8.png)
 
 Review your profile settings and create the profile.
 
-![Wizard10](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabWizard10.png)
+![Wizard10](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabWizard10.png)
 
 You can create multiple profiles for different CARC clusters and numbers of workers.
 
@@ -92,11 +92,11 @@ Select "parallel" then create/manage clusters.
 
 Choose the profile you just created. In this example, the profile name is "R2019a_Wheeler_PBS"
 
-![Validating1](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate1.png)
+![Validating1](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabValidate1.png)
 
 Select the profile you just created and select the validation tab. Press the validate button.
 
-![Validating2](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_server/ParallelMatlabValidate2.png)
+![Validating2](https://github.com/UNM-CARC/QuickBytes/ParallelMatlabValidate2.png)
 
 It will ask for your CARC username, and here you can also select your ssh keyfile if you use one (cmd+shift+. to reveal hidden directories so you can see you ~/.ssh folder and select your private key), or just enter your password.
 
