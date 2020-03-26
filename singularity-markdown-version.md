@@ -8,7 +8,6 @@ Docker and Singularity are free tools that allow you to run software with depend
 
 In this guide you will learn how to setup your software to run in a docker container, and how to convert the container to singularity and run it at CARC. The R software package party.
 
->In the example below commands to enter are given in <code><font color="Green">Green</font></code> and the resulting output is given in <code><font color="Navy">Navy</font></code>.
 
 ## What is Docker?
 
