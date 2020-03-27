@@ -66,6 +66,7 @@ Example of a Slurm submission script : `slurm_submission.sh`
     #SBATCH --ntasks=4
     #SBATCH --time=00:10:00
     #SBATCH --mem-per-cpu=100
+    #SBATCH --partition=partition_name
 
     srun hostname
     srun sleep
@@ -74,6 +75,8 @@ Example of a Slurm submission script : `slurm_submission.sh`
 The above script is requesting from the scheduler an allocation of 4 nodes for 10 minutes with 100MB of ram per CPU. Note that we are requesting resources for four tasks, `--ntasks=4`, but not four nodes specifically. The default behavior of the scheduler is to provide one node per task, but this can be changed with the `--cpus-per-task` flag. Once the scheduler allocates the requested resources the job starts to run and the commands not preceeded by `#SBATCH` are interpreted and executed. The script first executes the `srun hostname` followed by `srun sleep` command. 
 
 The arguments `–-job-name` and `–-output` correspond to name of the job you are submitting and the name of the output file where the any output not defined by the program being executed is saved. For example, anything printed to `stdout` will be saved in your `--output` file. 
+
+Of note here is the `--partition=partition_name` (or `-p partition_name`) command. This command specifies which partition, or queue, to submit your job to. If you are a member of a specific partition you likely are aware of the name of your partition, however you can see which partition you have access to with the `sinfo` command. If you leave this blank you will be submitted to the default or community partition. 
 
 To submit the job you execute the `sbatch` command followed by the name of your submission script, for example:
 
@@ -120,6 +123,7 @@ Below is the Slurm submission script to submit our python program named `submiss
     #SBATCH --ntasks=4
     #SBATCH --time=10:00
     #SBATCH --mem-per-cpu=100
+    #SBATCH --partition=ceti
 
     module load anaconda3
     python demo.py 34
