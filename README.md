@@ -41,6 +41,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
       * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
       * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
+      * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
      
   
       
