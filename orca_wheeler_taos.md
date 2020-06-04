@@ -67,7 +67,7 @@ output_scratch_path=$scratch_dir/$output_file
 input_scratch_path=$scratch_dir/$input_file
 
 # Copy the input file from the submission directory to the scratch directory
-cp $SLURM_SUBMIT_DIR/$input_file $output_scratch_path
+cp $SLURM_SUBMIT_DIR/$input_file $input_scratch_path
 
 # Orca needs the full path when running in parallel
 full_orca_path=$(which orca)
