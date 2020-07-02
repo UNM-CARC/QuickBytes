@@ -1,3 +1,7 @@
+# Storage Policy
+
+Home directories are limited to 200 GB of storage. Project space is limited to 250 GB of storage. Scratch storage is limited to 1 TB. 
+
 # Resource Usage Policy
 
 Soft limits and hard limits are used to provide fair scheduling without wasting resources. The job scheduler will schedule all jobs meeting the soft limit requirements. If there are additional resources after all jobs meeting the soft limits are scheduled, then jobs meeting the hard limits are scheduled. The hard limits prevent users from monopolising the cluster for long periods by starting large jobs during temporary lulls in utilisation. 
