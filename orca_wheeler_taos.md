@@ -64,15 +64,17 @@ prefix=$(echo $input_file | cut -f1 -d".")
 scratch_dir=/taos/scratch/$USER/
 
 # Set the input and output paths on the scratch file system
-output_scratch_path=$scratch_dir/$output_file
-input_scratch_path=$scratch_dir/$input_file
+mkdir $scratch_dir$prefix
+TEMP_DIR=$scratch_dir$prefix
+output_scratch_path=$TEMP_DIR/$output_file
+input_scratch_path=$TEMP_DIR/$input_file
 
 # Create directory for additional files
 mkdir $SLURM_SUBMIT_DIR/$prefix
 add_files_dir=$SLURM_SUBMIT_DIR/$prefix
 
 # Copy the input file from the submission directory to the scratch directory
-cp $SLURM_SUBMIT_DIR/$input_file $input_scratch_path
+cp $SLURM_SUBMIT_DIR/$input_file $TEMP_DIR/
 
 # Orca needs the full path when running in parallel
 full_orca_path=$(which orca)
@@ -82,7 +84,7 @@ $full_orca_path $input_scratch_path > $output_scratch_path
 
 # Orca finished so copy the output file on scratch to the submission directory and clean the scratch directory
 cp $output_scratch_path $SLURM_SUBMIT_DIR/$output_file
-cp $scratch_dir/$prefix* $add_files_dir
-rm $scratch_dir/$prefix* $output_scratch_path
+cp $TEMP_DIR/$prefix* $add_files_dir
+rm $TEMP_DIR
 ```
 Now you can simply submit your job to the queue with `sbatch orca_submission.sh`. 
