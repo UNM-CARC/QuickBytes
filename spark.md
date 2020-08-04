@@ -3,7 +3,7 @@
 Apache Spark is a parallel/distributed computing environment designed for processing large, complex data sets. Compared to other large-scale parallel programming environments (e.g. MPI), it’s generally easier to program, especially for data-centric workloads. You basically write a Java, Scala, or Python program that coordinates parallel data processing by a large number of worker processes. In addition, Spark has extensions analyzing streaming data sets (Spark Streaming) and using machine learning techniques for analyzing data (Spark ML), making it ideal for many modern data-oriented research questions.
 In this tutorial, we discuss how to run Spark on the UNM CARC cluster systems, using a Python-oriented example of analyzing Chicago crime data drawn from an excellent series of Spark Python examples provided by datascienceplus.com. Once you understand the basic Spark model, the main complications for running these examples on CARC are starting your personal Spark instance on which to run and then using that. The remainder of this page discusses on these issues, and shows how to set up a full-featured Spark environment on CARC systems using anaconda to run some of the examples from the tutorial linked above.
 
-All of the files from this tutorial are available at http://lobogit.unm.edu/carc/tutorials/spark.
+All of the files from this tutorial are available at https://lobogit.unm.edu/CARC/tutorials/-/tree/master/spark.
 
 ## The Basic Spark Model
 Spark is what is referred to as a Single-Program-Multiple-Data (SPMD) parallel programming model. You write a single Spark program in the language of your choice that runs on a single master node (we’ll be using Python in this example), and that master orchestrates multiple parallel workers, each of which work on a subset of the overall data. Key to this is understanding and managing which (and how much) data resides on the master and which data is split across the workers in what Spark refers to as Resilient Distributed Datasets (RDDs). Note that while RDDs are the main abstraction Spark uses under the covers to manage distributed data, you will more likely use and manipulate Spark DataFrames, a higher-level version of RDDs akin to a large distributed table or spreadsheet.
@@ -36,7 +36,7 @@ Run pbs-spark-submit on those nodes to start your personal spark instance (see b
 
 Talk to the spark workers using pyspark or spark-submit
 
-Basically, pbs-submit-spark starts your personal Spark cluster (and optionally one job) using batch queueing information from PBS queueing system, and after that’s done you can use pyspark to talk to interactively or submit-spark to submit new Spark jobs to it. pbs-spark-submit is available at http://lobogit.unm.edu/carc/tutorials/spark/pbs-spark-submit.
+Basically, pbs-submit-spark starts your personal Spark cluster (and optionally one job) using batch queueing information from PBS queueing system, and after that’s done you can use pyspark to talk to interactively or submit-spark to submit new Spark jobs to it. pbs-spark-submit is available at https://lobogit.unm.edu/CARC/tutorials/-/blob/master/spark/pbs-spark-submit.
 
 ## Simple CARC Spark Examples
 1. Create an interactive 4-node cluster on Wheeler for 1 hour
