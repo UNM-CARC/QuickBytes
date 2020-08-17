@@ -1,6 +1,6 @@
 # Storage Policy
 
-Home directories are limited to 200 GB of storage. Project space is limited to 250 GB of storage. Scratch storage is limited to 1 TB. 
+Home directories are limited to 200 GB of storage. Project space is limited to 250 GB of storage. Scratch storage is limited to 1 TB, except on the Xena cluster where it is 2 TB. 
 
 # Resource Usage Policy
 
