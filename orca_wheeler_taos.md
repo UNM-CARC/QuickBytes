@@ -52,19 +52,39 @@ Taos uses Slurm (**S**imple **L**inux **U**tility for **R**esource **M**anagemen
 #SBATCH --mail-type=fail         # send email if job fails
 #SBATCH --mail-user=<YourNetID>@unm.edu
 
-## Change to the submission directory 
-## and load the Orca software module
-cd $SLURM_SUBMIT_DIR
 module load openmpi-3.1.5-gcc-5.4.0-f6ikvl6
 module load orca/4.2.1
 
-## Set your input file for Orca
+## Set your input and output file names
 input_file=my_orca_input.inp
+output_file=my_orca_output.log
+prefix=$(echo $input_file | cut -f1 -d".")
+
+# Set the scratch directory path
+scratch_dir=/taos/scratch/$USER/
+
+# Set the input and output paths on the scratch file system
+mkdir $scratch_dir$prefix
+TEMP_DIR=$scratch_dir$prefix
+output_scratch_path=$TEMP_DIR/$output_file
+input_scratch_path=$TEMP_DIR/$input_file
+
+# Create directory for additional files
+mkdir $SLURM_SUBMIT_DIR/$prefix
+add_files_dir=$SLURM_SUBMIT_DIR/$prefix
+
+# Copy the input file from the submission directory to the scratch directory
+cp $SLURM_SUBMIT_DIR/$input_file $TEMP_DIR/
 
 # Orca needs the full path when running in parallel
 full_orca_path=$(which orca)
 
 # Run Orca
-$full_orca_path $input_file 
+$full_orca_path $input_scratch_path > $output_scratch_path
+
+# Orca finished so copy the output file on scratch to the submission directory and clean the scratch directory
+cp $output_scratch_path $SLURM_SUBMIT_DIR/$output_file
+cp $TEMP_DIR/$prefix* $add_files_dir
+rm $TEMP_DIR
 ```
 Now you can simply submit your job to the queue with `sbatch orca_submission.sh`. 
