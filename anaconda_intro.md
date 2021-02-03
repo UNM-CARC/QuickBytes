@@ -13,6 +13,7 @@ Let's create an environment on Wheeler to run a python machine learning script t
 We use `conda` to create new environments and install/upgrade packages within environments. To create our machine learning environment we type:
 
 `conda create --name TensorFlow python=3.5 pandas tensorflow`
+This is better
 
 The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages python version 3.5 specifically, pandas, and tensorflow. When you enter this command `conda` prints out the plan for this environment to `stdout`:
 
