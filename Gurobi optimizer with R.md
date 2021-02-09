@@ -20,17 +20,33 @@ packages in R at CARC, you can reach out for assistance by emailling help@carc.u
 JupyterHub to run an R notebook at CARC is you may need to install packages from ther terminal window on JupyterHub because 
 the notebook will not let you interactiively answer questions installs may need. 
 
+Start by installing the gurobi package:
 ```
 > install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
 Installing package into '/users/mfricke/R/x86_64-pc-linux-gnu-library/3.6'
 * installing *binary* package 'gurobi' ...
 * DONE (gurobi)
+```
+In another terminal window (or by quitting out of your current R session), go to your home directory and open your .bashrc to edit. Inside you will need to add these lines:
+```
+export GUROBI_HOME=$GUROBI_HOME:/opt/local/gurobi/8.1.0/linux64/
+export PATH=$PATH:/opt/local/gurobi/8.1.0/linux64/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/local/gurobi/8.1.0/linux64/lib
+```
+Save these changes to your .bashrc file and in the command line enter:
+```
+source .bashrc
+```
+You should now be able to load the gurobi library in an R session:
+```
 > library(gurobi)
 Loading required package: slam
 ```
-
-Let's runs a quick model as an example of what Gurobi can do: 
-
+Note that if you get an error regarding slam, you can install it using the command:
+```
+install.packages("slam", repos = "https://cloud.r-project.org")
+```
+Now let's runs a quick model as an example of what Gurobi can do and to see if everything is working properly: 
 ```
 > model <- list()
 > model$A          <- matrix(c(1,2,3,1,1,0), nrow=2, ncol=3, byrow=T)
