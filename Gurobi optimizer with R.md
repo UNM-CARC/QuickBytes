@@ -21,7 +21,7 @@ JupyterHub to run an R notebook at CARC is you may need to install packages from
 the notebook will not let you interactiively answer questions installs may need. 
 
 ```
-> install.packages('/opt/local/gurobi/810/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
+> install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
 Installing package into '/users/mfricke/R/x86_64-pc-linux-gnu-library/3.6'
 * installing *binary* package 'gurobi' ...
 * DONE (gurobi)
