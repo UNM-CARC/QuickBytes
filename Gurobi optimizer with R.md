@@ -36,7 +36,7 @@ Start by installing the gurobi package:
 ```
 username@wheeler-sn:~$ R
 > install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
-Installing package into '/users/mfricke/R/x86_64-pc-linux-gnu-library/3.6'
+Installing package into '/users/username/R/x86_64-pc-linux-gnu-library/3.6'
 * installing *binary* package 'gurobi' ...
 * DONE (gurobi)
 ```
