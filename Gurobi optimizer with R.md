@@ -12,7 +12,6 @@ session.
 ```
 username@wheeler-sn:~$ module load gurobi
 username@wheeler-sn:~$ module load r-3.6.0-gcc-7.3.0-python2-7akol5t
-username@wheeler-sn:~$ R
 ```
 
 Once you have started an R session, you can install packages just as you would in R. If you ever run into issues loading 
@@ -35,6 +34,7 @@ You should now be able to load the gurobi library in an R session:
 
 Start by installing the gurobi package:
 ```
+username@wheeler-sn:~$ R
 > install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
 Installing package into '/users/mfricke/R/x86_64-pc-linux-gnu-library/3.6'
 * installing *binary* package 'gurobi' ...
