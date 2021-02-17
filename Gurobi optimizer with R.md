@@ -7,14 +7,12 @@ programming optimizations. These techniques can help to find the answers to comp
 ## Example of running Gurobi optimizer with R at CARC
 
 There are modules for both Gurobi and R on the wheeler cluster. All you need to do is load them, and then start an R
-session. 
-
+session. This command is for version 8.1.0, however there are other versions of gurobi available (enter `module avail gurobi` to see a full list).
 ```
-username@wheeler-sn:~$ module load gurobi
+username@wheeler-sn:~$ module load gurobi/8.1.0
 username@wheeler-sn:~$ module load r-3.6.0-gcc-7.3.0-python2-7akol5t
 username@wheeler-sn:~$ R
 ```
-
 Once you have started an R session, you can install packages just as you would in R. If you ever run into issues loading 
 packages in R at CARC, you can reach out for assistance by emailling help@carc.unm.edu. One piece of advice if you are using 
 JupyterHub to run an R notebook at CARC is you may need to install packages from ther terminal window on JupyterHub because 
@@ -23,19 +21,9 @@ the notebook will not let you interactiively answer questions installs may need.
 Start by installing the gurobi package:
 ```
 > install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
-Installing package into '/users/mfricke/R/x86_64-pc-linux-gnu-library/3.6'
+Installing package into '/users/username/R/x86_64-pc-linux-gnu-library/3.6'
 * installing *binary* package 'gurobi' ...
 * DONE (gurobi)
-```
-In another terminal window (or by quitting out of your current R session), go to your home directory and open your .bashrc to edit. Inside you will need to add these lines:
-```
-export GUROBI_HOME=$GUROBI_HOME:/opt/local/gurobi/8.1.0/linux64/
-export PATH=$PATH:/opt/local/gurobi/8.1.0/linux64/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/local/gurobi/8.1.0/linux64/lib
-```
-Save these changes to your .bashrc file and in the command line enter:
-```
-source .bashrc
 ```
 You should now be able to load the gurobi library in an R session:
 ```
