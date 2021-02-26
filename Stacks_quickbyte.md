@@ -31,16 +31,16 @@ Demultiplexing with Stacks is comparatively easy. You just need a file of barcod
 	ACGTAT	CTAGAT	M_americana_NewMexico_MSBBIRD39487
 	......	......	......
 
-Here is how to run it, assuming you are dealing with paired end reads, gzipped fastq files, and used a single enzyme (ndeI) for your restriction digest. Note the we assume you have a "raw_reads" directory:
+Here is how to run it, assuming you are dealing with paired end reads, gzipped fastq files, and used a single enzyme (ndeI) for your restriction digest. Note the the "raw_reads" directory is the one that you'll use for the aligning step at the start of the reference-based assembly:
 
-	process_radtags -p $src/MULTIPLEXED_READS/ -b $src/BARCODES.file -o $src/raw_reads/ \
+	process_radtags -p /path/to/MULTIPLEXED_READS/ -b /path/to/BARCODES.file -o /path/to/raw_reads/ \
 		-i gzfastq -e ndeI -c -q -r -E phred33 
 
 The command is different for single end reads. You must specify each fastq input indiviually with the -f flag, as shown below. The rest is the same:
 
-	process_radtags -f $src/MULTIPLEXED_READS/RAW_READS_01.fastq.gz -b $src/BARCODES.file -o $src/raw_reads/ \
+	process_radtags -f /path/to/MULTIPLEXED_READS/RAW_READS_01.fastq.gz -b /path/to/BARCODES.file -o /path/to/raw_reads/ \
 		-i gzfastq -e ndeI -c -q -r -E phred33
-	process_radtags -f $src/MULTIPLEXED_READS/RAW_READS_02.fastq.gz -b $src/BARCODES.file -o $src/raw_reads/ \
+	process_radtags -f /path/to/MULTIPLEXED_READS/RAW_READS_02.fastq.gz -b /path/to/BARCODES.file -o /path/to/raw_reads/ \
 		-i gzfastq -e ndeI -c -q -r -E phred33
 	.......
 
@@ -48,7 +48,7 @@ You can find full details on process_radtags [here](https://catchenlab.life.illi
 
 ## Reference Based Assembly ##
 
-This method has several intermediate files, so we'll make directories to keep them separate (do this outside of script):
+We'll assume you demultiplex your reads before running the pipeline described below. The contents of this and the following section can all be put in a PBS/Slurm script. This method has several intermediate files, so we'll make directories to keep them separate (do this outside of script):
 
 	mkdir raw_reads
 	mkdir sam_files
