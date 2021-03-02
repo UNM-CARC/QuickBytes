@@ -51,7 +51,7 @@ If you do not specify `--account` in your submission script and there is no `~/.
 You can then use `sacctmgr show account` as specified above to find more information about this account.
 
 More resources:
-http://www.physik.uni-leipzig.de/wiki/files/slurm_summary.pdf
-https://slurm.schedmd.com/fair_tree.html
-https://slurm.schedmd.com/sacctmgr.html
+http://www.physik.uni-leipzig.de/wiki/files/slurm_summary.pdf  
+https://slurm.schedmd.com/fair_tree.html  
+https://slurm.schedmd.com/sacctmgr.html  
 https://slurm.schedmd.com/sacct.html
