@@ -36,11 +36,11 @@ If any of these are specified, the scheduler will not proceed further down the l
 ### --account
 `--account` can be specified in either an `srun` command or in a `sbatch` submission script using the `#SBATCH` directive. This option takes precedence over every other method of account specification.
 
-### ~./default_slurm_account
+### ~/.default_slurm_account
 If there exists a home file in your home directory called `.default_slurm_account` containing a valid account name, that account will be used any time you do not specifically use `--account`.
 
 ### Most recent project
-If you do not specify `--account` in your submission script and there is no `.default_slurm_account` (or the account specified therein is not valid), your resource usage will be attributed to the newest project you are a part of. You can find out which project this is with the command `sacctmgr show user <username>`. Example:
+If you do not specify `--account` in your submission script and there is no `~/.default_slurm_account` (or the account specified therein is not valid), your resource usage will be attributed to the newest project you are a part of. You can find out which project this is with the command `sacctmgr show user <username>`. Example:
 
 ```
 [tredfear@xena]:~ $ sacctmgr show user tredfear
