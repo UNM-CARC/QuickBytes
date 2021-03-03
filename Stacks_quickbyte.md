@@ -8,7 +8,7 @@ Stacks can easily be run on Wheeler with installed modules, and here we outline 
 
 ### Sample list and Population maps ###
 
-Before you get started, you'll need a list of sample names to run bwa conveniently. This is a file we'll call "sample_list", and it will just look like the following:
+Before you get started, you'll need a list of sample names to run bwa conveniently. This is a file we'll call "sample_list", and an example is below. For this and similar files, the first line describes what goes in each column and where tabs go, and the following lines give an example of what that looks like. For sample list, note that an empty newline should be at the end of the list.:
 
 	<SAMPLE NAME>
 	M_americana_Florida_MSBBIRD49539
@@ -62,7 +62,7 @@ The modules you need are stacks, bwa, and samtools. All are availible on Conda, 
 	module load bwa-0.7.17-intel-18.0.2-7jvpfu2
 	module load samtools-1.10-gcc-9.3.0-python3-ikifznw
 
-We'll also set some variables for refering to paths to stuff:
+We'll also set some variables for refering to paths to stuff. We assume that the reference names (ReferenceBaseName):
 
 	src=$PBS_O_WORKDIR
 	bwa_ref=$src/ReferenceBaseName
@@ -70,7 +70,7 @@ We'll also set some variables for refering to paths to stuff:
 
 Next, we need to index our reference:
 
-	bwa index -p ${bwa_ref} ${bwa_ref}.fa
+	bwa index -p $bwa_ref $bwa_ref.fa
 
 This is the big step, which uses the Burroughs-Wheeler Aligner to align our reads to our reference. Note that this should be able to be done using pipes, but I've had issues with that, so we just remove the files at the end of each loop.
 
@@ -78,8 +78,11 @@ This is the big step, which uses the Burroughs-Wheeler Aligner to align our read
 	do
 		# echo is only to help you keep track of where the pipeline is
 		echo ${indiv}
+		# align reads to reference genome
 		bwa mem -t $threads $bwa_ref $src/raw_reads/${indiv}.fq.gz > $src/sam_files/${indiv}.sam
+		# covert sam file to bam file (makes it much smaller and easier to work with)
 		samtools view -bS $src/sam_files/${indiv}.sam > $src/bam_files/${indiv}_unsort.bam
+		# sorts bam file, which is needed for next analyses
 		samtools sort $src/bam_files/${indiv}_unsort.bam -o $src/bam_files/${indiv}.bam
 		rm $src/sam_files/${indiv}.sam
 		rm $src/bam_files/${indiv}_unsort.bam
@@ -94,7 +97,7 @@ Finally, we run populations! This specific command will give us a 75% complete m
 	populations -P $src/stacks_out/ -M $src/popmap -O $src/populations_out/ \
 		--vcf -R .75 --write-random-snp --fstats --plink --smooth -t $threads
 	
-A quick note, if you want a quick phylogeny or fixed differences found in Stacks, you can get a interleaved phylip file by making a popmap file with each individual having its own population and specifying you want a phylip output. Please note that this is strict phylip format, meaning you want a maximum of 9 letters in your "population" column of the popmap (10 works, but will cause errors when input to certain programs). Also, this assumes you have a directory "populations_individual":
+A quick note, if you want input for RAxML or similar phylogenetic programs, you can get a interleaved phylip file by making a popmap file with each individual having its own population and specifying you want a phylip output. Please note that this is strict phylip format, meaning you want a maximum of 9 letters in your "population" column of the popmap (10 works, but will cause errors when input to certain programs). Also, this assumes you have a directory "populations_individual":
 
 	populations -P $src/stacks_out/ -M $src/popmap_individual -O $src/popualtions_individual/ \
 		-R .75 --phylip-var-all -t $threads
@@ -117,4 +120,4 @@ Then you just run a single line!
 	denovo_map.pl -T $threads -o $src/stacks_denovo/ --popmap $src/popmap --samples $src/raw_reads/ \
 		-X "<Extra parameters for populations here>"
 
-As I mentioned above, I mostly included this to demystify DeNovo Stacks, please read more on it before publishing anything!
+As I mentioned above, I mostly included this to demystify DeNovo Stacks, please read more on it before running anything! There are many parameters to optimize.
