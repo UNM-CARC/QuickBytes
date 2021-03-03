@@ -48,7 +48,7 @@ You can find full details on process_radtags [here](https://catchenlab.life.illi
 
 ## Reference Based Assembly ##
 
-We'll assume you demultiplex your reads before running the pipeline described below. The contents of this and the following section can all be put in a PBS/Slurm script. This method has several intermediate files, so we'll make directories to keep them separate (do this outside of script):
+We'll assume you demultiplex your reads before running the pipeline described below. The contents of this and the following section should all be put in a PBS/Slurm script, just make sure your directory names are correct. This method has several intermediate files, so we'll make directories to keep them separate (do this outside of script):
 
 	mkdir raw_reads
 	mkdir sam_files
