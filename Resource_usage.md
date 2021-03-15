@@ -43,6 +43,7 @@ Parameters |	Soft Limit  |	Hardlimit
 Number of Processors |	96 |	96
 Number of Nodes	|6 | 6
 Processors per Node |	16  | 16
+Walltime |  72:00:00  | 72:00:00
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
