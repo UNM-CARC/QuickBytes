@@ -32,9 +32,16 @@ This step by step tutorial will guide you through installing deep learning and M
 
 		 conda install -c anaconda keras-gpu  
 
-	c.   **Pytorch**
+	c.   **Pytorch** Non-GPU Version
 
-		 conda install pytorch torchvision -c pytorch
+		conda install pytorch torchvision -c pytorch
+		 
+	d.   **Pytorch** GPU Version
+
+	First make sure that you have Python 3.7 installed in your current environment (via `conda create --name <env_name> python==3.7`). Next install the following packages (to get the .tar.bz2 file, please contact CARC staff and we can copy it directly into your home directory):
+		 
+		 conda install pytorch-1.5.0-py3.7_cuda10.1.243_cudnn7.6.3_0.tar.bz2
+		 conda install cudatoolkit=10.1.243
 
 6. Install additional Machine Learning packages
 	
