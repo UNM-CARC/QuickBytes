@@ -290,9 +290,12 @@ Here is a sample PBS script combining everything we have above, with as much par
 
 	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
 	source activate gatk-env
-	
+
+	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	source $(which env_parallel.bash)
+
 	src=$PBS_O_WORKDIR
-	reference=${src}/reference.fa
+	reference=${src}/reference
 	
 	# Trimming section
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
