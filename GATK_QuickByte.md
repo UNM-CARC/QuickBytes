@@ -321,17 +321,17 @@ Here is a sample PBS script combining everything we have above, with as much par
 	cat $src/sample_list | env_parallel -j $PBS_NUM_NODES --sshloginfile $PBS_NODEFILE \
 		'bwa mem \
 			-t $threads -M \
-			-R ‘@RG\tID:{}\tPL:ILLUMINA\tLB:”{}”\tSML”{}” \
+			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSML{}" \
 			$reference \
 			$src/raw_reads/{}_R1.fastq.gz \
 			$src/raw_reads/{}_R2.fastq.gz \
-			> $src/sams/{}.sam
+			> $src/alignments/{}.sam
 		gatk MarkDuplicatesSpark \
-			-I $src/sams/{}.sam \
+			-I $src/alignments/{}.sam \
 			-M $src/bams/{}_dedup_metrics.txt \
 			--tmp-dir $src/alignments/dedup_temp \
 			-O $src/bams/{}_dedup.bam
-		rm $src/sams/{}.sam'
+		rm $src/alignments/{}.sam'
 
 	# index our VCF if that hasn't already been done
 	gatk IndexFeatureFile -I $src[name-of-known-sites].vcf
