@@ -4,7 +4,7 @@ Many microevolutionary questions invoke population genetic processes to explain 
 
 Here, we'll give a basic introduction to msprime, give a simple example of two diverging populations, and show how to parallelize replicates on CARC. The example is one I used to establish how F<sub>ST</sub>, [an estimate of population divergence](https://onlinelibrary.wiley.com/doi/10.1111/j.1558-5646.1984.tb05657.x), changes over time based on population size. In particular, I used this to test if observed values of F<sub>ST</sub> between islands connected during the Pleistocene became panmictic at those times, or if there was still reduced gene flow between given islands (with the system being one worked on in the past in papers like [Smith & Filardi 2007](https://academic.oup.com/auk/article/124/2/479/5562749)).
 
-This QuickByte describes msprime 1.0, which is a major updated from the widely used earlier versions.
+This QuickByte describes msprime 1.0, which is a major update from the widely used earlier versions.
 
 ## How msprime Works ##
 
