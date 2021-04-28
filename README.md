@@ -23,7 +23,6 @@ Quickbytes are tutorials designed to help CARC users.
          * [Parallel MATLAB batch submission](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_profile_creation/Parallel%20MATLAB%20profile%20setup%20and%20batch%20submission.md)
       * JupyterHub
          * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
-         * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
          * [Anaconda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Anaconda_JupyterHub.md)
       * Anaconda
          * [General intro to Anaconda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
@@ -32,9 +31,12 @@ Quickbytes are tutorials designed to help CARC users.
       * R
          * [R Programming in HPC](https://github.com/UNM-CARC/QuickBytes/blob/master/R_usage.md)
          * [R at CARC](https://github.com/UNM-CARC/QuickBytes/tree/master/R_at_CARC)
+      * Machine Learning
+         * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
+         * [Machine Learning Conda Environments (including GPU libraries)](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
+         * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.ipynb)
+         * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * [Paraview](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
-      * [Installing Deep Learning Library in Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
-      * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
       * [Gurobi optimizer with R](https://github.com/UNM-CARC/QuickBytes/blob/master/Gurobi%20optimizer%20with%20R.md)
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
