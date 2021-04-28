@@ -12,7 +12,7 @@ This QuickByte describes msprime 1.0, which is a major update from the widely us
 
 ## How to run msprime ##
 
-Msprime is a python module, with reccomended download via conda. We'll make an environment with it and a couple other important modules:
+Msprime is a python package, with reccomended download via conda. We reccomend you use miniconda for this, as we've had some bugs with installing this through anaconda in the past. We'll make an environment with it and a couple other important modules:
 
 	conda create -n msp1-env -c conda-forge msprime scikit-allel numpy
 
