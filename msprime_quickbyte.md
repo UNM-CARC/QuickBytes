@@ -57,14 +57,22 @@ We can have the migration rate change over time too, here we increase the migrat
 	
 The final common demographic event is population size change, which we'll set to have a bottleneck three quarters of the way through the simulation. That is, we set the population size of population 1 to be three times the present population 2500 years:
 	
-	size_increase = msp.PopulationParametersChange(time=2500, initial_size=30000, population_id=0)
+	demo.add_population_parameters_change(time=2500, initial_size=30000, population="pop1")
+
+Finally, we need to sort these events, as we added them out of order for instructional purposes:
+
+	demo.sort_events()
+
+A really helpful debugging feature is the print function for demography objects, it lists and explains the events and migration matrix!
+	
+	print(demo)
 
 Bringing this all together, our simulation will look like:
 
 	trees = msp.sim_ancestry(samples={"pop1":10, "pop2":10},
                          demography=demo,
                          recombination_rate=1e-8,
-                         length=1e7)
+                         sequence_length=1e7)
 			 
 And we'll add mutations like this, using a yearly rate of 2.3e-9 and a generation time of 2.55 years (same as the case study):
 
