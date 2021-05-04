@@ -320,11 +320,11 @@ Here is a sample PBS script combining everything we have above, with as much par
 
 	cat $src/sample_list | env_parallel -j $PBS_NUM_NODES --sshloginfile $PBS_NODEFILE \
 		'bwa mem \
-			-t $threads -M \
+			-t 8 -M \
 			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSML{}" \
 			$reference \
-			$src/raw_reads/{}_R1.fastq.gz \
-			$src/raw_reads/{}_R2.fastq.gz \
+			$src/clean_reads/{}_paired_R1.fastq.gz \
+			$src/clean_reads/{}_paired_R2.fastq.gz \
 			> $src/alignments/{}.sam
 		gatk MarkDuplicatesSpark \
 			-I $src/alignments/{}.sam \
