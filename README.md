@@ -46,7 +46,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
       * [Stacks for RAD-Seq Data](https://github.com/UNM-CARC/QuickBytes/blob/master/Stacks_quickbyte.md)
       * [Genomic variant calling with GATK](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md)
-      * [Population genetic simulations with msprime (backwards-time)]((https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
+      * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
   
       
       
