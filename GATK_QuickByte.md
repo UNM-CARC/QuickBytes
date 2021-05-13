@@ -243,14 +243,14 @@ This first step is optional, but here we separate out indels and SNPs. Note that
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-selectType SNP \
-		-o $src/combined_vcfs/raw_snps.vcf.gz
+		-select-yype SNP \
+		-O $src/combined_vcfs/raw_snps.vcf.gz
 
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-selectType INDEL \
-		-o $src/combined_vcfs/raw_indel.vcf.gz
+		-select-type INDEL \
+		-O $src/combined_vcfs/raw_indel.vcf.gz
 
 Here are some good sample filters. The “DP_filter” is depth of coverage (you will probably want to change this), “Q_filter” is quality score, “QD_filter” is quality by depth (avoids artificial inflation of calls), and “FS_filter” is a strand bias filter (higher value means higher bias). Note that DP is better for low depth samples, while QD is better for high depth. More info can be found on [GATK’s website](https://gatk.broadinstitute.org/hc/en-us/articles/360035890471-Hard-filtering-germline-short-variants).
 
@@ -258,10 +258,11 @@ Here are some good sample filters. The “DP_filter” is depth of coverage (you
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/raw_snps.vcf.gz \
 		-O $src/analysis_vcfs/filtered_snps.vcf  \
-		-filter-name “DP_filter” -filter “DP < 4” \
-		-filter-name “Q_filter” -filter “QUAL < 30.0” \
-		-filter-name “QD_filter” -filter “QD < 2.0” \
-		-filter-name “FS_filter” -filter “FS > 60.0”
+		-filter "DP < 4" --filter-name "DP_filter" \
+		-filter "QUAL < 30.0" --filter-name "Q_filter" \
+		-filter "QD < 2.0" --filter-name "QD_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter" \
+		-filter "FS > 60.0" --filter-name "FS_filter"
 
 This will give us our final VCF! Note that the filtered SNPs are still included, just with a filter tag. You can use something like SelectVariants' "exclude-filtered" flag or [VCFtools’](http://vcftools.sourceforge.net/) “--remove-filtered-all” flag to get rid of them.
 
@@ -441,28 +442,32 @@ Here is a sample PBS script combining everything we have above, with as much par
     		-I $src/combined_vcfs/gather_list \
     		-O combined_vcfs/combined_vcf.vcf.gz
 
+	# Index the gathered VCF
+	gatk IndexFeatureFile \
+		-I $src/combined_vcfs/combined_vcf.vcf.gz
+
 	# Select and filter variants
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-selectType SNP \
-		-o $src/combined_vcfs/raw_snps.vcf.gz
+		-select-type SNP \
+		-O $src/combined_vcfs/raw_snps.vcf.gz
 
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-selectType INDEL \
-		-o $src/combined_vcfs/raw_indel.vcf.gz
+		-select-type INDEL \
+		-O $src/combined_vcfs/raw_indel.vcf.gz
 
 	gatk VariantFiltration \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/raw_snps.vcf.gz \
 		-O $src/analysis_vcfs/filtered_snps.vcf  \
-		-filter-name "DP_filter" -filter "DP < 4" \
-		-filter-name "Q_filter" -filter "QUAL < 30.0" \
-		-filter-name "QD_filter" -filter "QD < 2.0" \
-		-filter-name "MQ_filter" -filter "MQ < 40.0" \
-		-filter-name "FS_filter" -filter "FS > 60.0"
+		-filter "DP < 4" --filter-name "DP_filter" \
+		-filter "QUAL < 30.0" --filter-name "Q_filter" \
+		-filter "QD < 2.0" --filter-name "QD_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter" \
+		-filter "FS > 60.0" --filter-name "FS_filter"
 
 ## Troubleshooting ##
 
