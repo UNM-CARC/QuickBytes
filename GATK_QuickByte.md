@@ -1,10 +1,10 @@
 # Parallel genomic variant calling with Genome Analysis Toolkit (GATK) #
 
-This QuickBytes outlines how to run a pipeline based on Genome Analysis Toolkit v4 (GATK4) best practices, a common pipeline for processing genomic data from Illumina platforms. Major modifications from “true” best practices are done to facilitate using this pipeline for both model and non-model organisms. Additionally, we show how to best parallelize these steps on CARC. Here we summarize the steps and provide an example of a parallelized script, but extensive documentation (including other Best Practices pipelines) can be found [here](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows). Specifically, the Best Practices informing this pipeline are the [data pre-processing workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery) and the [germline short variant discovery workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-). We aim to give you sample commands to emulate these scripts workflows, which will also allow you to easily modify the pipeline.
+This QuickBytes outlines how to run a pipeline based on Genome Analysis Toolkit v4 (GATK4) best practices, a common pipeline for processing genomic data from Illumina platforms. Major modifications from “true” best practices are done to facilitate using this pipeline for both model and non-model organisms. Additionally, we show how to best parallelize these steps on CARC. Here we outline the steps for a single sample without parallelization, then with parallelization for specific steps, and finally provide an example of a fully parallelized script. Extensive documentation (including other Best Practices pipelines) can be found [here](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows). Specifically, the Best Practices informing this pipeline are the [data pre-processing workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery) and the [germline short variant discovery workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-). We aim to give you sample commands to emulate these scripts workflows, which will also allow you to easily modify the pipeline.
 
 The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) and optionally indels for a given dataset. This same pipeline can be used for humans, model organisms, and non-model organisms. Spots that can leverage information from model organisms are noted, but those steps can also be bypassed for the sake of generality. Because sample size and depth of coverage are often lower in non-model organisms, filtering recommendations and memory requirements will vary. Note that this assumes you are using paired-end data and will differ slightly if you use unpaired.
 
-The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, and finally filtering those variants for analysis.
+The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -31,7 +31,7 @@ Alternatively, you can load these as modules if you are on Wheeler (Xena only ha
 	module load gatk-4.1.4.1-gcc-4.8.5-python3-fqiavji
 	module load trimmomatic-0.36-gcc-4.8.5-q3gx4rj
 
-If you are parallelizing (see “Calling variants with HaplotypeCaller” and sample PBS script), you need this:
+If you are parallelizing (see “Scatter-gather Parallel” and sample PBS script), you'll need this:
 
 	module load parallel-20170322-gcc-4.8.5-2ycpx7e
 	source $(which env_parallel.bash)
@@ -181,7 +181,7 @@ The simplest way is individually going through BAM files and calling SNPs on the
 		-O $src/gvcfs/${sample}_raw.g.vcf.gz \
 		-ERC GVCF
 
-One issue with HaplotypeCaller is that it takes a long time, but is not programmed to be parallelized by default. We can use GNU parallel to solve that problem in two ways. If you have many small inputs, it will be easiest to parallelize like this (at the cost of run time). Note that we restrict the memory such that each job can only max out the core it's on (you'll want to change from 6g based on the machine you're running this on):
+One issue with HaplotypeCaller is that it takes a long time, but is not programmed to be parallelized by default. We can use GNU parallel to solve that problem in two ways. If you have many small inputs and don't want to do scatter-gather parallel, you can run one instance of HaplotypeCaller per core. Note that we restrict the memory such that each job can only max out the core it's on (you'll want to change from 6g based on the machine you're running this on):
 
 	cat $src/sample_list | env_parallel --sshloginfline $PBS_NODEFILE \
 		'gatk --java-options "-Xmx6g" HaplotypeCaller \
@@ -190,18 +190,18 @@ One issue with HaplotypeCaller is that it takes a long time, but is not programm
 		-O $src/gvcfs/${}_raw.g.vcf.gz \
 		-ERC GVCF'
 
-If you are dealing with large files, HaplotypeCaller may take longer than your walltime. The Scatter-gather Parallel section will outline how to fix that by breaking the job into multiple intervals.
+If you are dealing with large files, HaplotypeCaller may take longer than your walltime. The Scatter-gather Parallel section will outline how to fix that by breaking the job (and the next section) into multiple intervals.
 
 ### Consolidating and Genotyping ###
 
-This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs takes a lot of memory for datasets with many samples. Overall, it seems that GenomicsDBImport is more suited for model organisms, while CombineGVCFs is more convenient for non-model organisms (which often have smaller projects and less contiguous references). If in doubt, I'd say go with CombineGVCFs, which is much easier to implement. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
+This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs can take a while for large datasets, but is easier to use. Overall, it seems that GenomicsDBImport is more suited for model organisms, while CombineGVCFs is more convenient for non-model organisms. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot take this input, we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
 
 	gvcf_names=""
 	while read sample; do
 		gvcf_names="${src}/${gvcf_names}-V ${src}/gvcfs/${sample}_raw.g.vcf.gz "
 	done < $src/sample_list
 
-If you do use GenomicsDBImport, or want to genotype contigs/chromosomes independently, we'll need intervals for it to work with. This is the same used for parallelizing HaplotypeCaller above. Also, you'll need to pre-make a temp directory for holding files:
+If you do use GenomicsDBImport, or want to genotype contigs/chromosomes independently, we'll need intervals for it to work with (the same used for scatter-gather parallelization). Also, you'll need to pre-make a temp directory for holding files:
 
 	mkdir gendb_temp
 	cut -f 1 ${reference}.fa.fai > $src/intervals.list	
@@ -261,26 +261,27 @@ Here are some good sample filters. The “DP_filter” is depth of coverage (you
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "MQ < 40.0" --filter-name "MQ_filter" \
 		-filter "FS > 60.0" --filter-name "FS_filter"
 
 This will give us our final VCF! Note that the filtered SNPs are still included, just with a filter tag. You can use something like SelectVariants' "exclude-filtered" flag or [VCFtools’](http://vcftools.sourceforge.net/) “--remove-filtered-all” flag to get rid of them.
 
 ### Scatter-gather Parallel
 
-Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. This starts with HaplotypeCaller, and the output of GatherVcfs is the same as what comes from GenotypeGVCFs. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
+Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the invervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
 	
 	# make our interval list
 	cut -f 1 ${reference}.fa.fai > $src/intervals.list
 	
-	mkdir ${src}/gvcfs/${sample}
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
-		'gatk --java-options "-Xmx6g" HaplotypeCaller \
-		-R ${reference}.fa \
-		-I $src/bams/${sample}_recal.bam \
-		-O $src/gvcfs/${sample}/${sample}_{}_raw.g.vcf.gz \
-		-L {} \
-		-ERC GVCF'
+	while read sample; do
+		mkdir ${src}/gvcfs/${sample}
+		cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+			'gatk --java-options "-Xmx6g" HaplotypeCaller \
+			-R ${reference}.fa \
+			-I $src/bams/${sample}_recal.bam \
+			-O $src/gvcfs/${sample}/${sample}_{}_raw.g.vcf.gz \
+			-L {} \
+			-ERC GVCF'
+	done < $src/sample_list
 	
 You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF file paths for each sample you're including (the while loop below).
 
@@ -466,7 +467,6 @@ Here is a sample PBS script combining everything we have above, with as much par
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "MQ < 40.0" --filter-name "MQ_filter" \
 		-filter "FS > 60.0" --filter-name "FS_filter"
 
 ## Troubleshooting ##
@@ -474,6 +474,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 If you need help troubleshooting an error, make sure to let us know the size of your dataset (number of individuals and approximate number of reads should suffice, unless coverage varies between individuals), GATK version, node details, and any error messages output.
 
 ## Citations ##
+
+Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114–2120. https://doi.org/10.1093/bioinformatics/btu170
 
 Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. Bioinformatics, 25(14), 1754–1760. https://doi.org/10.1093/bioinformatics/btp324
 
