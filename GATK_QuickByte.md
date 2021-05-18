@@ -352,7 +352,7 @@ Here is a sample PBS script combining everything we have above, with as much par
 	cat $src/sample_list | env_parallel -j $PBS_NUM_NODES --sshloginfile $PBS_NODEFILE \
 		'bwa mem \
 			-t $threads -M \
-			-R ‘@RG\tID:{}\tPL:ILLUMINA\tLB:”{}”\tSML”{}” \
+			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSM:{}" \
 			$reference \
 			$src/raw_reads/{}_R1.fastq.gz \
 			$src/raw_reads/{}_R2.fastq.gz \
