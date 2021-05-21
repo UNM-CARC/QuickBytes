@@ -6,7 +6,6 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, and finally filtering those variants for analysis.
 
-Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
 ## Preliminary stuff ##
 
