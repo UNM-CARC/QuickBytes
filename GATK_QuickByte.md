@@ -2,9 +2,11 @@
 
 This QuickBytes outlines how to run a pipeline based on Genome Analysis Toolkit v4 (GATK4) best practices, a common pipeline for processing genomic data from Illumina platforms. Major modifications from “true” best practices are done to facilitate using this pipeline for both model and non-model organisms. Additionally, we show how to best parallelize these steps on CARC. Here we outline the steps for a single sample without parallelization, then with parallelization for specific steps, and finally provide an example of a fully parallelized script. Extensive documentation (including other Best Practices pipelines) can be found [here](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows). Specifically, the Best Practices informing this pipeline are the [data pre-processing workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery) and the [germline short variant discovery workflow](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-). We aim to give you sample commands to emulate these scripts workflows, which will also allow you to easily modify the pipeline.
 
-The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) and optionally indels for a given dataset. This same pipeline can be used for humans, model organisms, and non-model organisms. Spots that can leverage information from model organisms are noted, but those steps can also be bypassed for the sake of generality. Because sample size and depth of coverage are often lower in non-model organisms, filtering recommendations and memory requirements will vary. Note that this assumes you are using paired-end data and will differ slightly if you use unpaired.
+The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) and optionally indels for a given dataset. This same pipeline can be used for humans, model organisms, and non-model organisms. Spots that can leverage information from model organisms are noted, but those steps can be bypassed. Because sample size and depth of coverage are often lower in non-model organisms, filtering recommendations and memory requirements will vary. Note that this assumes you are using paired-end data and will differ slightly if you use unpaired.
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
+
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total) and a reference genome. They are located at /projects/tutorials/gatk/. Copy them into your space like "cp /projects/tutorials/gatk/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -92,8 +94,8 @@ Although not a part of GATK's best practices, it is common practice to trim your
 	# note we'll be getting our adapter sequences from ones provided in the conda package
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
 
-	read1=$src/raw_reads/${sample}_R1.fastq.gz
-	read2=$src/raw_reads/${sample}_R2.fastq.gz
+	read1=$src/raw_reads/${sample}_1.fastq.gz
+	read2=$src/raw_reads/${sample}_2.fastq.gz
 	paired_r1=$src/clean_reads/${sample}_paired_R1.fastq.gz
 	paired_r2=$src/clean_reads/${sample}_paired_R2.fastq.gz
 	unpaired_r1=$src/clean_reads/${sample}_unpaired_R1.fastq.gz
@@ -331,8 +333,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 	# Trimming section
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
 	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
-		'read1=$src/raw_reads/{}_R1.fastq.gz
-		read2=$src/raw_reads/{}_R2.fastq.gz
+		'read1=$src/raw_reads/{}_1.fastq.gz
+		read2=$src/raw_reads/{}_2.fastq.gz
 		paired_r1=$src/clean_reads/{}_paired_R1.fastq.gz
 		paired_r2=$src/clean_reads/{}_paired_R2.fastq.gz
 		unpaired_r1=$src/clean_reads/{}_unpaired_R1.fastq.gz
