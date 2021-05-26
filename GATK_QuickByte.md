@@ -6,7 +6,7 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total) and a reference genome. They are located at /projects/tutorials/gatk/. Copy them into your space like "cp /projects/tutorials/gatk/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total), a file with adapter sequences to trim, and a reference genome. They are located at /projects/tutorials/gatk/. Copy them into your space like "cp /projects/tutorials/gatk/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -91,8 +91,8 @@ Because it is not covered by best practices, and is often done by the sequencing
 
 Although not a part of GATK's best practices, it is common practice to trim your reads before using them in analyses. We'll use trimmomatic for this. Trimmomatic performs very poorly with its internal thread command, so we'll use GNU parallel to run it in the final script. Note that trimmomatic doesn't have many command line flags, so we'll name variables ahead of time to keep them straight:
 
-	# note we'll be getting our adapter sequences from ones provided in the conda package
-	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
+	# note this assumes the provided fasta file is in your working directory.
+	adapters=$src/TruSeq3-PE.fa
 
 	read1=$src/raw_reads/${sample}_1.fastq.gz
 	read2=$src/raw_reads/${sample}_2.fastq.gz
@@ -107,9 +107,13 @@ Although not a part of GATK's best practices, it is common practice to trim your
 		ILLUMINACLIP:${adapters}:2:30:10:2:keepBothReads \
 		LEADING:3 TRAILING:3 MINLEN:${min_length}
 	
-If you're using the spack module, you call trimmomatic using java and get the adapters from the module file:
-	
+If you don't have access to the CARC directory with the adapters file, it can be found in the conda install/spack package. The exact path will vary, but they'll be something like this:
+
 	adapters=/opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/trimmomatic-0.36-q3gx4rjeruluf75uhcdfkjoaujqnjhzf/bin/TruSeq3-SE.fa
+	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
+
+If you're using the spack module, you call trimmomatic using java:
+
 	java -jar /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/trimmomatic-0.36-q3gx4rjeruluf75uhcdfkjoaujqnjhzf/bin/trimmomatic-0.36.jar PE ...
 
 ### Alignment and Pre-processing ###
@@ -138,7 +142,7 @@ The next step is to mark PCR duplicates to remove bias, sort the file, and conve
 		-I $src/alignments/${sample}.sam \
 		-M $src/bams/${sample}_dedup_metrics.txt \
 		--tmp-dir $src/alignments/dedup_temp \
-		-O $src/bams/{$sample}_dedup.bam
+		-O $src/bams/${sample}_dedup.bam
 
 The final step is to recalibrate base call scores. This applies machine learning to find where quality scores are over or underestimated based on things like read group and cycle number of a given base. This is strongly recommended, but is rarely possible for non-model organisms, as a file of known polymorphisms is needed. Note, however, that it can take a strongly filtered VCF from the end of the pipeline, before running the entire pipeline again (but [others haven’t found much success with this method](https://evodify.com/gatk-in-non-model-organism/)). Here is how it looks, with the first line indexing the input VCF file if you haven't already.
 
