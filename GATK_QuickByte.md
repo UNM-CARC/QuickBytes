@@ -6,7 +6,7 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total), a file with adapter sequences to trim, and a reference genome. They are located at /projects/tutorials/gatk/. Copy them into your space like "cp /projects/tutorials/gatk/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total), a file with adapter sequences to trim, and a reference genome. They are located at /projects/tutorials/GATK/. Copy them into your space like "cp /projects/tutorials/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -108,8 +108,10 @@ Although not a part of GATK's best practices, it is common practice to trim your
 		LEADING:3 TRAILING:3 MINLEN:${min_length}
 	
 If you don't have access to the CARC directory with the adapters file, it can be found in the conda install/spack package. The exact path will vary, but they'll be something like this:
-
+	
+	# spack
 	adapters=/opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/trimmomatic-0.36-q3gx4rjeruluf75uhcdfkjoaujqnjhzf/bin/TruSeq3-SE.fa
+	# conda
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
 
 If you're using the spack module, you call trimmomatic using java:
@@ -144,7 +146,11 @@ The next step is to mark PCR duplicates to remove bias, sort the file, and conve
 		--tmp-dir $src/alignments/dedup_temp \
 		-O $src/bams/${sample}_dedup.bam
 
-The final step is to recalibrate base call scores. This applies machine learning to find where quality scores are over or underestimated based on things like read group and cycle number of a given base. This is strongly recommended, but is rarely possible for non-model organisms, as a file of known polymorphisms is needed. Note, however, that it can take a strongly filtered VCF from the end of the pipeline, before running the entire pipeline again (but [others haven’t found much success with this method](https://evodify.com/gatk-in-non-model-organism/)). Here is how it looks, with the first line indexing the input VCF file if you haven't already.
+We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_debup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
+
+#### Base Quality Score Recalibration (model organisms)
+
+An optional step (and one not taken in the tutorial) is to recalibrate base call scores. This applies machine learning to find where quality scores are over or underestimated based on things like read group and cycle number of a given base. This is recommended, but is rarely possible for non-model organisms, as a file of known polymorphisms is needed. Note, however, that it can take a strongly filtered VCF from the end of the pipeline, before running the entire pipeline again (but [others haven’t found much success with this method](https://evodify.com/gatk-in-non-model-organism/)). Here is how it looks, with the first line indexing the input VCF file if you haven't already.
 
 	gatk IndexFeatureFile -I $src[name-of-known-sites].vcf
 
@@ -159,8 +165,6 @@ The final step is to recalibrate base call scores. This applies machine learning
 		-R ${reference}.fa \
 		--bqsr-recal-file $src/bams/${sample}_recal_data.table \
 		-O $src/bams/${sample}_recal.bam
-
-We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_debup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
 
 ### Collect alignment and summary statistics (optional)
 
@@ -369,23 +373,6 @@ Here is a sample PBS script combining everything we have above, with as much par
 			--tmp-dir $src/alignments/dedup_temp \
 			-O $src/bams/{}_dedup.bam
 		rm $src/sams/{}.sam'
-
-	# index our VCF if that hasn't already been done
-	gatk IndexFeatureFile -I $src[name-of-known-sites].vcf
-	
-	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
-		'gatk --java-options "-Xmx6g" BaseRecalibrator \
-			-I $src/bams/{}_dedup.bam \
-			-R ${reference}.fa \
-			--known-sites $src/[name-of-known-sites].vcf \
-			-O $src/bams/{}_recal_data.table
-		gatk --java-options "-Xmx6g" ApplyBQSR \
-			-I $src/bams/{}_dedup.bam \
-			-R ${reference}.fa \
-			--bqsr-recal-file bams/{}_recal_data.table \
-			-O $src/bams/{}_recal.bam
-		rm $src/bams/{}_dedup.bam'
-		
 
 	# Collecting metrics in parallel
 	# Remember to change from _recal to _dedup if you can’t do base recalibration.
