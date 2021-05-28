@@ -211,7 +211,7 @@ This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommen
 
 	gvcf_names=""
 	while read sample; do
-		gvcf_names="${src}/${gvcf_names}-V ${src}/gvcfs/${sample}_raw.g.vcf.gz "
+		gvcf_names="${gvcf_names}-V ${src}/gvcfs/${sample}_raw.g.vcf.gz "
 	done < $src/sample_list
 
 If you do use GenomicsDBImport, or want to genotype contigs/chromosomes independently, we'll need intervals for it to work with (the same used for scatter-gather parallelization). Also, you'll need to pre-make a temp directory for holding files:
