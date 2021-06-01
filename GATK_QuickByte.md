@@ -364,8 +364,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 			-t 8 -M \
 			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSM:{}" \
 			$reference \
-			$src/raw_reads/{}_R1.fastq.gz \
-			$src/raw_reads/{}_R2.fastq.gz \
+			$src/clean_reads/{}_R1.fastq.gz \
+			$src/clean_reads/{}_R2.fastq.gz \
 			> $src/sams/{}.sam
 		gatk MarkDuplicatesSpark \
 			-I $src/sams/{}.sam \
