@@ -366,13 +366,13 @@ Here is a sample PBS script combining everything we have above, with as much par
 			$reference \
 			$src/clean_reads/{}_R1.fastq.gz \
 			$src/clean_reads/{}_R2.fastq.gz \
-			> $src/sams/{}.sam
+			> $src/alignments/{}.sam
 		gatk MarkDuplicatesSpark \
-			-I $src/sams/{}.sam \
+			-I $src/alignments/{}.sam \
 			-M $src/bams/{}_dedup_metrics.txt \
 			--tmp-dir $src/alignments/dedup_temp \
 			-O $src/bams/{}_dedup.bam
-		rm $src/sams/{}.sam'
+		rm $src/alignments/{}.sam'
 
 	# Collecting metrics in parallel
 	# Remember to change from _recal to _dedup if you can’t do base recalibration.
