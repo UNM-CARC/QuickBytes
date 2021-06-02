@@ -359,13 +359,13 @@ Here is a sample PBS script combining everything we have above, with as much par
 	# Then, we have a number of jobs equal to the number of nodes requested.
 	# Note that MarkDuplicates doesn't take much time, but only uses one core, so it's a bit inefficient here.
 
-	cat $src/sample_list | env_parallel -j $PBS_NUM_NODES --sshloginfile $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j 1 --sshloginfile $PBS_NODEFILE \
 		'bwa mem \
 			-t 8 -M \
 			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSM:{}" \
 			$reference \
-			$src/clean_reads/{}_R1.fastq.gz \
-			$src/clean_reads/{}_R2.fastq.gz \
+			$src/clean_reads/{}_paired_R1.fastq.gz \
+			$src/clean_reads/{}_paired_R2.fastq.gz \
 			> $src/alignments/{}.sam
 		gatk MarkDuplicatesSpark \
 			-I $src/alignments/{}.sam \
