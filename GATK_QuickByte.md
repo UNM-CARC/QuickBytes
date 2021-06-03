@@ -338,6 +338,13 @@ Here is a sample PBS script combining everything we have above, with as much par
 	src=$PBS_O_WORKDIR
 	reference=${src}/reference.fa
 	
+	# indexing reference
+	bwa index -p $reference ${reference}.fa
+	samtools faidx ${reference}.fa -o ${reference}.fa.fai
+	picard CreateSequenceDictionary \
+       		R=${reference}.fa \
+       		O=${reference}.dict
+	
 	# Trimming section
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
 	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
@@ -354,7 +361,7 @@ Here is a sample PBS script combining everything we have above, with as much par
 			ILLUMINACLIP:${adapters}:2:30:10:2:keepBothReads \
 			LEADING:3 TRAILING:3 MINLEN:${min_length}'
 	
-	# Section for alignment and marking duplicatesn. 
+	# Section for alignment and marking duplicates. 
 	# Note we parallelize such that BWA uses exactly one node.
 	# Then, we have a number of jobs equal to the number of nodes requested.
 	# Note that MarkDuplicates doesn't take much time, but only uses one core, so it's a bit inefficient here.
