@@ -62,11 +62,12 @@ We will be using a few variables throughout this that we can set now. These are 
 
 ### Sample Names ###
 
-To keep our script short, and outputs easy to understand, we will use consistent sample names for each step, and keep the sample names in a file. We assume this file is named “sample_list”. The file should have one sample name per line, as below:
+To keep our script short, and outputs easy to understand, we will use consistent sample names for each step, and keep the sample names in a file. We assume this file is named “sample_list”. The file should have one sample name per line. with a single blank line at the end. The one for the tutorial dataset looks like:
 
-	Sample1
-	Sample2
-	Sample3
+	GRSG_JHWY140
+	GRSG_JHWY142
+	GUSG_GGS1
+	GUSG_GGS2
 	
 We will use this sample list in two ways. The first way is loops, and second is GNU parallel. You can see some examples in the PBS script at the end of the document. Here's a basic demonstration of how to us the list in a loop:
 
@@ -336,7 +337,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 	source activate gatk-env
 	
 	src=$PBS_O_WORKDIR
-	reference=${src}/reference.fa
+	# this is "sagegrouse_reference" in the tutorial
+	reference=${src}/reference
 	
 	# indexing reference
 	bwa index -p $reference ${reference}.fa
