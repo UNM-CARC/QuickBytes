@@ -395,7 +395,7 @@ Here is a sample PBS script combining everything we have above, with as much par
 		picard CollectInsertSizeMetrics \
 			INPUT=$src/bams/{}_recal.bam \
 			OUTPUT=$src/alignments/insert_metrics/{}_insert_size.txt \
-			HISTOGRAM_FILE=$src/{}_insert_hist.pdf
+			HISTOGRAM_FILE=$src/alignments/insert_metrics/{}_insert_hist.pdf
 		samtools depth \
 			-a $src/bams/{}_recal.bam \
 			> $src/alignments/depth/{}_depth.txt'
@@ -441,12 +441,12 @@ Here is a sample PBS script combining everything we have above, with as much par
 	while read interval; do
    		echo ${src}/combined_vcfs/intervals/${interval}_genotyped.vcf.gz >> \
        			$src/combined_vcfs/gather_list
-	done < $src/chromosomes.list
+	done < $src/intervals.list
 	
 	# Run GatherVcfs
 	gatk GatherVcfs \
     		-I $src/combined_vcfs/gather_list \
-    		-O combined_vcfs/combined_vcf.vcf.gz
+    		-O $src/combined_vcfs/combined_vcf.vcf.gz
 
 	# Index the gathered VCF
 	gatk IndexFeatureFile \
