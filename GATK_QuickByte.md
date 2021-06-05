@@ -84,7 +84,7 @@ For clarity, in most cases the commands are written as they would be for a for l
 
 ### Demultiplexing ###
 
-Because it is not covered by best practices, and is often done by the sequencing center, we will not go into the details of demultiplexing here. We recommend you use Illumina’s software [bcl2fastq](https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) if you have the data in .bcl format, and [saber](https://github.com/najoshi/sabre) if it has already been converted to fastq format and it does not have dual combinatorial barcodes. **We'll assume these reads will be in the raw_reads folder with the name SAMPLE_R1.fastq.gz (or R2 for read 2).**
+Because it is not covered by best practices, and is often done by the sequencing center, we will not go into the details of demultiplexing here. We recommend you use Illumina’s software [bcl2fastq](https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) if you have the data in .bcl format, and [saber](https://github.com/najoshi/sabre) if it has already been converted to fastq format and it does not have dual combinatorial barcodes. **We'll assume these reads will be in the raw_reads folder with the name SAMPLE_1.fastq.gz (or 2 for read 2).**
 
 ## The Pipeline ##
 
