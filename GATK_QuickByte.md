@@ -317,7 +317,7 @@ Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists nee
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
 			-O $src/combined_vcfs/intervals/{}_genotyped.vcf.gz'
 			
-The final (gather) step uses GatherVcfs, for which we'll make a file containing the paths to all input genotyped VCFs (generated in the while loop).
+The final (gather) step uses GatherVcfs, for which we'll make a file containing the paths to all input genotyped VCFs (generated in the while loop). Note the first line initializes a blank file for the gather list. After we make the gathered VCF, we need to index it for future analyses.
 
 	> $src/combined_vcfs/gather_list
 	while read interval; do
@@ -328,6 +328,9 @@ The final (gather) step uses GatherVcfs, for which we'll make a file containing 
 	gatk GatherVcfs \
     		-I $src/combined_vcfs/gather_list \
     		-O combined_vcfs/combined_vcf.vcf.gz
+		
+	gatk IndexFeatureFile \
+		-I $src/combined_vcfs/raw_snps.vcf.gz
 
 ## Sample PBS Script ##
 
@@ -390,14 +393,14 @@ Here is a sample PBS script combining everything we have above, with as much par
 	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
 		'picard CollectAlignmentSummaryMetrics \
 			R=${reference}.fa \
-			I=$src/bams/{}_recal.bam \
+			I=$src/bams/{}_dedup.bam \
 			O=$src/alignments/alignment_summary/{}_alignment_summary.txt
 		picard CollectInsertSizeMetrics \
-			INPUT=$src/bams/{}_recal.bam \
+			INPUT=$src/bams/{}_dedup.bam \
 			OUTPUT=$src/alignments/insert_metrics/{}_insert_size.txt \
 			HISTOGRAM_FILE=$src/alignments/insert_metrics/{}_insert_hist.pdf
 		samtools depth \
-			-a $src/bams/{}_recal.bam \
+			-a $src/bams/{}_dedup.bam \
 			> $src/alignments/depth/{}_depth.txt'
 
 	# Scatter-gather HaploType Caller, probably the most likely to need checkpoints.
@@ -411,7 +414,7 @@ Here is a sample PBS script combining everything we have above, with as much par
 		cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
 			'gatk --java-options "-Xmx6g" HaplotypeCaller \
 			-R ${reference}.fa \
-			-I $src/bams/${sample}_recal.bam \
+			-I $src/bams/${sample}_dedup.bam \
 			-O $src/gvcfs/${sample}/${sample}_{}_raw.g.vcf.gz \
 			-L {} \
 			-ERC GVCF'
