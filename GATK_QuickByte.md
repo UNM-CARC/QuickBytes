@@ -6,7 +6,7 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two gzipped fastq files per species (i.e. four total), a file with adapter sequences to trim, and a reference genome. They are located at /projects/tutorials/GATK/. Copy them into your space like "cp /projects/tutorials/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually..
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/tutorials/GATK/. Copy them into your space like "cp /projects/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on wheeler takes about 5.5 hours.
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -332,10 +332,25 @@ The final (gather) step uses GatherVcfs, for which we'll make a file containing 
 	gatk IndexFeatureFile \
 		-I $src/combined_vcfs/raw_snps.vcf.gz
 
+**NOTE THAT THIS FILE STILL NEEDS TO HAVE VARIANTS SELECTED AND FILTERED, SEE "Selecting and filtering variants" ABOVE**
+
 ## Sample PBS Script ##
 
 Here is a sample PBS script combining everything we have above, with as much parallelization as possible. One reason to break up steps like we did is for improved checkpointing (without having to write code checking if files are already present). Once you are finished running a block of code, you can just comment it out. Similarly, if you can only get part way through your sample list, you can copy it and remove samples that have already completed a given step.
+	
+	#!/bin/bash
 
+	#PBS -q default
+	#PBS -l nodes=4:ppn=8
+	#PBS -l walltime=10:00:00
+	#PBS -N gatk_tutorial
+	#PBS -m ae
+	#PBS -M youremail@school.edu
+	
+	# the PBS lines are for the default queue, using 4 nodes, and has a conservative 10 hour wall time
+	# it is named "gatk_tutorial" and sends an email to "youremail@school.edu" when done
+
+	# load your conda environment
 	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
 	source activate gatk-env
 	
