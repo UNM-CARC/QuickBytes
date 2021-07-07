@@ -14,6 +14,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [Managing modules](https://github.com/UNM-CARC/QuickBytes/blob/master/module_management.md)
       * [Intro to Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md)
       * [Converting PBS to Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs2slurm.md)
+      * [Intro to Slurm accounting at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/slurm_accounting.md)
       * [GNU Parallel](https://github.com/UNM-CARC/QuickBytes/blob/master/GNU%20Parallel.md)
    
    * Applications software
