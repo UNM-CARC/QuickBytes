@@ -354,6 +354,10 @@ Here is a sample PBS script combining everything we have above, with as much par
 	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
 	source activate gatk-env
 	
+	# load GNU parallel, get env_parallel
+	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	source $(which env_parallel.bash)
+	
 	src=$PBS_O_WORKDIR
 	# this is "sagegrouse_reference" in the tutorial
 	reference=${src}/reference
