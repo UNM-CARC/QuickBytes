@@ -352,7 +352,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 
 	# load your conda environment
 	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
-	source activate gatk-env
+	eval "$(conda shell.bash hook)"
+	conda activate gatk-env
 	
 	# load GNU parallel, get env_parallel
 	module load parallel-20170322-gcc-4.8.5-2ycpx7e
