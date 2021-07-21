@@ -22,5 +22,7 @@
 ## QIIME2 pipeline##
 
 ### install ###
-
+```
    module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+   
+```
