@@ -12,11 +12,25 @@
 
 ### steps for each pipeline ###
 1. install
-2. join reads
-3. filter reads (remove chimeras)
-4. Create OTUs/ASVs
-5. Calculate Abundances per sample
-6. Determine Taxonomy for OTUs/ASVs
+2. join forward and reverse reads
+3. remove primer regions
+4. filter reads (remove chimeras)
+5. Create OTUs/ASVs
+6. Calculate Abundances per sample
+7. Determine Taxonomy for OTUs/ASVs
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## QIIME2 pipeline ##
@@ -28,15 +42,24 @@
    
    # enables conda activate to work
    eval "$(conda shell.bash hook)"
-   
+      
+
    #download the yml
-   wget https://data.qiime2.org/distro/core/qiime2-2020.8-py36-linux-conda.yml
+   wget https://data.qiime2.org/distro/core/qiime2-2021.4-py38-linux-conda.yml
    
    # create conda environment called qiime2-2020.8
-   conda env create -y -n qiime2-2020.8 --file qiime2-2020.8-py36-linux-conda.yml
+   conda env create -n qiime2-2021.4 --file qiime2-2021.4-py38-linux-conda.yml
    
    # delete yml
    rm qiime2-2020.8-py36-linux-conda.yml
    
    conda activate qiime2-2020.8
 ```
+
+
+### join forward and reverse reads ###
+
+
+
+
+
