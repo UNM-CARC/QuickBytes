@@ -379,3 +379,14 @@ cd $src/usearch
 
 ```
 
+
+### Determine Taxonomy for OTUs/ASVs ###
+```
+wget https://drive5.com/sintax/rdp_16s_v16.fa.gz
+gunzip rdp_16s_v16.fa.gz
+
+# Creates taxonomy file with OTU and the taxonomy in the reads.sintax file
+./usearch11.0.667 -sintax otus.fasta -db rdp_16s_v16.fa -tabbedout reads.sintax -strand both -sintax_cutoff 0.8
+
+
+```
