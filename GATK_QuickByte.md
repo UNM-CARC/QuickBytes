@@ -308,7 +308,7 @@ This first step is optional, but here we separate out indels and SNPs. Note that
 		-select-type INDEL \
 		-O $src/combined_vcfs/raw_indel.vcf.gz
 
-Here are some good sample filters. The “DP_filter” is depth of coverage (you will probably want to change this), “Q_filter” is quality score, “QD_filter” is quality by depth (avoids artificial inflation of calls), and “FS_filter” is a strand bias filter (higher value means higher bias). Note that DP is better for low depth samples, while QD is better for high depth. More info can be found on [GATK’s website](https://gatk.broadinstitute.org/hc/en-us/articles/360035890471-Hard-filtering-germline-short-variants).
+Here are some good sample filters. The “DP_filter” is depth of coverage (you will probably want to change this), “Q_filter” is quality score, “QD_filter” is quality by depth (avoids artificial inflation of calls), "MQ_filter" is a mapping quality filter, and “FS_filter” is a strand bias filter (higher value means higher bias). Note that DP is better for low depth samples, while QD is better for high depth. More info can be found on [GATK’s website](https://gatk.broadinstitute.org/hc/en-us/articles/360035890471-Hard-filtering-germline-short-variants).
 
 	gatk VariantFiltration \
 		-R ${reference}.fa \
@@ -317,7 +317,8 @@ Here are some good sample filters. The “DP_filter” is depth of coverage (you
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "FS > 60.0" --filter-name "FS_filter"
+		-filter "FS > 60.0" --filter-name "FS_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter"
 
 This will give us our final VCF! Note that the filtered SNPs are still included, just with a filter tag. You can use something like SelectVariants' "exclude-filtered" flag or [VCFtools’](http://vcftools.sourceforge.net/) “--remove-filtered-all” flag to get rid of them.
 
@@ -566,7 +567,8 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "FS > 60.0" --filter-name "FS_filter"
+		-filter "FS > 60.0" --filter-name "FS_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter"
 
 <a name="tshoot"/>
 
