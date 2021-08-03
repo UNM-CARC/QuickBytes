@@ -137,6 +137,14 @@ qiime tools export \
 
 
 
+
+
+
+
+
+
+
+
 ## Mothur pipeline ##
 need to fix:
 moving files out from data folder. 
@@ -300,6 +308,17 @@ mothur "#classify.otu(list=stability.trim.contigs.good.unique.filter.unique.prec
 # 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.fasta
 mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist, list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, name=stability.trim.contigs.good.names,  fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta)
 ```
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## USEARCH/UPARSE ##
