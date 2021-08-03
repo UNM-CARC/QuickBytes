@@ -139,7 +139,8 @@ qiime tools export \
 
 
 ## Mothur pipeline ##
-
+need to fix:
+moving files out from data folder. 
 
 
 ### install ###
