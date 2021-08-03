@@ -373,6 +373,8 @@ cd $src/usearch
  ```
 
 # map back reads and create OTU table
+# the otutab.txt is the OTU table 
+# the map.txt shows you how each read is mapped to what OTU
 ./usearch11.0.667 -otutab merged.fq -otus otus.fasta -otutabout otutab.txt -mapout map.txt
 
 ```
