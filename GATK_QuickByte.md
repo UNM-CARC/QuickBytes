@@ -249,7 +249,7 @@ If you are dealing with large files, HaplotypeCaller may take longer than your w
 
 ### Consolidating and Genotyping ###
 
-This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs can take a while for large datasets, but is easier to use. Overall, it seems that GenomicsDBImport is more suited for model organisms, while CombineGVCFs is more convenient for non-model organisms. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot take this input, we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
+This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs can take a long time for large datasets, but is easier to use. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot take this input, we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
 
 	gvcf_names=""
 	while read sample; do
@@ -353,6 +353,7 @@ You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF 
 			-R ${reference}.fa \
 			${interval_list} \
 			-O $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz'
+			
 Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists needed!
 
 	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
@@ -361,6 +362,28 @@ Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists nee
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
 			-O $src/combined_vcfs/intervals/{}_genotyped.vcf.gz'
 			
+If you have many samples, it may be best to use GenomicsDBImport. It is very similar, with both that step and the genotyping below. Note that the directory for --genomicsdb-workspace-path can't exist (unless you're updating it):
+
+	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		'mkdir $src/gendb_temp/{}
+   	 	interval_list=""
+    		# loop to generate list of sample-specific intervals
+		while read sample; do
+			interval_list="${interval_list}-V ${src}/gvcfs/${sample}/${sample}_{}_raw.g.vcf.gz "
+		done < $src/sample_list
+		# run make the genomics databases
+		gatk --java-options "-Xmx6g" GenomicsDBImport \
+			 ${interval_list} \
+			--genomicsdb-workspace-path $src/genomics_databases/{} \
+			--tmp-dir $src/gendb_temp/{} \
+			-L {}'
+
+	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
+		-R ${reference}.fa \
+		-V gendb://$src/genomics_databases/{} \
+		-O $src/combined_vcfs/intervals/{}_genotyped.vcf.gz'
+
 The final (gather) step uses GatherVcfs, for which we'll make a file containing the paths to all input genotyped VCFs (generated in the while loop). Note the first line initializes a blank file for the gather list. After we make the gathered VCF, we need to index it for future analyses.
 
 	> $src/combined_vcfs/gather_list
