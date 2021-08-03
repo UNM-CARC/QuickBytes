@@ -13,11 +13,10 @@
 ### steps for each pipeline ###
 1. install
 2. join forward and reverse reads
-3. remove primer regions
-4. filter reads (remove chimeras)
-5. Create OTUs/ASVs
-6. Calculate Abundances per sample
-7. Determine Taxonomy for OTUs/ASVs
+3. filter reads (remove chimeras)
+4. Create OTUs/ASVs
+5. Calculate Abundances per sample
+6. Determine Taxonomy for OTUs/ASVs
 
 
 
@@ -54,7 +53,7 @@ cd src
 
 
 ## QIIME2 pipeline ##
-
+need to finish to otu table
 ### install ###
 ```
    # load miniconda
@@ -303,6 +302,78 @@ mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.prec
 ```
 
 
-##
+## USEARCH/UPARSE ##
 
+
+### install ###
+```
+cd $src
+
+mkdir usearch
+cd usearch
+
+
+# download the program
+wget https://www.drive5.com/downloads/usearch11.0.667_i86linux32.gz
+
+gunzip usearch11.0.667_i86linux32
+
+# change permissions so you can run it
+chmod +x usearch11.0.667_i86linux32
+
+# rename so its shorter
+ mv usearch11.0.667_i86linux32 usearch11.0.667
+ 
+ ```
+ 
+ 
+ ### 2. join forward and reverse reads ###
+ ```
+# need to unzip all the files first
+cd $src/data/MiSeq_SOP/fastqs
+gunzip *gz
+
+cd $src/usearch
+
+# merges forward and reverse reads. 
+./usearch11.0.667 -fastq_mergepairs $src/data/MiSeq_SOP/fastqs/*R1*.fastq -fastqout merged.fq -relabel @
+
+
+ 
+ # we can use this step to guide how we will filter the reads. 
+ # this will tell us the size of the reads and the error rate. 
+ # given the error rate is well below 0.5 and most reaads are above 250 bp, i will use that and 250 as the shortest size for length. 
+  ./usearch11.0.667 -fastx_info merged.fq -secs 5 -output reads_info.txt
+  
+  
+
+ # filter reads based off the suggestions above. This creates a fasta file which can be used for clustering
+ ./usearch11.0.667 -fastq_filter merged.fq -fastaout reads.fasta -fastq_maxee 0.5 -fastq_minlen 250
+```
+
+### Create OTUs/ASVs #### 
+
+```
+# dereplicate sequences so we only have unique reads. 
+# creates file with uniques.fasta which each read relabeled as uniq
+./usearch11.0.667 -fastx_uniques reads.fasta -fastaout uniques.fasta -sizeout -relabel Uniq
+
+# creates otus at 97% and removes chimeras via UPARSE
+# warning: this will throw out singletons so change -minsize to 1. 
+# creates uparse.txt - log of how the clustering went for each unique read.
+# creates otus.fasta - representative OTUs. 
+./usearch11.0.667 -cluster_otus uniques.fasta -otus otus.fasta -uparseout uparse.txt -relabel Otu -minsize 2
+
+
+
+```
+
+
+### Calculate Abundances per sample ###
+ ```
+
+# map back reads and create OTU table
+./usearch11.0.667 -otutab merged.fq -otus otus.fasta -otutabout otutab.txt -mapout map.txt
+
+```
 
