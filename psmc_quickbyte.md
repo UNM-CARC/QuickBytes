@@ -18,7 +18,7 @@ Due to the inavailibility of PSMC on conda, high number of included utilities, a
 
 Then we'll install some dependencies with conda as below.
 
-	conda create -n psmc-env -c bioconda -c conda-forge picard bcftools samtools bwa htslib
+	conda create -n psmc-env -c bioconda -c conda-forge picard bcftools samtools bwa
 
 At the top of any scripts used for this, change to your working directory and activate the environment like:
 
