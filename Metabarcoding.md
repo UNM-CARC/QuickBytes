@@ -2,7 +2,7 @@
 
 
 ### Different pipelines ###
-1. Qiime2 (using dada2)
+1. QIIME2 (using dada2)
 2. Mothur
 3. USEARCH
 
