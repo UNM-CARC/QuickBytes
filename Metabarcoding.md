@@ -1,4 +1,4 @@
-# Processing Metabarcode reads #
+# Metabarcoding Tutorial #
 
 
 ### Different pipelines ###
