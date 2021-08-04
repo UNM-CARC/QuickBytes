@@ -25,7 +25,7 @@
 
 ## Set up raw data ##
 
-# create overal folder
+### create folder structure ###
 ```
 mkdir metabarcoding
 cd metabarcoding
