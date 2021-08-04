@@ -3,8 +3,8 @@
 
 ### Different pipelines ###
 1. Qiime2
-2. USEARCH/UPARSE
-3. Mothur
+2. Mothur
+3. USEARCH
 4. DADA2
 
 
@@ -27,6 +27,7 @@
 ## Set up raw data ##
 
 # create overal folder
+```
 mkdir metabarcoding
 cd metabarcoding
 src=~/metabarcoding
@@ -44,7 +45,7 @@ gzip >fa
 # move back to main folder
 
 cd src
-
+```
 
 
 
@@ -409,3 +410,36 @@ gunzip rdp_16s_v16.fa.gz
 
 
 ```
+
+
+
+
+
+## QIIME2 pipeline ##
+need to finish to otu table
+### install ###
+```
+module load r-4.0.4-gcc-10.2.0-python3-dghog6f
+mkdir dada2_tutorial
+cd dada2_tutorial
+mkdir pkgs
+
+
+# launch R
+R 
+
+
+# make sure to make the folder prior to installing packages or else it won't work!
+path_to_packages <- "~metabarcoding/dada2_tutorial/pkgs"
+dir.create(path_to_packages, recursive = TRUE)
+
+# this sets the path for your packages. 
+# you will need to run this every time you run this code or it will revert to the default path for your packages!
+.libPaths(path_to_packages)
+   
+install.packages("devtools")
+library("devtools")
+devtools::install_github("benjjneb/dada2")
+
+
+
