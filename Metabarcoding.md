@@ -9,7 +9,7 @@
 
 
 
-### steps for each pipeline ###
+### Steps for each pipeline ###
 1. install
 2. join forward and reverse reads
 3. filter reads (remove chimeras)
