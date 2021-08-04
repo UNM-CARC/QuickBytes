@@ -13,9 +13,9 @@
 1. install
 2. join forward and reverse reads
 3. filter reads (remove chimeras)
-4. Create OTUs/ASVs
-5. Calculate Abundances per sample
-6. Determine Taxonomy for OTUs/ASVs
+4. create OTUs/ASVs
+5. calculate Abundances per sample
+6. determine Taxonomy for OTUs/ASVs
 
 
 
