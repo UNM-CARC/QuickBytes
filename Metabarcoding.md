@@ -399,7 +399,7 @@ cd $src/usearch
 ```
 
 
-### Determine Taxonomy for OTUs/ASVs ###
+### Determine Taxonomy for OTUs ###
 ```
 # downloaad rdp database
 wget https://drive5.com/sintax/rdp_16s_v16.fa.gz
