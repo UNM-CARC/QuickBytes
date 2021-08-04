@@ -321,7 +321,7 @@ mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.prec
 
 
 
-## USEARCH/UPARSE ##
+## USEARCH ##
 
 
 ### install ###
