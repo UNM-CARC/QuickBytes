@@ -169,7 +169,7 @@ conda activate mothur
 ### join forward and reverse reads ###
 
 ```
-cd src
+cd $src
 mkdir mothur_tutorial 
 
 # unzip all files
@@ -224,8 +224,8 @@ mothur "#filter.seqs(fasta=stability.trim.contigs.good.unique.align, vertical=T,
 
 # find all unique sequences again in case there are some sequences that are now the same.
 # creates:
-# 1. stability.trim.contigs.good.unique.filter.count_table
-# 2. stability.trim.contigs.good.unique.filter.unique.fasta
+#     1. stability.trim.contigs.good.unique.filter.count_table
+#     2. stability.trim.contigs.good.unique.filter.unique.fasta
 mothur "#unique.seqs(fasta=stability.trim.contigs.good.unique.filter.fasta, count=stability.trim.contigs.good.count_table)"
 
 
@@ -238,9 +238,9 @@ mothur "#pre.cluster(fasta=stability.trim.contigs.good.unique.filter.unique.fast
 
 # remove chimeras
 Output files:
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.chimeras
-# 3. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.accnos
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.chimeras
+#     3. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.accnos
 mothur "#chimera.vsearch(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.fasta, count=stability.trim.contigs.good.unique.filter.unique.precluster.count_table, dereplicate=t)"
 
 # remove chimeras from fasta
@@ -257,17 +257,17 @@ tar zxvf  trainset18_062020.pds.tgz
 
 # remove sequences that are not bacteria. 
 # output
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.taxonomy
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.tax.summary
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.taxonomy
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.tax.summary
 mothur "#classify.seqs(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table, reference=trainset18_062020.pds.fasta, taxonomy=trainset18_062020.pds.tax, cutoff=80)"
 
 
 # removing lineages here
 # output
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.pick.taxonomy
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.accnos
-# 3. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.pick.count_table
-# 4. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.fasta
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.pick.taxonomy
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.accnos
+#     3. stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.pick.count_table
+#     4. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.fasta
 mothur "#remove.lineage(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table, taxonomy=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)"
 
 # get summary of taxonomy by counts
@@ -282,30 +282,30 @@ mothur "#summary.tax(taxonomy=stability.trim.contigs.good.unique.filter.unique.p
 
 # create file of distances between potential OTUs
 # output
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist
 mothur "#dist.seqs(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.fasta, cutoff=0.03)"
 
 # create OTUs at 97% similarity.
 # output 
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.steps
-# 3. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.sensspec
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.steps
+#     3. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.sensspec
 mothur "#cluster(column=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.pick.count_table)"
 
 # Creates OTU table with only OTUs
 # output
-# 1.  stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.shared
+#     1.  stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.shared
 mothur "#make.shared(list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, label=0.03)"
 
 # create taxonomy for each OTU
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.cons.taxonomy
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.cons.tax.summary
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.cons.taxonomy
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.cons.tax.summary
 mothur "#classify.otu(list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.pick.taxonomy, label=0.03)"
 
 # get representative sequences files
 # output 
-# 1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.names
-# 2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.fasta
+#     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.names
+#     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.fasta
 mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist, list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, name=stability.trim.contigs.good.names,  fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta)
 ```
 
