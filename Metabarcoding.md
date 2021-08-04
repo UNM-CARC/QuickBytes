@@ -53,7 +53,8 @@ cd $src
 
 
 ## QIIME2 (using dada2) pipeline ##
-need to create otu table
+
+
 ### install ###
 ```
    # load miniconda
@@ -95,9 +96,9 @@ qiime tools import \
 qiime demux summarize \
   --i-data  $src/qiime2_tutorial/demux-paired-end.qza \
   --o-visualization $src/qiime2_tutorial/demux.qzv
-
-
-
+```
+### filter reads (remove chimeras) and create ASVs ###
+```
 qiime dada2 denoise-paired \
   --i-demultiplexed-seqs  $src/qiime2_tutorial/demux-paired-end.qza \
   --p-trunc-len-f 240 \
@@ -118,17 +119,16 @@ qiime feature-table summarize \
 qiime metadata tabulate \
   --m-input-file $src/qiime2_tutorial/denoising-stats.qza \
   --o-visualization $src/qiime2_tutorial/denoising-stats.qzv
-  
-  # export rep seq sequenes.
+```
+
+### calculate Abundances per sample ###
+```
+  # export rep seq sequences.
  qiime tools export \
   --input-path $src/qiime2_tutorial/rep-seqs-dada2.qza \
   --output-path $src/qiime2_tutorial/rep-seqs.fasta
-
-
-
      
-     
-     
+# creates OTU table
 qiime tools export \
   --input-path $src/qiime2_tutorial/table-dada2.qza \
    --output-path $src/qiime2_tutorial/exported-feature-table
