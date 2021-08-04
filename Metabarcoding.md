@@ -2,10 +2,9 @@
 
 
 ### Different pipelines ###
-1. Qiime2
+1. Qiime2 (using dada2)
 2. Mothur
 3. USEARCH
-4. DADA2
 
 
 
@@ -44,7 +43,7 @@ gzip >fa
 
 # move back to main folder
 
-cd src
+cd $src
 ```
 
 
@@ -53,8 +52,8 @@ cd src
 
 
 
-## QIIME2 pipeline ##
-need to finish to otu table
+## QIIME2 (using dada2) pipeline ##
+need to create otu table
 ### install ###
 ```
    # load miniconda
@@ -81,7 +80,7 @@ need to finish to otu table
 
 
 ```
-cd scr
+cd $scr
 
 mkdir qiime2_tutorial
 
@@ -278,7 +277,7 @@ mothur "#summary.tax(taxonomy=stability.trim.contigs.good.unique.filter.unique.p
 ```
 
 
-### Create OTUs/ASVs ###
+### Create OTUs ###
 ```
 
 # create file of distances between potential OTUs
@@ -371,7 +370,7 @@ cd $src/usearch
  ./usearch11.0.667 -fastq_filter merged.fq -fastaout reads.fasta -fastq_maxee 0.5 -fastq_minlen 250
 ```
 
-### Create OTUs/ASVs #### 
+### Create OTUs #### 
 
 ```
 # dereplicate sequences so we only have unique reads. 
@@ -402,6 +401,7 @@ cd $src/usearch
 
 ### Determine Taxonomy for OTUs/ASVs ###
 ```
+# downloaad rdp database
 wget https://drive5.com/sintax/rdp_16s_v16.fa.gz
 gunzip rdp_16s_v16.fa.gz
 
@@ -411,35 +411,6 @@ gunzip rdp_16s_v16.fa.gz
 
 ```
 
-
-
-
-
-## QIIME2 pipeline ##
-need to finish to otu table
-### install ###
-```
-module load r-4.0.4-gcc-10.2.0-python3-dghog6f
-mkdir dada2_tutorial
-cd dada2_tutorial
-mkdir pkgs
-
-
-# launch R
-R 
-
-
-# make sure to make the folder prior to installing packages or else it won't work!
-path_to_packages <- "~metabarcoding/dada2_tutorial/pkgs"
-dir.create(path_to_packages, recursive = TRUE)
-
-# this sets the path for your packages. 
-# you will need to run this every time you run this code or it will revert to the default path for your packages!
-.libPaths(path_to_packages)
-   
-install.packages("devtools")
-library("devtools")
-devtools::install_github("benjjneb/dada2")
 
 
 
