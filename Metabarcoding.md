@@ -1,6 +1,10 @@
 # Metabarcoding Tutorial #
 
 
+
+
+
+
 ### Different pipelines ###
 1. QIIME2 (using dada2)
 2. Mothur
@@ -93,12 +97,16 @@ qiime tools import \
 --output-path $src/qiime2_tutorial/demux-paired-end.qza
 
 # summary figures online
+# open visual at this link: https://view.qiime2.org/
 qiime demux summarize \
   --i-data  $src/qiime2_tutorial/demux-paired-end.qza \
   --o-visualization $src/qiime2_tutorial/demux.qzv
 ```
 ### filter reads (remove chimeras) and create ASVs ###
 ```
+# following what we see in the visualization we will trim the reads and denoise the reads. 
+# this will also create the rep seq qiime file wiht the ASVs. 
+# This method denoises paired-end sequences, dereplicates them, and filters chimeras.
 qiime dada2 denoise-paired \
   --i-demultiplexed-seqs  $src/qiime2_tutorial/demux-paired-end.qza \
   --p-trunc-len-f 240 \
@@ -116,9 +124,6 @@ qiime feature-table summarize \
   --i-table $src/qiime2_tutorial/table-dada2.qza \
   --o-visualization $src/qiime2_tutorial/table.qzv 
 
-qiime metadata tabulate \
-  --m-input-file $src/qiime2_tutorial/denoising-stats.qza \
-  --o-visualization $src/qiime2_tutorial/denoising-stats.qzv
 ```
 
 ### calculate Abundances per sample ###
