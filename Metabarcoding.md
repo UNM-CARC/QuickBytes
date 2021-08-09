@@ -172,13 +172,22 @@ conda activate mothur
 cd $src
 mkdir mothur_tutorial 
 
-# unzip all files
-cd $src/data/MiSeq_SOP/fastqs
+cd mothur_tutorial
+# copy files into mothur folder
+scp $src/data/MiSeq_SOP/fastqs/*gz .
 
 # create a list of the files
-mothur "#make.file(., type=gz, prefix=stability)"
+# output
+#     1. stability.files
+mothur "#make.file(inputdir=., type=gz, prefix=stability)"
+
 
 # join forward and reverse reads. Gives you a count of reads of how many reads are assembled for each sample
+# output
+#     1. stability.trim.contigs.fasta
+#     2. stability.scrap.contigs.fasta
+#     3. stability.contigs.report
+#     4. stability.contigs.groups
 mothur "#make.contigs(file=stability.files, processors=8)"
 
 # summary stats on the merged reads
@@ -191,38 +200,60 @@ mothur "#summary.seqs(fasta=stability.trim.contigs.fasta)"
 ### filter reads, remove primer region, and remove chimeras ###
 ```
 # removes reads that are longer than 275 bases. Likely to be errors
+# output files
+#        1. stability.contigs.pick.groups
+#        2. stability.trim.contigs.good.fasta
+#        3. stability.trim.contigs.bad.accnos
+#        4. stability.contigs.good.groups
 mothur "#screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, maxambig=0, maxlength=275)"
 
 
-# find unique sequences in dataset
 
+# find unique sequences in dataset. This is to reduce the size of the dataset and reduce redundancies. 
+# output files
+#        1.stability.trim.contigs.good.names
+         2. stability.trim.contigs.good.unique.fasta
 mothur "#unique.seqs(fasta=stability.trim.contigs.good.fasta)"
 
+
+# count up how many reads are match the good names. 
+# output file
+#        1. stability.trim.contigs.good.count_table
 mothur "#count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)"
-mothur "#summary.seqs(count=stability.trim.contigs.good.count_table)"
 
 
+# now going to trim unique reads to silva dataset. 
 
 # download reference database to trim reads
 wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.bacteria.zip
 unzip silva.bacteria.zip
 
 
-# trim to the V4 variable region of the silva bacteria dataset
+# trim to the V4 variable region of the silva bacteria dataset. This is the reigon we sequenced
+# output file
+#        1. silva.bacteria/silva.bacteria.pcr.fasta
 mothur "#pcr.seqs(fasta=silva.bacteria/silva.bacteria.fasta, start=11894, end=25319, keepdots=F, processors=8)"
 
-# align reads to Silva reference
+# align unique reads to Silva reference
+# output files. 
+#        1. stability.trim.contigs.good.unique.align
+#        2. stability.trim.contigs.good.unique.align.report
 mothur "#align.seqs(fasta=stability.trim.contigs.good.unique.fasta, reference=silva.bacteria/silva.bacteria.pcr.fasta)"
 
 
 # summary of where the sequences align
+# output file
+#        1. stability.trim.contigs.good.unique.summary
 mothur "#summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)"
 
 # trim sequences that extend beyond the Silva alignment (overhangs) and remove gap only columns. 
+# output file
+#        1. stability.filter
+#        2. stability.trim.contigs.good.unique.filter.fasta
 mothur "#filter.seqs(fasta=stability.trim.contigs.good.unique.align, vertical=T, trump=.)"
 
 
-# find all unique sequences again in case there are some sequences that are now the same.
+# find all unique sequences again in case there are some sequences that are now identical.
 # creates:
 #     1. stability.trim.contigs.good.unique.filter.count_table
 #     2. stability.trim.contigs.good.unique.filter.unique.fasta
@@ -231,7 +262,29 @@ mothur "#unique.seqs(fasta=stability.trim.contigs.good.unique.filter.fasta, coun
 
 
 # pre-clustering to clean up sequencing errors. Differences of two nucleotides will be clustered. 
-
+# output files
+#        1. stability.trim.contigs.good.unique.filter.unique.precluster.fasta
+#        2. stability.trim.contigs.good.unique.filter.unique.precluster.count_table
+#        3. stability.trim.contigs.good.unique.filter.unique.precluster.F3D0.map
+#        4. stability.trim.contigs.good.unique.filter.unique.precluster.F3D1.map
+#        5. stability.trim.contigs.good.unique.filter.unique.precluster.F3D141.map
+#        6. stability.trim.contigs.good.unique.filter.unique.precluster.F3D142.map
+#        7. stability.trim.contigs.good.unique.filter.unique.precluster.F3D143.map
+#        8. stability.trim.contigs.good.unique.filter.unique.precluster.F3D144.map
+#        9. stability.trim.contigs.good.unique.filter.unique.precluster.F3D145.map
+#        10. stability.trim.contigs.good.unique.filter.unique.precluster.F3D146.map
+#        11. stability.trim.contigs.good.unique.filter.unique.precluster.F3D147.map
+#        12. stability.trim.contigs.good.unique.filter.unique.precluster.F3D148.map
+#        13. stability.trim.contigs.good.unique.filter.unique.precluster.F3D149.map
+#        14. stability.trim.contigs.good.unique.filter.unique.precluster.F3D150.map
+#        15. stability.trim.contigs.good.unique.filter.unique.precluster.F3D2.map
+#        16. stability.trim.contigs.good.unique.filter.unique.precluster.F3D3.map
+#        17. stability.trim.contigs.good.unique.filter.unique.precluster.F3D5.map
+#        18. stability.trim.contigs.good.unique.filter.unique.precluster.F3D6.map
+#        19. stability.trim.contigs.good.unique.filter.unique.precluster.F3D7.map
+#        20. stability.trim.contigs.good.unique.filter.unique.precluster.F3D8.map
+#        21. stability.trim.contigs.good.unique.filter.unique.precluster.F3D9.map
+#        22. stability.trim.contigs.good.unique.filter.unique.precluster.Mock.map
 mothur "#pre.cluster(fasta=stability.trim.contigs.good.unique.filter.unique.fasta, count=stability.trim.contigs.good.unique.filter.count_table, diffs=2)"
 
 
@@ -252,14 +305,13 @@ mothur "#remove.seqs(fasta=stability.trim.contigs.good.unique.filter.unique.prec
 # downloading files to classifiy sequences and remove non-bacterial reads
 wget https://mothur.s3.us-east-2.amazonaws.com/wiki/trainset18_062020.pds.tgz
 tar zxvf  trainset18_062020.pds.tgz
- mv trainset18_062020.pds/* .
  
 
 # remove sequences that are not bacteria. 
 # output
 #     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.taxonomy
 #     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pds.wang.tax.summary
-mothur "#classify.seqs(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table, reference=trainset18_062020.pds.fasta, taxonomy=trainset18_062020.pds.tax, cutoff=80)"
+mothur "#classify.seqs(fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.filter.unique.precluster.denovo.vsearch.pick.count_table, reference=trainset18_062020.pds/trainset18_062020.pds.fasta, taxonomy=trainset18_062020.pds/trainset18_062020.pds.tax, cutoff=80)"
 
 
 # removing lineages here
@@ -306,16 +358,8 @@ mothur "#classify.otu(list=stability.trim.contigs.good.unique.filter.unique.prec
 # output 
 #     1. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.names
 #     2. stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.0.03.rep.fasta
-mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist, list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, name=stability.trim.contigs.good.names,  fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta)
+mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.dist, list=stability.trim.contigs.good.unique.filter.unique.precluster.pick.pick.opti_mcc.list, name=stability.trim.contigs.good.names,  fasta=stability.trim.contigs.good.unique.filter.unique.precluster.pick.fasta)"
 ```
-
-
-
-
-
-
-
-
 
 
 
