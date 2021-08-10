@@ -26,7 +26,7 @@ For eachof them, they will follow these key steps:
 1. install
       * how to set up the environments. 
 3. join forward and reverse reads
-      * Illumina sequencing produces forward and reverse reads for every sequence. The first step is to assemble them into merged reads. 
+      * Illumina sequencing produces forward and reverse reads for every sequence.
 5. filter reads (remove chimeras)
       * The merged reads will need to be trimmed of extraneous sequence, poor quality sequences will need be removed, and chimera, the generation of DNA sequences           from disparate organisms due to errors in the PCR process, will also need to be removed. 
 7. create OTUs/ASVs
