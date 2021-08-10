@@ -409,7 +409,7 @@ chmod +x usearch11.0.667_i86linux32
  ```
  
  
- ### 2. join forward and reverse reads ###
+ ### join forward and reverse reads ###
  ```
 # need to unzip all the files first
 cd $src/data/MiSeq_SOP/fastqs
