@@ -68,10 +68,12 @@ cd $src
 
 
 
-## QIIME2 (using dada2) pipeline ##
+## QIIME2 (using DADA2) pipeline ##
+For QIIME2, every file created is either uses a .qsv or .qsa extension. the .qsv is a zip file that contains data and the metadata. The .qsv are visualizations that can be viewed by uploading the file to https://view.qiime2.org/. QIIME2 prefers to create ASVs using the DADA2 method, so this tutorial will do that.
 
 
 ### install ###
+We will create a conda environment called qiime2-2021.4. 
 ```
    # load miniconda
    module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
@@ -115,7 +117,10 @@ qiime demux summarize \
   --i-data  $src/qiime2_tutorial/demux-paired-end.qza \
   --o-visualization $src/qiime2_tutorial/demux.qzv
 ```
+
+
 ### filter reads (remove chimeras) and create ASVs ###
+This step does all of the filtering and creation of ASVs at once. 
 ```
 # following what we see in the visualization we will trim the reads and denoise the reads. 
 # this will also create the rep seq qiime file wiht the ASVs. 
@@ -129,17 +134,19 @@ qiime dada2 denoise-paired \
   --o-denoising-stats  $src/qiime2_tutorial/stats-dada2.qza \
   --p-n-threads 0 # use all available cores
 
+# create rep-seq file.
 qiime feature-table tabulate-seqs \
   --i-data $src/qiime2_tutorial/rep-seqs-dada2.qza \
   --o-visualization $src/qiime2_tutorial/rep-seqs.qzv
 
+# create summary table 
 qiime feature-table summarize \
   --i-table $src/qiime2_tutorial/table-dada2.qza \
   --o-visualization $src/qiime2_tutorial/table.qzv 
 
 ```
 
-### calculate Abundances per sample ###
+### Creation of ASV table ###
 ```
   # export rep seq sequences.
   # it is exported in the rep-seqs wiht 
@@ -158,16 +165,8 @@ qiime tools export \
 
 
 
-
-
-
-
-
-
 ## Mothur pipeline ##
-need to fix:
-moving files out from data folder. 
-
+Mothur uses a unique syntax in which each command begins is structured liek this: mothur "#command here(parameters_here=X)". Mothur can do ASVs but the preference of the its creator is to use OTUS so we will do that here. 
 
 ### install ###
 
@@ -281,6 +280,7 @@ mothur "#unique.seqs(fasta=stability.trim.contigs.good.unique.filter.fasta, coun
 
 
 # pre-clustering to clean up sequencing errors. Differences of two nucleotides will be clustered. 
+# creates an output file for each sample so it can create a lot of files.
 # output files
 #        1. stability.trim.contigs.good.unique.filter.unique.precluster.fasta
 #        2. stability.trim.contigs.good.unique.filter.unique.precluster.count_table
@@ -385,14 +385,14 @@ mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.prec
 
 
 ## USEARCH ##
-
+USEARCH is a proprietary software developed by Robert Edgar. For this tutorial, we will use the free, 32-bit version. However, if you have multiple sequencing runs, you will likely need to upgrade to the paid, 64-bit version. USEARCH can do OTUs or ASVs. For this example I stuck with OTUs. 
 
 ### install ###
 ```
 cd $src
 
-mkdir usearch
-cd usearch
+mkdir usearch_tutorial
+cd usearch_tutorial
 
 
 # download the program
@@ -415,7 +415,7 @@ chmod +x usearch11.0.667_i86linux32
 cd $src/data/MiSeq_SOP/fastqs
 gunzip *gz
 
-cd $src/usearch
+cd $src/usearch_tutorial
 
 # merges forward and reverse reads. 
 ./usearch11.0.667 -fastq_mergepairs $src/data/MiSeq_SOP/fastqs/*R1*.fastq -fastqout merged.fq -relabel @
@@ -447,11 +447,10 @@ cd $src/usearch
 ./usearch11.0.667 -cluster_otus uniques.fasta -otus otus.fasta -uparseout uparse.txt -relabel Otu -minsize 2
 
 
-
 ```
 
 
-### Calculate Abundances per sample ###
+### Create OTU table ###
  ```
 
 # map back reads and create OTU table
@@ -470,8 +469,6 @@ gunzip rdp_16s_v16.fa.gz
 
 # Creates taxonomy file with OTU and the taxonomy in the reads.sintax file
 ./usearch11.0.667 -sintax otus.fasta -db rdp_16s_v16.fa -tabbedout reads.sintax -strand both -sintax_cutoff 0.8
-
-
 ```
 
 
