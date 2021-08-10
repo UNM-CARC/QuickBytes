@@ -28,11 +28,11 @@ For eachof them, they will follow these key steps:
 3. join forward and reverse reads
       * Illumina sequencing produces forward and reverse reads for every sequence. The first step is to assemble them into merged reads. 
 5. filter reads (remove chimeras)
-      * The merged reads will need to be trimmed of extraneous sequene, poor quality sequences will need be removed, and chimera, the generation of DNA sequences           from disparate organisms due to errors in the PCR process, will also need to be removed. 
+      * The merged reads will need to be trimmed of extraneous sequence, poor quality sequences will need be removed, and chimera, the generation of DNA sequences           from disparate organisms due to errors in the PCR process, will also need to be removed. 
 7. create OTUs/ASVs
       * The unique sequences will be determined based on their algorithm. 
 9. Creation of OTU/ASV table
-      * The abundanaces of the OTUs or ASVs will be tabulated per saample to create the table. 
+      * The abundances of the OTUs or ASVs will be tabulated per sample to create the table. 
 11. determine Taxonomy for OTUs/ASVs
       * The taxonomy of each of the OTUs/ASVs will be inferred by comparing the sequences against commonly used databases.
 
