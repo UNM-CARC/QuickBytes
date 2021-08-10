@@ -1,12 +1,20 @@
 # Metabarcoding Tutorial #
 
+Metabarcoding is the process of using next-generation sequencing platforms (Illumina, PacBio or Oxfor Nanopore) to sequence amplicons and determine the ecological community that is present. The most common applications are micriobiome analyses to study the community of bacteria or fungi. Given that metabarcocding relies upon PCR, biases do occur (e.g. primer biases, variation in loci copy number, incomplete lineage sorting, ect). However, other techniques such as metagenomic sequencing cannot fully assemble larger genomes such as fungal genomes and fail to capture all of the species present in high diversity samples. Thus, metabarcoding remains the best option to characterize microbial communities. 
+
+This tutorial is designed to give you an example of how to take the sequences you get from the sequencing facility and generate:
+
+1. a fasta file of all of the unique sequences known as the representative sequence file (abbrevaited to rep-seq) 
+2. a table which will have the abundance of each of the representative sequences for every sample. Often referred to as a OTU/ASV table.  
 
 
+One point of contention for metabarcoding projects is how to define which sequences are unique. The traditional view was to  cluster any sequences that diverged by less than 3% of sequence similarity into a species known as an OTU (perational taxon unit). However, other people reject the clustering step as being artbitrary and define any divergence as noteworthy. This approach is known as ASVs, (amplicon sequence variants). While the debate between clustering to OTUs or using ASVs remains contentious, for most community analyses, each will give you the same biological answer. The right choice will depend on your question and your system. For example, fungal metabarcoding use a highly variable region called the internal transcribed spaacer (ITS) which is known to diverge up to 3% wihtin an individual (they haave many copies of the ITS reigon) aand among members of the same species. Thus, clustering to OTUs is more logical for fungal taxa to avoid oversplitting species. Howver, if you were using a conserved gene such as the 18S, ASV's might give you a better approximation of species.
 
 
 
 ### Different pipelines ###
-1. QIIME2 (using dada2)
+There are many different pipelines to process metabarcoding samples. For this tutorial we will focus on the three main ones:
+1. QIIME2 (using DADA2)
 2. Mothur
 3. USEARCH
 
@@ -14,20 +22,24 @@
 
 
 ### Steps for each pipeline ###
+For eachof them, they will follow these key steps:
 1. install
-2. join forward and reverse reads
-3. filter reads (remove chimeras)
-4. create OTUs/ASVs
-5. calculate Abundances per sample
-6. determine Taxonomy for OTUs/ASVs
-
-
-
-
+      * how to set up the environments. 
+3. join forward and reverse reads
+      * Illumina sequencing produces forward and reverse reads for every sequence. The first step is to assemble them into merged reads. 
+5. filter reads (remove chimeras)
+      * The merged reads will need to be trimmed of extraneous sequene, poor quality sequences will need be removed, and chimera, the generation of DNA sequences           from disparate organisms due to errors in the PCR process, will also need to be removed. 
+7. create OTUs/ASVs
+      * The unique sequences will be determined based on their algorithm. 
+9. Creation of OTU/ASV table
+      * The abundanaces of the OTUs or ASVs will be tabulated per saample to create the table. 
+11. determine Taxonomy for OTUs/ASVs
+      * The taxonomy of each of the OTUs/ASVs will be inferred by comparing the sequences against commonly used databases.
 
 
 
 ## Set up raw data ##
+For each of the pipelines we will use 16S bacterial of the V4 region provided by the Mothur pipeline. 
 
 ### create folder structure ###
 ```
@@ -43,10 +55,10 @@ wget https://mothur.s3.us-east-2.amazonaws.com/wiki/miseqsopdata.zip
 unzip miseqsopdata.zip
 
 cd miseqsopdata
-gzip >fa
+# gzip all fastq files to save space.
+gzip *fa
 
 # move back to main folder
-
 cd $src
 ```
 
@@ -88,6 +100,7 @@ cd $src
 cd $scr
 
 mkdir qiime2_tutorial
+cd qiime2_tutorial
 
 # merge reads
 qiime tools import \
@@ -129,9 +142,10 @@ qiime feature-table summarize \
 ### calculate Abundances per sample ###
 ```
   # export rep seq sequences.
+  # it is exported in the rep-seqs wiht 
  qiime tools export \
   --input-path $src/qiime2_tutorial/rep-seqs-dada2.qza \
-  --output-path $src/qiime2_tutorial/rep-seqs.fasta
+  --output-path $src/qiime2_tutorial/rep-seqs
      
 # creates OTU table
 qiime tools export \
