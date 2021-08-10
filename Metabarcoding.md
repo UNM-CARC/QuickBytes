@@ -38,7 +38,7 @@ For eachof them, they will follow these key steps:
 
 
 
-## Set up raw data ##
+## Data for tutorial ##
 For each of the pipelines we will use 16S bacterial of the V4 region provided by the Mothur pipeline. 
 
 ### create folder structure ###
@@ -348,7 +348,7 @@ mothur "#summary.tax(taxonomy=stability.trim.contigs.good.unique.filter.unique.p
 ```
 
 
-### Create OTUs ###
+### create OTUs ###
 ```
 
 # create file of distances between potential OTUs
@@ -450,7 +450,7 @@ cd $src/usearch_tutorial
 ```
 
 
-### Create OTU table ###
+### create OTU table ###
  ```
 
 # map back reads and create OTU table
@@ -461,7 +461,7 @@ cd $src/usearch_tutorial
 ```
 
 
-### Determine Taxonomy for OTUs ###
+### determine Taxonomy for OTUs ###
 ```
 # downloaad rdp database
 wget https://drive5.com/sintax/rdp_16s_v16.fa.gz
