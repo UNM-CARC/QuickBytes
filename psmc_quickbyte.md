@@ -4,6 +4,8 @@ The [pairwise sequentially Markovian coalescent model](https://www.nature.com/ar
 
 It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a seperate job with more nodes.
 
+The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Wheeler will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
+
 
 ## Installation and setup
 
@@ -36,8 +38,8 @@ Generating input is essentially a simplified version of [GATK's widely used pipe
 
 	# Align with BWA
 	bwa index -p reference reference.fa
-	# assuming you have 16 threads, not that this .sam file will be huge, and we'll remove it at the end
-	bwa mem -t 16 reference.fa sample_R1.fastq.gz sample_R2.fastq.gz > bwa_alignment.sam
+	# assuming you have 8 threads, not that this .sam file will be huge, and we'll remove it at the end
+	bwa mem -t 8 reference.fa sample_R1.fastq.gz sample_R2.fastq.gz > bwa_alignment.sam
 	# convert .sam to .bam
 	samtools view -S -b bwa_alignment.sam > unsorted_alignment.bam
 	# sort the .bam file
@@ -46,10 +48,10 @@ Generating input is essentially a simplified version of [GATK's widely used pipe
 	rm bwa_alignment.sam
 	rm unsorted_alignment.bam
 	
-	# pipeline combining bcftool's mpileup and call (consensus mode) using 16 threads, then samtools's vcfutils.pl
+	# pipeline combining bcftool's mpileup and call (consensus mode) using 8 threads, then samtools's vcfutils.pl
 	# the latter filters variants with a depth less than 10 or greater than 50, and those with quality score under 30
-	bcftools mpileup -Q 30 -q 30 -Ovu -f reference.fa sorted_alignment.bam --threads 16 | \
-		bcftools call -c --threads 16 | \
+	bcftools mpileup -Q 30 -q 30 -Ovu -f reference.fa sorted_alignment.bam --threads 8 | \
+		bcftools call -c --threads 8 | \
 		vcfutils.pl vcf2fq -d 10 -D 50 -Q 30 > variant_consensus.fq
 	
 	# generate PSMC input
