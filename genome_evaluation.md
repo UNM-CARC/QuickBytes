@@ -54,12 +54,12 @@ There are a few ways to assess the output in the output directory, with the most
 
 ## Assessing completeness with BUSCO ##
 
-The next step will be to assess how complete our genome is by seeing how many single-copy orthologs are detected. This is important, because obviously if our genome is missing important portions, those regions won't be detected in analyses. For this, we will use BUSCO. As it stands, there are some issues installing BUSCO with conda (new versions fail to solve), and it doesn't work well as a spack module, so I'll provide a conda .yml for you. First, exapand this bit for the yml file:
+The next step will be to assess how complete our genome is by seeing how many single-copy orthologs are detected. This is important, because obviously if our genome is missing important portions, those regions won't be detected in analyses. For this, we will use BUSCO. As it stands, there are some issues installing BUSCO with conda (new versions fail to solve), and it doesn't work well as a spack module, so I'll provide a conda .yml for you. First, copy the file from our shared tutorial directory like "cp /projects/shared/tutorials/quickbytes/busco-env.yml ~/path/to/directory" or exapand this bit and manually copy its contents:
 
 <details>
 	<summary> Text for the .yml file </summary>
 	
-	name: busco-test
+	name: busco-env
 	channels:
 	  - bioconda
 	  - ursky
@@ -317,15 +317,15 @@ The next step will be to assess how complete our genome is by seeing how many si
 	  - xz=5.2.5=h516909a_1
 	  - zlib=1.2.11=h516909a_1010
 	  - zstd=1.5.0=ha95c52a_0
-	prefix: ~/.conda/envs/busco-test
+	prefix: ~/.conda/envs/busco-env
 </details>
 
 You then install it like this:
 
 	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
 	# commented command is how this was made
-	# conda create --name busco-test --channel bioconda --channel conda-forge busco=5.1.3
-	conda env create -f busco-test.yml
+	# conda create --name busco-env --channel bioconda --channel conda-forge busco=5.1.3
+	conda env create -f busco-env.yml
 
 Then, you'll need to find which dataset of genes you want to use. To do this, either activate the conda environment (if you have it) or load the module and run "busco --list-datasets". You'll see an output like this, with a taxonomic hierarchy. You should choose the one most representative of your dataset. We'll do an example for our Sage Grouse genome again. First, we'll scroll down to eurkaryotes (eukaryota_odb10), then animals (metazoa_odb10), and then vertrabrates (vertabrata_odb10) below. The smallest group for us to use is the set for all birds, which is "aves_odb10". You can see it used in our sample command below.
 
