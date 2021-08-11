@@ -35,7 +35,7 @@ Then, we'll make a subdirectory for future bootstraps with "mkdir boot". If you 
 Generating input is essentially a simplified version of [GATK's widely used pipeline](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) using [bcftools](http://samtools.github.io/bcftools/bcftools.html) to leverage its simplicity and ability to generate a consensus FASTA file with heterozygosity. First, reads are alligned to the reference with BWA. Then, bcftools' mpileup and call are used to obtain variant calls, which are filtered using bcftools' view command. Finally, a consensus sequence is generated and converted to a "PSMC FASTA" for use in PSMC itself. Code for running these steps is below, assuming your reference is "reference.fa" and read files are called "sample_R1.fastq.gz" and "sample_R2.fastq.gz".
 
 	# Align with BWA
-	bwa index -bwtsw reference.fa
+	bwa index -p reference reference.fa
 	# assuming you have 16 threads, not that this .sam file will be huge, and we'll remove it at the end
 	bwa mem -t 16 reference.fa sample_R1.fastq.gz sample_R2.fastq.gz > bwa_alignment.sam
 	# convert .sam to .bam
