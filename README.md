@@ -31,22 +31,33 @@ Quickbytes are tutorials designed to help CARC users.
       * R
          * [R Programming in HPC](https://github.com/UNM-CARC/QuickBytes/blob/master/R_usage.md)
          * [R at CARC](https://github.com/UNM-CARC/QuickBytes/tree/master/R_at_CARC)
+         * [Running R in Parallel with Future](https://github.com/UNM-CARC/QuickBytes/blob/master/Parallel_R_with_Future.ipynb)
+         * [Gurobi optimizer with R](https://github.com/UNM-CARC/QuickBytes/blob/master/Gurobi%20optimizer%20with%20R.md)
       * Machine Learning
          * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
          * [Machine Learning Conda Environments (including GPU libraries)](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
          * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.ipynb)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
+      * Bioinformatics
+         * [Genomic variant calling with GATK](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md)
+         * [Genome evaluation with QUAST and BUSCO](https://github.com/UNM-CARC/QuickBytes/blob/master/genome_evaluation.md)
+         * [Single genome demographic history with PSMC](https://github.com/UNM-CARC/QuickBytes/blob/master/psmc_quickbyte.md)
+         * [Stacks for RAD-Seq Data](https://github.com/UNM-CARC/QuickBytes/blob/master/Stacks_quickbyte.md)
+         * [Metabarcoding with QIIME2, Mothur, and USEARCH](https://github.com/UNM-CARC/QuickBytes/blob/master/Metabarcoding.md)
+         * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
+         * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
+      * Computational Chemistry
+         * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
       * [Paraview](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
-      * [Gurobi optimizer with R](https://github.com/UNM-CARC/QuickBytes/blob/master/Gurobi%20optimizer%20with%20R.md)
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
-      * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
       * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
       * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
-      * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
-      * [Stacks for RAD-Seq Data](https://github.com/UNM-CARC/QuickBytes/blob/master/Stacks_quickbyte.md)
-      * [Genomic variant calling with GATK](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md)
-      * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
+      
+      
+      
+      
+      
   
       
       
