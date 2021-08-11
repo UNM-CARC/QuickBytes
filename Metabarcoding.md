@@ -10,8 +10,8 @@ This tutorial is designed to give you an example of how to take the sequences yo
 
 One point of contention for metabarcoding projects is how to define which sequences are unique. The traditional view was to  cluster any sequences that diverged by less than 3% of sequence similarity into a species known as an OTU (operational taxon unit). However, other people reject the clustering step as being arbitrary and define any divergence as noteworthy. This approach is known as ASVs, (amplicon sequence variants). While the debate between clustering to OTUs or using ASVs remains contentious, for most community analyses, each will give you the same biological answer. The right choice will depend on your question and your system. For example, fungal metabarcoding studies use a highly variable region called the internal transcribed spacer (ITS) which is known to diverge by 3% within an individual (they have many copies of the ITS region) and among members of the same species. Thus, clustering to OTUs is more logical for fungal taxa to avoid oversplitting species. However, if you were using a conserved gene such as the 18S, ASV's might give you a better approximation of species.
 
-
-
+ Final note: make sure you are runing the commands in a pbs script or on an interactive node!
+ 
 ### Different pipelines ###
 There are many different pipelines to process metabarcoding samples. For this tutorial we will focus on the three main ones:
 1. QIIME2 (using DADA2)
