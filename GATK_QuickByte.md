@@ -6,9 +6,37 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on wheeler takes about 5.5 hours.
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on wheeler takes about 5.5 hours. If you run this script, note that it should output a filtered VCF file that's ~350 Mb.
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
+
+## Table of Contents ##
+
+- [Preliminaries](#prelim)
+
+- [The Pipeline](#pipeline)
+
+  - [Trimming reads](#trimming)
+	
+  - [Alignment and pre-processing](#align)
+	
+  - [Summary statistics](#sumstat)
+	
+  - [Calling Variants](#haplo)
+	
+  - [Consolidating and genotyping](#geno)
+	
+  - [Selecting variants](#select)
+	
+- [Scatter-gather parallel](#parallel)
+
+- [Sample Scatter-gather PBS script](#script)
+
+- [Trobuleshooting](#tshoot)
+
+- [Citations](#cite)	
+
+<a name="prelim"/>
 
 ## Preliminary stuff ##
 
@@ -86,7 +114,11 @@ For clarity, in most cases the commands are written as they would be for a for l
 
 Because it is not covered by best practices, and is often done by the sequencing center, we will not go into the details of demultiplexing here. We recommend you use Illumina’s software [bcl2fastq](https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) if you have the data in .bcl format, and [saber](https://github.com/najoshi/sabre) if it has already been converted to fastq format and it does not have dual combinatorial barcodes. **We'll assume these reads will be in the raw_reads folder with the name SAMPLE_1.fastq.gz (or 2 for read 2).**
 
+<a name="pipeline"/>
+
 ## The Pipeline ##
+
+<a name="trimming"/>
 
 ### Trimming Reads ###
 
@@ -119,6 +151,8 @@ If you're using the spack module, you call trimmomatic using java:
 
 	java -jar /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/trimmomatic-0.36-q3gx4rjeruluf75uhcdfkjoaujqnjhzf/bin/trimmomatic-0.36.jar PE ...
 
+<a name="align"/>
+
 ### Alignment and Pre-processing ###
 
 This section prepares BAM files for variant calling. First, we need to index our reference and make a sequence dictionary. We'll index two ways, one for bwa and one for GATK:
@@ -139,13 +173,14 @@ Then, we need to align demultiplexed reads to a reference. For this step, we wil
 		$src/clean_reads/${sample}_paired_R2.fastq.gz \
 		> $src/alignments/${sample}.sam
 
-The next step is to mark PCR duplicates to remove bias, sort the file, and convert it to the smaller BAM format for downstream use. GATK’s new MarkDuplicatesSpark performs all these tasks, but needs a temporary directory to store intermediate files:
+The next step is to mark PCR duplicates to remove bias, sort the file, and convert it to the smaller BAM format for downstream use. GATK’s new MarkDuplicatesSpark performs all these tasks, but needs a temporary directory to store intermediate files. Note that although we aren't formally using Spark for parallelization, the line " --conf 'spark.executor.cores=8'" still speed it up, and makes (change the number of cores if the cores per node are higher than 8):
 
 	gatk MarkDuplicatesSpark \
 		-I $src/alignments/${sample}.sam \
 		-M $src/bams/${sample}_dedup_metrics.txt \
 		--tmp-dir $src/alignments/dedup_temp \
-		-O $src/bams/${sample}_dedup.bam
+		-O $src/bams/${sample}_dedup.bam \
+		 --conf "spark.executor.cores=8"
 
 We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_debup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
 
@@ -167,6 +202,8 @@ An optional step (and one not taken in the tutorial) is to recalibrate base call
 		--bqsr-recal-file $src/bams/${sample}_recal_data.table \
 		-O $src/bams/${sample}_recal.bam
 
+<a name="sumstat"/>
+
 ### Collect alignment and summary statistics (optional)
 
 This step is optional, and is not part of GATK’s best practices, but is good to have. It will output important stats for assessing sample quality. Picard’s “CollectAlignmentSummaryMetrics” gives several helpful statistics about the alignment for a given sample. Picard’s “CollectInsertSizeMetrics” gives information about the distribution of insert sizes. Samtools’s “depth” gives information about the read depth of the sample. Note that "depth" has huge output files, so it may be best to skip it until needed.
@@ -184,6 +221,8 @@ This step is optional, and is not part of GATK’s best practices, but is good t
 	samtools depth \
 		-a $src/bams/${sample}_recal.bam \
 		> $src/alignments/depth/${sample}_depth.txt
+
+<a name="haplo"/>
 
 ### Calling variants with HaplotypeCaller
 
@@ -206,9 +245,11 @@ One issue with HaplotypeCaller is that it takes a long time, but is not programm
 
 If you are dealing with large files, HaplotypeCaller may take longer than your walltime. The Scatter-gather Parallel section will outline how to fix that by breaking the job (and the next section) into multiple intervals.
 
+<a name="geno"/>
+
 ### Consolidating and Genotyping ###
 
-This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs can take a while for large datasets, but is easier to use. Overall, it seems that GenomicsDBImport is more suited for model organisms, while CombineGVCFs is more convenient for non-model organisms. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot take this input, we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
+This next step has two options, GenomicsDBImport and CombineGVCFs. GATK recommends GenomicsDBImport, as it is more efficient for large datasets, but it performs poorly on references with many contigs. CombineGVCFs can take a long time for large datasets, but is easier to use. Note that GenomicsDBImport must have intervals (generally corresponding to contigs or chromosomes) specified. GenomicsDBImport can take a file specifying GVCFs, but because CombineGVCFs cannot take this input, we just make a list of samples to combine programmatically and plug it in. Here is how we generate that command:
 
 	gvcf_names=""
 	while read sample; do
@@ -248,7 +289,8 @@ And one for CombineGVCFs:
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_gvcf.g.vcf.gz \
 		-O $src/combined_vcfs/combined_vcf.vcf.gz
-		
+
+<a name="select"/>
 
 ### Selecting and filtering variants
 
@@ -266,7 +308,7 @@ This first step is optional, but here we separate out indels and SNPs. Note that
 		-select-type INDEL \
 		-O $src/combined_vcfs/raw_indel.vcf.gz
 
-Here are some good sample filters. The “DP_filter” is depth of coverage (you will probably want to change this), “Q_filter” is quality score, “QD_filter” is quality by depth (avoids artificial inflation of calls), and “FS_filter” is a strand bias filter (higher value means higher bias). Note that DP is better for low depth samples, while QD is better for high depth. More info can be found on [GATK’s website](https://gatk.broadinstitute.org/hc/en-us/articles/360035890471-Hard-filtering-germline-short-variants).
+Here are some good sample filters. The “DP_filter” is depth of coverage (you will probably want to change this), “Q_filter” is quality score, “QD_filter” is quality by depth (avoids artificial inflation of calls), "MQ_filter" is a mapping quality filter, and “FS_filter” is a strand bias filter (higher value means higher bias). Note that DP is better for low depth samples, while QD is better for high depth. More info can be found on [GATK’s website](https://gatk.broadinstitute.org/hc/en-us/articles/360035890471-Hard-filtering-germline-short-variants).
 
 	gatk VariantFiltration \
 		-R ${reference}.fa \
@@ -275,11 +317,14 @@ Here are some good sample filters. The “DP_filter” is depth of coverage (you
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "FS > 60.0" --filter-name "FS_filter"
+		-filter "FS > 60.0" --filter-name "FS_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter"
 
 This will give us our final VCF! Note that the filtered SNPs are still included, just with a filter tag. You can use something like SelectVariants' "exclude-filtered" flag or [VCFtools’](http://vcftools.sourceforge.net/) “--remove-filtered-all” flag to get rid of them.
 
-### Scatter-gather Parallel
+<a name="parallel"/>
+
+## Scatter-gather Parallel
 
 Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the invervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
 	
@@ -309,6 +354,7 @@ You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF 
 			-R ${reference}.fa \
 			${interval_list} \
 			-O $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz'
+			
 Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists needed!
 
 	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
@@ -317,6 +363,28 @@ Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists nee
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
 			-O $src/combined_vcfs/intervals/{}_genotyped.vcf.gz'
 			
+If you have many samples, it may be best to use GenomicsDBImport. It is very similar, with both that step and the genotyping below. Note that the directory for --genomicsdb-workspace-path can't exist (unless you're updating it):
+
+	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		'mkdir $src/gendb_temp/{}
+   	 	interval_list=""
+    		# loop to generate list of sample-specific intervals
+		while read sample; do
+			interval_list="${interval_list}-V ${src}/gvcfs/${sample}/${sample}_{}_raw.g.vcf.gz "
+		done < $src/sample_list
+		# run make the genomics databases
+		gatk --java-options "-Xmx6g" GenomicsDBImport \
+			 ${interval_list} \
+			--genomicsdb-workspace-path $src/genomics_databases/{} \
+			--tmp-dir $src/gendb_temp/{} \
+			-L {}'
+
+	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
+		-R ${reference}.fa \
+		-V gendb://$src/genomics_databases/{} \
+		-O $src/combined_vcfs/intervals/{}_genotyped.vcf.gz'
+
 The final (gather) step uses GatherVcfs, for which we'll make a file containing the paths to all input genotyped VCFs (generated in the while loop). Note the first line initializes a blank file for the gather list. After we make the gathered VCF, we need to index it for future analyses.
 
 	> $src/combined_vcfs/gather_list
@@ -334,9 +402,13 @@ The final (gather) step uses GatherVcfs, for which we'll make a file containing 
 
 **NOTE THAT THIS FILE STILL NEEDS TO HAVE VARIANTS SELECTED AND FILTERED, SEE "Selecting and filtering variants" ABOVE**
 
+<a name="script"/>
+
 ## Sample PBS Script ##
 
 Here is a sample PBS script combining everything we have above, with as much parallelization as possible. One reason to break up steps like we did is for improved checkpointing (without having to write code checking if files are already present). Once you are finished running a block of code, you can just comment it out. Similarly, if you can only get part way through your sample list, you can copy it and remove samples that have already completed a given step.
+
+To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refer to [this conversion guide](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs2slurm.md) for the rest.
 	
 	#!/bin/bash
 
@@ -389,7 +461,6 @@ Here is a sample PBS script combining everything we have above, with as much par
 	# Section for alignment and marking duplicates. 
 	# Note we parallelize such that BWA uses exactly one node.
 	# Then, we have a number of jobs equal to the number of nodes requested.
-	# Note that MarkDuplicates doesn't take much time, but only uses one core, so it's a bit inefficient here.
 
 	cat $src/sample_list | env_parallel -j 1 --sshloginfile $PBS_NODEFILE \
 		'bwa mem \
@@ -403,7 +474,8 @@ Here is a sample PBS script combining everything we have above, with as much par
 			-I $src/alignments/{}.sam \
 			-M $src/bams/{}_dedup_metrics.txt \
 			--tmp-dir $src/alignments/dedup_temp \
-			-O $src/bams/{}_dedup.bam
+			-O $src/bams/{}_dedup.bam \
+			 --conf "spark.executor.cores=8"
 		rm $src/alignments/{}.sam'
 
 	# Collecting metrics in parallel
@@ -495,11 +567,16 @@ Here is a sample PBS script combining everything we have above, with as much par
 		-filter "DP < 4" --filter-name "DP_filter" \
 		-filter "QUAL < 30.0" --filter-name "Q_filter" \
 		-filter "QD < 2.0" --filter-name "QD_filter" \
-		-filter "FS > 60.0" --filter-name "FS_filter"
+		-filter "FS > 60.0" --filter-name "FS_filter" \
+		-filter "MQ < 40.0" --filter-name "MQ_filter"
+
+<a name="tshoot"/>
 
 ## Troubleshooting ##
 
 If you need help troubleshooting an error, make sure to let us know the size of your dataset (number of individuals and approximate number of reads should suffice, unless coverage varies between individuals), GATK version, node details, and any error messages output.
+
+<a name="cite"/>
 
 ## Citations ##
 
