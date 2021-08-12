@@ -78,10 +78,6 @@ We will create a conda environment called qiime2-2021.4.
    # load miniconda
    module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
    
-   # enables conda activate to work
-   eval "$(conda shell.bash hook)"
-      
-
    #download the yml
    wget https://data.qiime2.org/distro/core/qiime2-2021.4-py38-linux-conda.yml
    
@@ -91,7 +87,6 @@ We will create a conda environment called qiime2-2021.4.
    # delete yml
    rm qiime2-2020.8-py36-linux-conda.yml
    
-   conda activate qiime2-2021.4
 ```
 
 
@@ -99,6 +94,7 @@ We will create a conda environment called qiime2-2021.4.
 
 
 ```
+conda activate qiime2-2021.4
 cd $scr
 
 mkdir qiime2_tutorial
@@ -174,12 +170,10 @@ Mothur uses a unique syntax in which each command begins is structured liek this
  # load miniconda
  module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
    
- # enables conda activate to work
- eval "$(conda shell.bash hook)"
       
 conda env create -n mothur
 conda install -n mothur -c bioconda mothur
-conda activate mothur
+
  
  
 ```
@@ -187,6 +181,7 @@ conda activate mothur
 ### join forward and reverse reads ###
 
 ```
+conda activate mothur
 cd $src
 mkdir mothur_tutorial 
 
@@ -385,7 +380,7 @@ mothur "#get.oturep(column=stability.trim.contigs.good.unique.filter.unique.prec
 
 
 ## USEARCH ##
-USEARCH is a proprietary software developed by Robert Edgar. For this tutorial, we will use the free, 32-bit version. However, if you have multiple sequencing runs, you will likely need to upgrade to the paid, 64-bit version. USEARCH can do OTUs or ASVs. For this example I stuck with OTUs. 
+USEARCH is a proprietary software developed by Robert Edgar. For this tutorial, we will use the free, 32-bit version. However, if you have multiple sequencing runs, you will likely need to upgrade to the paid, 64-bit version. USEARCH can do OTUs or ASVs. For this example I stuck with OTUs. Many of the commands can easily be changed to VSEARCH, an alternative that is open-source.
 
 ### install ###
 ```
