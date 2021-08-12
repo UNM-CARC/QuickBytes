@@ -39,11 +39,11 @@ Generating input is essentially a simplified version of [GATK's widely used pipe
 	# Align with BWA
 	bwa index -p reference reference.fa
 	# assuming you have 8 threads, not that this .sam file will be huge, and we'll remove it at the end
-	bwa mem -t 8 reference.fa sample_R1.fastq.gz sample_R2.fastq.gz > bwa_alignment.sam
+	bwa mem -t 8 reference sample_R1.fastq.gz sample_R2.fastq.gz > bwa_alignment.sam
 	# convert .sam to .bam
 	samtools view -S -b bwa_alignment.sam > unsorted_alignment.bam
 	# sort the .bam file
-	picard SortSam I=unsorted_alignment.bam.bam O=sorted_alignment.bam SORT_ORDER=coordinate
+	picard SortSam I=unsorted_alignment.bam O=sorted_alignment.bam SORT_ORDER=coordinate
 	# remove old files, comment out if you want to keep them to troubleshoot
 	rm bwa_alignment.sam
 	rm unsorted_alignment.bam
