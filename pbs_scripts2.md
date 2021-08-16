@@ -11,13 +11,14 @@ loaded. That will be introduced in the next PBS script.
 
 ```bash
 ## Introduction for writing a PBS script
-## Copyright (c) 2018 The Center for Advanced Research Computing
-## The University of New Mexico
-####################################################
 ## The next lines specify what resources you are requesting.
-## Starting with 1 node, 8 processors per node, and 48 hours of walltime. 
-#PBS -lnodes=1:ppn=8
-#PBS -lwalltime=48:00:00
+## Starting with 1 node, 8 processors per node, and 2 hours of walltime. 
+## Setup your qsub flags
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=8
+#PBS -N my_job
+#PBS -M myemailaddress@unm.edu
+#PBS -m bae
 ## All other instructions to TORQUE are here as well and are preceded by a single #, note that normal comments can also be preceded by a single #
 ## Specify the shell to be bash
 #PBS -S /bin/bash
@@ -46,16 +47,19 @@ information.
 ## The Center for Advanced Research Computing
 ## at The University of New Mexico
 ####################################################
-#PBS -lnodes=1:ppn=8
-#PBS -lwalltime=1:00
+## Setup your qsub flags
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=8
+#PBS -N my_job
+#PBS -M myemailaddress@unm.edu
+#PBS -m bae
 # load the environment module to use OpenMPI built with the Intel compilers
 module load openmpi-3.1.1-intel-18.0.2-hlc45mq 
 # Change to the directory where the PBS script was submitted from
 cd $PBS_O_WORKDIR
-# print out a hello message from each of the processors on this host
-# indicating the host this is running on
-export THIS_HOST=$(hostname)
-mpirun -np 8 -machinefile $PBS_NODEFILE echo Hello World from host $THIS_HOST
+# run the command "hostname" on ever CPU. Hostname prints the name of the computer is it running on.
+# $PBS_NP is the total number of CPUs requested. In this case 1 nodes x 8 CPUS per node = 8
+mpirun -np $PBS_NP hostname
 ####################################################
 ```
 
@@ -68,15 +72,20 @@ mpirun -np 8 -machinefile $PBS_NODEFILE echo Hello World from host $THIS_HOST
 ## The Center for Advanced Research Computing
 ## at The University of New Mexico
 ####################################################
-#PBS -lnodes=2:ppn=8
-#PBS -lwalltime=1:00
+## Setup your qsub flags
+#PBS -l walltime=2:00:00
+#PBS -l nodes=4:ppn=8
+#PBS -N my_job
+#PBS -M myemailaddress@unm.edu
+#PBS -m bae
 # Change to directory the PBS script was submitted from
 cd $PBS_O_WORKDIR
 # load the environment module to use OpenMPI built with the Intel compilers
 module load openmpi-3.1.1-intel-18.0.2-hlc45mq 
 # print out a hello message from each of the processors on this host
-# indicating the host this is running on
-export THIS_HOST=$(hostname)
-mpirun -np 16 -machinefile $PBS_NODEFILE echo Hello World from host $THIS_HOST
+# run the command "hostname" on ever CPU. Hostname prints the name of the computer is it running on.
+# $PBS_NP is the total number of CPUs requested. In this case 4 nodes x 8 CPUS per node = 32
+# Since we are running on multiple nodes (computers) we have to tell mpirun the names of the nodes we were assigned. Those names are in $PBS_NODEFILE.
+mpirun -np $PBS_NP -machinefile $PBS_NODEFILE hostname
 ###################################################
 ```
