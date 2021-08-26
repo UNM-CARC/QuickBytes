@@ -10,7 +10,7 @@ This step by step tutorial will guide you through installing deep learning and M
 
 2. Create the Conda Environment with a name.
  
-	 	conda create --name <env_name> python==3.6
+	 	conda create --name <env_name> python'>3.6'
 
 3. Verify the installation of the environment.
 
