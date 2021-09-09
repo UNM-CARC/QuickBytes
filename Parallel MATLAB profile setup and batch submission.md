@@ -47,7 +47,7 @@ tic
 n = 200;
 A = 500;
 a = zeros(1,n);
-for i 1:n;
+for i = 1:n
     a(i) = max(abs(eig(rand(A))))
 end
 toc
@@ -56,7 +56,7 @@ tic
 n = 200;
 A = 500;
 a = zeros(1,n);
-parfor i 1:n;
+parfor i = 1:n
     a(i) = max(abs(eig(rand(A))))
 end
 toc
@@ -76,6 +76,6 @@ cd #PBS_O_WORKDIR
 
 module load matlab/R2019a
 
-matlab -r -nodisplay parallel_matlab > parallel_matlab.out
+matlab -nodisplay -r parallel_matlab.m > parallel_matlab.out
 ```
 Submit your PBS script with `qsub parallel_matlab.pbs` and hopefully all goes swimmingly. If you require assistance with MATLAB parallel computing please send an email to help@carc.unm.edu.
