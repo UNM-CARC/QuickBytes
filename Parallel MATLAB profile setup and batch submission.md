@@ -30,7 +30,7 @@ With the settings imported you can now launch parallel pools for computation usi
 >> A = 500
 >> a = zeros(1,n)
 >> parfor i = 1:n
->> a(i) = max(abs(eig(rand(A))))
+>> a(i) = max(abs(eig(rand(A))));
 >> end
 >> toc
 >> delete(poolobj);
@@ -48,7 +48,7 @@ n = 200;
 A = 500;
 a = zeros(1,n);
 for i = 1:n
-    a(i) = max(abs(eig(rand(A))))
+    a(i) = max(abs(eig(rand(A))));
 end
 toc
 
@@ -57,7 +57,7 @@ n = 200;
 A = 500;
 a = zeros(1,n);
 parfor i = 1:n
-    a(i) = max(abs(eig(rand(A))))
+    a(i) = max(abs(eig(rand(A))));
 end
 toc
 delete(poolobj);
@@ -69,7 +69,7 @@ Now the PBS script we will call `parallel_matlab.pbs` to submit your sample MATL
 
 #PBS -N parallel_matlab
 #PBS -l walltime=01:00:00
-#PBS -l nodes=1:ppn=8
+#PBS -l nodes=2:ppn=8
 #PBS -j oe
 
 cd #PBS_O_WORKDIR
