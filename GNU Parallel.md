@@ -119,7 +119,7 @@ To run this job, save the PBS script to a file, e.g. mtest_pbs. Submit the job t
 The usage of gnu-parallel for python tasks is similar to that of matlab. Following are the sample codes showing implementation of gnu-parallel for python tasks. 
 
 ### Code for PBS script
-	#/bin/bash
+	#!/bin/bash
 	#PBS -N Gnu_parallel_test
 	#PBS -l nodes=2:ppn=4
 	#PBS -l walltime=01:00:00
