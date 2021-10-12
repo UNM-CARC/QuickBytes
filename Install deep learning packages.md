@@ -42,7 +42,6 @@ This step by step tutorial will guide you through installing deep learning and M
 		 
 		 pip install torch==1.9.0+cu102 -f https://nelsonliu.me/files/pytorch/whl/torch_stable.html
 
-	To obtain the `.tar.bz2` file, please contact CARC staff and we can copy it directly into your home directory.
 
 6. Install additional Machine Learning packages
 	
