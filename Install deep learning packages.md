@@ -63,6 +63,7 @@ This step by step tutorial will guide you through installing deep learning and M
 		x = torch.tensor([1, 2, 3], device=device)
 		y = torch.tensor([1,4,9]).to(device)
 		print(x,y)
+		print(x+y)
 
 	Expected Output:
 
@@ -73,7 +74,8 @@ This step by step tutorial will guide you through installing deep learning and M
         		[0.3298, 0.1289, 0.5349]])
 		Is GPU Available? True  CUDA device count: 1  current_device: 0
 		tensor([1, 2, 3], device='cuda:0') tensor([1, 4, 9], device='cuda:0')
-
+		tensor([ 2, 6, 12], device='cuda:0')
+		
 6. Install additional Machine Learning packages
 	
 	i.  **OpenCV**
