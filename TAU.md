@@ -23,6 +23,7 @@ Then run your program normally to get profiles.
 
 ```bash
 [xena ~]$ OMP_NUM_THREADS = 4
+```
 
 Set OMP_NUM_threads to different numbers to get different profiles
 
