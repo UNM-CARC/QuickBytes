@@ -73,7 +73,7 @@ For QIIME2, every file created is either uses a .qsv or .qsa extension. the .qsv
 
 
 ### install ###
-We will create a conda environment called qiime2-2021.4. 
+We will create a conda environment called qiime2-2021.4 on the Wheeler cluster. 
 ```
    # load miniconda
    module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
