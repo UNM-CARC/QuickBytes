@@ -1,6 +1,6 @@
  TAU or Tuning and Analysis Utilities is a portable profiling and tracing toolkit for perforamcne analysis of parallel programs writting in Fortran, C, C++, Java and Python. 
 
-If you would like to trace or profile performance of your program, you can start with the following commands on the Wheeler cluster:
+If you would like to trace or profile performance of your program, you can start with the following commands on the Xena cluster:
 
 ```bash
 [xena ~]$ module load tau-2.30.1-gcc-10.2.0-kyoim3d
