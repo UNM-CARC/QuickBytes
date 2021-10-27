@@ -35,7 +35,9 @@ Set OMP_NUM_threads to different numbers to get different profiles
 After pprof command, performance analysation will be shown. 
 
 ```bash
+[xena ~]$ tau_treemerge.pl
+[xena ~]$ tau2slog2 tau.trc tau.edf -o tau.slog2
 [xena ~]$ jumpshot example.trc 
 ```
 
-Jumpshot is used for visualizng the trace for which X11 displace is required.
+Jumpshot is used for visualizng the trace for which X11 displace is required. For X11 forwarding, refer https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md
