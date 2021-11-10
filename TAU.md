@@ -19,7 +19,7 @@ Instead of gcc foo.c -o foo replace gcc with tau_cc.sh
 ```
 
 If your code uses OpenMP, mention -fopenmp while compiling your program.
-Then run your program normally to get profiles. Also, module load any openmpi module like "```bash module load openmpi-1.10.1-gcc-4.8.5-xv45hpa```".
+Then run your program normally to get profiles. Also, module load any openmpi module like "``` module load openmpi-1.10.1-gcc-4.8.5-xv45hpa```".
 
 ```bash
 [xena ~]$ OMP_NUM_THREADS = 4
