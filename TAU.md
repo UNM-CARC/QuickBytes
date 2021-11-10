@@ -19,7 +19,7 @@ Instead of gcc foo.c -o foo replace gcc with tau_cc.sh
 ```
 
 If your code uses OpenMP, mention -fopenmp while compiling your program.
-Then run your program normally to get profiles. 
+Then run your program normally to get profiles. Also, module load any openmpi module like "```bash module load openmpi-1.10.1-gcc-4.8.5-xv45hpa```".
 
 ```bash
 [xena ~]$ OMP_NUM_THREADS = 4
@@ -28,7 +28,7 @@ Then run your program normally to get profiles.
 Set OMP_NUM_threads to different numbers to get different profiles
 
 ```bash
-[xena ~]$ TAU_TRACE=1
+[xena ~]$ export TAU_TRACE = 1
 [xena ~]$ pprof
 ```
 
@@ -37,7 +37,7 @@ After pprof command, performance analysation will be shown.
 ```bash
 [xena ~]$ tau_treemerge.pl
 [xena ~]$ tau2slog2 tau.trc tau.edf -o tau.slog2
-[xena ~]$ jumpshot example.trc 
+[xena ~]$ jumpshot tau.slog2
 ```
 
 Jumpshot is used for visualizng the trace for which X11 displace is required. For X11 forwarding, refer https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md
