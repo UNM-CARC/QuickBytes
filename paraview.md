@@ -34,7 +34,7 @@ qsub -I -l nodes=2:ppn=8
 
 NOTE: Wait until wheeler assigns you two compute nodes.
 
-###Load ParaView Module
+### Load ParaView Module
 
 ```bash
 module load paraview-5.4.1-gcc-4.8.5-python2-impi-wulnuwu
@@ -75,7 +75,7 @@ Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspecto
 
 NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this with the qdel command on the cluster head node.
 
-##Client - Server Mode (Reverse Connection Method)
+## Client - Server Mode (Reverse Connection Method)
 
 This process allows you to connect to wheeler service node if you have firewall connectivity issues and requires you to know your localhost IP address "local\_host_IP".
 
