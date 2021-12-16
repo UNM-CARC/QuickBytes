@@ -75,8 +75,11 @@ For QIIME2, every file created is either uses a .qsv or .qsa extension. the .qsv
 ### install ###
 We will create a conda environment called qiime2-2021.4. 
 ```
-   # load miniconda
+   # To install QIIME2 on the Wheeler cluster, use the following command:
    module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+   
+   # To do a similar installation on the Taos cluster, use the following command instead:
+   module load miniconda3-4.10.3-gcc-10.2.0-gu6ytpa
    
    #download the yml
    wget https://data.qiime2.org/distro/core/qiime2-2021.4-py38-linux-conda.yml
