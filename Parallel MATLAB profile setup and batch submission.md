@@ -4,13 +4,13 @@
 In order to submit a PBS script that takes advantage of MATLAB Parallel Server you first need to set up a new cluster profile specific to Wheeler. Thankfully this has already been done and all you need to do as a user is import the profile and that only needs to be done once. If you would like to do this interactively you can start an interactive session with the following:
 
 ```bash
-wheeler-sn:~$ qsub -I -l walltime=01:00:00 -l nodes=1:ppn=8
+wheeler-sn:~$ srun --pty bash
 ```
 Once you have a node allocated to you load the MATLAB module and start a MATLAB session:
 
 ```bash
-wheeler001:~$ module load matlab/R2019a
-wheeler001:~$ matlab -nodisplay
+wheeler001:~$ module load matlab
+wheeler001:~$ matlab
 
 To get started, type doc.
 For product information, visit www.mathworks.com.
@@ -19,7 +19,7 @@ For product information, visit www.mathworks.com.
 Now simply import the wheeler cluster profile availble in the root matlab folder:
 
 ```
->> parallel.importProfile('/opt/local/MATLAB/R2019a/wheeler.settings')
+>> parallel.importProfile('/opt/local/MATLAB/R2019a/wheeler-normal.settings')
 ```
 With the settings imported you can now launch parallel pools for computation using the `wheeler` cluster profile. The code below is an example to test parallel computing across two nodes on Wheeler while timing execution:
 
