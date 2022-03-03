@@ -4,7 +4,7 @@
 In order to submit a PBS script that takes advantage of MATLAB Parallel Server you first need to set up a new cluster profile specific to Wheeler. Thankfully this has already been done and all you need to do as a user is import the profile and that only needs to be done once. If you would like to do this interactively you can start an interactive session with the following:
 
 ```bash
-wheeler-sn:~$ srun --pty bash
+wheeler:~$ srun --pty bash
 ```
 Once you have a node allocated to you load the MATLAB module and start a MATLAB session:
 
