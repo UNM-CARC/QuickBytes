@@ -65,13 +65,13 @@ The corresponding Slurm script for the above PBS script can be written as
 ```bash
 #!/bin/bash
 
-#SBATCH --ntasks= 1
+#SBATCH --ntasks=1
 #SBATCH --time=01:00:00
-#SBATCH --job-name test
-#SBATCH --output = test_out
-#SBATCH --error = test_error
-#SBATCH --mail-type= BEGIN|FAIL|END
-#SBATCH --mail-user =user@unm.edu
+#SBATCH --job-name=test
+#SBATCH --output=test.out
+#SBATCH --error=test.err
+#SBATCH --mail-type=BEGIN,FAIL,END
+#SBATCH --mail-user=user@unm.edu
 
 cd $SLURM_SUBMIT_DIR/
 python test.py
