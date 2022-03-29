@@ -19,7 +19,7 @@ For product information, visit www.mathworks.com.
 Now simply import the wheeler cluster profile availble in the root matlab folder:
 
 ```
->> parallel.importProfile('/opt/local/MATLAB/R2019a/wheeler-normal.settings')
+>> parallel.importProfile('/opt/local/MATLAB/wheeler-normal.settings')
 ```
 With the settings imported you can now launch parallel pools for computation using the `wheeler` cluster profile. The code below is an example to test parallel computing across two nodes on Wheeler while timing execution:
 
