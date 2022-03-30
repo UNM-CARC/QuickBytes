@@ -19,29 +19,28 @@ For product information, visit www.mathworks.com.
 Now simply import the wheeler cluster profile availble in the root matlab folder:
 
 ```
->> parallel.importProfile('/opt/local/MATLAB/R2019a/wheeler-normal.settings')
+>> profile = parallel.importProfile('/opt/local/MATLAB/wheeler-normal.settings')
 ```
 With the settings imported you can now launch parallel pools for computation using the `wheeler` cluster profile. The code below is an example to test parallel computing across two nodes on Wheeler while timing execution:
 
 ```
->> poolobj = parpool('wheeler', 16)
+>> poolobj = parpool(profile, 16)
 >> tic
 >> n = 200
 >> A = 500
 >> a = zeros(1,n)
 >> parfor i = 1:n
 >> a(i) = max(abs(eig(rand(A))))
->> end
+>> end % You may need to hit enter more than once to get the prompt back.
 >> toc
 >> delete(poolobj);
 ```
 Even better is to do everything using a batch script and avoid the mistakes associated with interactive computing. Below is an example MATLAB script named `parallel_matlab.m` that will import our cluster profile and compare the time of computation for a sequential for loop and a parallel for loop with 16 cores ('workers' in MATLAB speak):
 
 ```
-% If you have already set up your cluster profile you can comment or delete the following line
-parallel.importProfile('/opt/local/MATLAB/R2019a/wheeler.settings')
+profile = parallel.importProfile('/opt/local/MATLAB/wheeler-normal.settings')
 
-poolobj = parpool('wheeler', 16);
+poolobj = parpool(profile, 16);
 
 tic
 n = 200;
