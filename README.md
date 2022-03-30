@@ -49,6 +49,8 @@ Quickbytes are tutorials designed to help CARC users.
          * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
       * Computational Chemistry
          * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
+      * Computational Immunology
+         * [SimCov on Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/SimCov.md)
       * [Paraview](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
