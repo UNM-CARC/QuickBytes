@@ -24,10 +24,10 @@ Quickbytes are tutorials designed to help CARC users.
          * [Parallel MATLAB batch submission](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_profile_creation/Parallel%20MATLAB%20profile%20setup%20and%20batch%20submission.md)
       * JupyterHub
          * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
-         * [Anaconda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Anaconda_JupyterHub.md)
-      * Anaconda
-         * [General intro to Anaconda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
-         * [Intro to Anaconda with example](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
+         * [Conda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Conda_JupyterHub.md)
+      * Conda
+         * [General intro to Conda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
+         * [Intro to Conda with example](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
          * [Anaconda pip channels](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_pip_channels.md)
       * R
          * [R Programming in HPC](https://github.com/UNM-CARC/QuickBytes/blob/master/R_usage.md)
