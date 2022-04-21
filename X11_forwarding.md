@@ -28,6 +28,11 @@ $ ssh -X username@wheeler.alliance.unm.edu
 ```
 $ qsub -IX -l nodes=1:ppn=1
 ```
+Note that the equivalent of this command using slurm would be as follows:
+
+```
+$ srun --x11 --nodes=1 --ntasks=1 xterm
+```
 
 3. Once you have been assiged a node, load the MATLAB module. Then start MATLAB. You should automatically get a MATLAB GUI 
 poping us on your computer. 
@@ -42,6 +47,11 @@ $ matlab
 5. When you are finished loading your add-on, click the x to close the GUI. Lastly, exit the interactive session to release the 
 node for other users. 
 
+6. One can find a quickbyte video on x11 forwarding by accessing the following link:
+
+```
+https://www.youtube.com/watch?v=-5ic9JWHuqI&list=PLvr5gRBLi7VAzEB_t5aXOLHLfdIu2s1hZ&index=10
+```
 
 If you have any trouble at any point please reach out to us at help@carc.unm.edu 
 
