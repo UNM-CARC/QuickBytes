@@ -55,7 +55,8 @@ ans =
       1      "Tesla K40m"          "3.5"               true              false
 ```
 
-Next, you must tell MATLAB which GPU to use (pass in the desired index from the above table):
+Next, you can tell MATLAB which GPU to use (pass in the desired index from the above table).
+If you do not do this, MATLAB will automatically grab the lowest index GPU when you try to use one.
 ```bash
 >> gpuDevice(1)
 ```
@@ -77,7 +78,7 @@ ans =
 
 #### Using Arrays on GPU
 
-In order to utilize the gpu, data must be loaded into a `gpuArray` object.
+In order to utilize the GPU, data must be loaded into a `gpuArray` object.
 For a full description of the `gpuArray` object, please visit the official MathWorks Documentation at [https://www.mathworks.com/help/parallel-computing/gpuarray.html](https://www.mathworks.com/help/parallel-computing/gpuarray.html)
 
 ##### Initialize Array
@@ -86,13 +87,14 @@ In this example we will use the `magic(8)` function to create a magic square mat
 ```bash
 >> A = magic(8)
 ```
-Next, pass that into a `gpuArray` object:
+Next, pass that into a `gpuArray` object.
+This will copy the contents of a normal array into an array on the GPU.
 ```bash
 >> B = gpuArray(A)
 ```
 
 ##### Test if array is on GPU
-The `isgpuarray` function tests if an array is on a gpu:
+The `isgpuarray` function tests if an array is on a GPU:
 ```bash
 >> isgpuarray(A)
 
@@ -110,10 +112,12 @@ ans =
 
    1
 ```
-This confirms that array A is not on the gpu, but array B is.
+This confirms that array A is not on the GPU, but array B is.
 
 ##### Retrieve Array from GPU
-In order to retrieve an array from the gpu and put it back in the MATLAB workspace, use the `gather` function:
+In order to retrieve an array from the GPU and put it back in the MATLAB workspace, use the `gather` function.
+It will copy the contents of an array on the GPU into a normal array.
+This is neccesary if you want to to perform non-GPU actions on your data after using the GPU.
 ```bash
 >> C = gather(B)
 ```
@@ -200,13 +204,44 @@ matlab -nodisplay -r gpu_matlab > gpu_matlab.out
 
 ```
 
+#### Slurm Script
+
+Now, let's create a Slurm script called `gpu_matlab.sh`. 
+Replace the `<DIR>` with the path to the directory containing the MATLAB script created above. 
+This script will request the desired resrouces, load the MATLAB module, then run the script.
+The output of the script will be sent to the file: `gpu_matlab.out`
+
+```bash
+#!/bin/bash
+
+#SBATCH --job-name gpu_matlab_job
+#SBATCH --output gpu_matlab_job.out
+#SBATCH --error gpu_matlab_job.err
+#SBATCH --time 00:05:00
+#SBATCH --ntasks 1
+#SBATCH -G 1
+
+cd <DIR>
+
+module load matlab
+matlab -nodisplay -r gpu_matlab > gpu_matlab.out
+```
+
 
 #### Submit Job to Queue
 
 Now we can submit the job to the scheduler from the xena head node:
+
+PBS script version:
 ```bash
 xena:~$ qsub gpu_matlab.pbs
 ```
+
+Slurm script version:
+```bash
+xena:~$ sbatch gpu_matlab.sh
+```
+
 View the results:
 ```bash
 xena:~$ cat gpu_matlab.out
@@ -303,7 +338,7 @@ matlab -nodisplay -r gpu_logistic_map > gpu_logistic_map.out
 
 Now we can submit the job to the scheduler from the xena head node:
 ```bash
-xena:~$ qsub gpu_logistic_map.sh
+xena:~$ sbatch gpu_logistic_map.sh
 ```
 View the results:
 ```bash
