@@ -39,11 +39,96 @@ xena-01:~$ matlab
 This should bring up the MATLAB graphical user interface (GUI).
 
 ### Create MATLAB script
-Now, we
+Now, create the following MATLAB script with the name 'deep_learning_example.m' and ensure it lives within the directory created above ('~/deepLearningExample/').
 ```bash
->> dataDir = '~/deepLearningExample/data/';
+dataDir = '~/deepLearningExample/data';
+
+% Ensure the data is downloaded first
+isDownloaded = false;
+if ~isDownloaded
+    downloadIAPRTC12Data('http://www-i6.informatik.rwth-aachen.de/imageclef/resources/iaprtc12.tgz',dataDir);
+end
+
+% Grab Subset of data for training
+trainImagesDir = fullfile(dataDir, "iaprtc12","images","00");
+exts = [".jpg",".bmp",".png"];
+imdsPristine = imageDatastore(trainImagesDir,FileExtensions=exts);
+
+% Prepare Training Data
+
+JPEGQuality = [5:5:40 50 60 70 80];
+
+%compressedImagesDir = fullfile(dataDir,"iaprtc12","JPEGDeblockingData","compressedImages");
+%residualImagesDir = fullfile(dataDir,"iaprtc12","JPEGDeblockingData","residualImages");
+
+isCompressed = false;
+
+if ~isCompressed
+    [compressedDirName,residualDirName] = createJPEGDeblockingTrainingSet(imdsPristine,JPEGQuality);
+else
+    compressedDirName = fullfile(dataDir,"iaprtc12","images","00","compressedImages");
+    residualDirName = fullfile(dataDir,"iaprtc12","images","00","residualImages");
+end
+% Create Random Patch Extraction Datastore for Training
+
+imdsCompressed = imageDatastore(compressedDirName,FileExtensions=".mat",ReadFcn=@matRead);
+imdsResidual = imageDatastore(residualDirName,FileExtensions=".mat",ReadFcn=@matRead);
+
+augmenter = imageDataAugmenter(...
+    RandRotation=@()randi([0,1],1)*90,...
+    RandXReflection=true);
+
+
+patchSize = 50;
+patchesPerImage = 128;
+dsTrain = randomPatchExtractionDatastore(imdsCompressed,imdsResidual,patchSize, ...
+    PatchesPerImage=patchesPerImage, ...
+    DataAugmentation=augmenter);
+dsTrain.MiniBatchSize = patchesPerImage;
+
+inputBatch = preview(dsTrain);
+disp(inputBatch)
+
+layers = dnCNNLayers
+
+maxEpochs = 10;
+initLearningRate = 0.1;
+l2reg = 0.0001;
+batchSize = 64;
+
+options = trainingOptions("sgdm", ...
+    Momentum=0.9, ...
+    InitialLearnRate=initLearningRate, ...
+    LearnRateSchedule="piecewise", ...
+    GradientThresholdMethod="absolute-value", ...
+    GradientThreshold=0.005, ...
+    L2Regularization=l2reg, ...
+    MiniBatchSize=batchSize, ...
+    MaxEpochs=maxEpochs, ...
+    Plots="training-progress", ...
+    ExecutionEnvironment='gpu',...
+    Verbose=true);
+
+doTraining = true;
+
+if doTraining
+    [net,info] = trainNetwork(dsTrain,layers,options);
+    modelDateTime = string(datetime("now",Format="yyyy-MM-dd-HH-mm-ss"));
+    save("trainedJPEGDnCNN-"+modelDateTime+".mat","net");
+end
+
+return
 ```
+
+
+#### Sbsequent uses of this Script
+
+Booleans
+
 ### Get Required Example Functions
+
+The script created above requires the usage of functions provided by MathWorks.
+A quick way to find these functions 
 
 ### Train Interactively
 
