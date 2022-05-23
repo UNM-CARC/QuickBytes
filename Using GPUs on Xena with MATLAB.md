@@ -302,8 +302,8 @@ return
 #### Slurm Script
 
 
-When using the `--pariution dualGPU` flag on xena, you must also set `--cpus-per-task 2` and `-G 2` for MATLAB to correctly find and utilize the available GPUs.
-These numbers must match, as MATLAB will use a CPU to access each GPU.
+When using the `--partition dualGPU` flag on xena, you must also set `--cpus-per-task 2` and `-G 2` for MATLAB to correctly find and utilize the available GPUs.
+These numbers should match, as MATLAB will use a CPU to access each GPU.
 For this partition, we ask for two CPUs and two GPUs.
 
 Create the following slurm scrpt called `gpu_logistic_map.sh`.
@@ -350,4 +350,4 @@ You can also view the `logistic_map.jpg` image using your preferred method.
 
 ## Using Multiple Nodes with their own GPUs
 
-Coming Soon!
+Coming Soon! (Maybe)
