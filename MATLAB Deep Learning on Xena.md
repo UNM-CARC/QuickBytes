@@ -232,23 +232,187 @@ It is reccomended that you use the dual GPU machines.
 When using either of the scripts below, ensure the `ExecutionEnvironment` option in the above MATLAB script matches your choice of machine.
 
 #### Single GPU
+```bash
+#!/bin/bash
+
+#SBATCH --job-name DnCNN_singleGPU
+#SBATCH --mail-user jmccullough12@unm.edu
+#SBATCH --mail-type ALL
+#SBATCH --output dncnn_single_gpu.out
+#SBATCH --error dncnn_single_gpu.err
+#SBATCH --time 48:00:00
+#SBATCH --partition singleGPU
+#SBATCH --ntasks 1
+#SBATCH --mem 0
+#SBATCH --cpus-per-task 16
+#SBATCH -G 1
+
+cd ~/deepLearningExample
+
+module load matlab
+matlab -nodisplay -r deep_learning_example > dncnn_single_training.out
+
+```
 
 #### Dual GPU
+```bash
+#!/bin/bash
 
+#SBATCH --job-name DnCNN_DualGPU
+#SBATCH --mail-user <YOUR EMAIL>
+#SBATCH --mail-type ALL
+#SBATCH --output dncnn_dual_gpu.out
+#SBATCH --error dncnn_dual_gpu.err
+#SBATCH --time 48:00:00
+#SBATCH --partition dualGPU
+#SBATCH --ntasks 1
+#SBATCH --mem 0
+#SBATCH --cpus-per-task 16
+#SBATCH -G 2
+
+cd ~/deepLearningExample
+
+module load matlab
+matlab -nodisplay -r deep_learning_example > dncnn_dual_training.out
+```
 ### View Results
 
 While a network is being trained, you can see the results in real time with the `cat` command.
 
 If you used the single GPU slurm script, use this command to view the output:
 ```bash
-xena:~$ cat deepLearningExamples/SOMETHING.out
+xena:~$ cat deepLearningExamples/dncnn_single_training.out
 ```
 
 If you used the dual GPU slurm script, use this command to view the output:
 ```bash
-xena:~$ cat deepLearningExamples/SOMETHING_ELSE.out
+xena:~$ cat deepLearningExamples/dncnn_dual_training.out
 ```
 
 ## Test the Model
 
+Once a model has finished training, it will be saved to a .mat file with a name like: `trainedJPEGDnCNNyyyy-MM-dd-HH-mm-ss.mat`
+You can also use the pretrained example model (see the above instructions to get the example MATALB function files).
 
+### MATLAB Script
+
+Use the following MATLAB Script to the results of a trianed model.
+To specify which model to use, replace the `<MODEL FILE>` with the name of your model.
+
+If the script is run interactively with X11 fowarding (see above instructions), an image will appear that shows the predictions made on a test image,.
+The resulting comparisons are also saved to an imaged titled 'results.tif' which can be viewed with your preferred image viewer.
+
+Create the following script with the name 'test_model.m' and ensure it lives in the 'deepLearningExample' directory.
+```bash
+% Open and test results of trained CNN model for JPEG Denoising
+
+% Load the model from file
+
+load("trainedJPEGDnCNN-2022-05-23-00-37-23.mat");
+
+% Open test images
+
+fileNames = ["sherlock.jpg","peacock.jpg","fabric.png","greens.jpg", ...
+    "hands1.jpg","kobi.png","lighthouse.png","office_4.jpg", ...
+    "onion.png","pears.png","yellowlily.jpg","indiancorn.jpg", ...
+    "flamingos.jpg","sevilla.jpg","llama.jpg","parkavenue.jpg", ...
+    "strawberries.jpg","trailer.jpg","wagon.jpg","football.jpg"];
+filePath = fullfile(matlabroot,"toolbox","images","imdata")+filesep;
+filePathNames = strcat(filePath,fileNames);
+testImages = imageDatastore(filePathNames);
+
+
+% Select an image to view - choose an image name from the above list.
+
+testImage = "lighthouse.png";
+Ireference = imread(testImage);
+
+% Compress the test image in three different levels of quality
+
+imwrite(Ireference,fullfile(tempdir,"testQuality10.jpg"),"Quality",10);
+imwrite(Ireference,fullfile(tempdir,"testQuality20.jpg"),"Quality",20);
+imwrite(Ireference,fullfile(tempdir,"testQuality50.jpg"),"Quality",50);
+
+I10 = imread(fullfile(tempdir,"testQuality10.jpg"));
+I20 = imread(fullfile(tempdir,"testQuality20.jpg"));
+I50 = imread(fullfile(tempdir,"testQuality50.jpg"));
+
+I10ycbcr = rgb2ycbcr(I10);
+I20ycbcr = rgb2ycbcr(I20);
+I50ycbcr = rgb2ycbcr(I50);
+
+% Apply network to compressed test images
+
+I10y_predicted = denoiseImage(I10ycbcr(:,:,1),net);
+I20y_predicted = denoiseImage(I20ycbcr(:,:,1),net);
+I50y_predicted = denoiseImage(I50ycbcr(:,:,1),net);
+
+I10ycbcr_predicted = cat(3,I10y_predicted,I10ycbcr(:,:,2:3));
+I20ycbcr_predicted = cat(3,I20y_predicted,I20ycbcr(:,:,2:3));
+I50ycbcr_predicted = cat(3,I50y_predicted,I50ycbcr(:,:,2:3));
+
+I10_predicted = ycbcr2rgb(I10ycbcr_predicted);
+I20_predicted = ycbcr2rgb(I20ycbcr_predicted);
+I50_predicted = ycbcr2rgb(I50ycbcr_predicted);
+
+% View and save results
+
+montage({I50,I20,I10,I50_predicted,I20_predicted,I10_predicted},Size=[2 3])
+title("Compressed Images (above) Compared to Deblocked Images (below) with Quality Factor 50, 20 and 10 (Left to Right)")
+
+imwrite(getframe(gca).cdata,'results.tif','tif');
+
+% Change the following boolean to look closer at a specific region of
+% interes in the test image
+
+doROI = false;
+
+if doROI
+    roi = [30 440 100 80];
+    i10 = imcrop(I10,roi);
+    i20 = imcrop(I20,roi);
+    i50 = imcrop(I50,roi);
+    i10predicted = imcrop(I10_predicted,roi);
+    i20predicted = imcrop(I20_predicted,roi);
+    i50predicted = imcrop(I50_predicted,roi);
+    montage({i50,i20,i10,i50predicted,i20predicted,i10predicted},Size=[2 3])
+    title("Compressed Images ROI (above) Compared to Deblocked Images ROI (below) with Quality Factor 50, 20 and 10 (Left to Right)")
+    imwrite(getframe(gca).cdata,'results_roi.tif','tif');
+end
+
+
+```
+### Changes you can make to the test_model.m script
+
+The above script can be modified for two different kinds of functionality:
+
+1. Use a different test image
+2. Zoom in on a specific region of interest (ROI)
+
+#### Different test image
+You can change the test image by changing the line: 
+```bash
+testImage = "lighthouse.png";
+```
+to any of the images in the list of filenames, directly above in the script.
+
+#### Zoom in on specific ROI
+To zoom in on a specific region of interest, change the following line:
+```bash
+doROI = false;
+```
+to
+```bash
+doROI = true;
+```
+
+Then ROI can be changed by modifying this line:
+```bash
+roi = [30 440 100 80];
+```
+
+This region works well when using `lighthouse.png` as your test image.
+
+Running the script with the boolean changed will display and save a image of the results zoomed in on the ROI.
+If you are using X11 forwarding, the image should appear on your display.
+The results are also saved to an image ('results_roi.tif') that can be viewed in your choice of image viewer.
