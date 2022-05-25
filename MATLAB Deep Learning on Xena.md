@@ -37,7 +37,10 @@ xena:~$ mkdir deepLearningExample
 ## Train CNN Interactively <a name="1"></a>
 It is possible to train the the example CNN in an interactive MATLAB session and track the progress.
 This requires X11 fowarding.
-For a full guide on how to do that, please view our [Quickbytes youtube tutorial.](https://www.youtube.com/watch?v=-5ic9JWHuqI&t=224s&ab_channel=UNMCARC "Quickbytes X11 Forwarding Tutorial")  
+For a full guide on how to do that, please view our [Quickbytes youtube tutorial.](https://www.youtube.com/watch?v=-5ic9JWHuqI&t=224s&ab_channel=UNMCARC "Quickbytes X11 Forwarding Tutorial").
+Please note that you should not fully train a CNN interactively as the plotting requires large amounts of memory.
+It is alright to use the interactive plotting to verify that a model is training.
+In order to fully train a model, please schedule a job using a slurm script and disable the plotting.
 
 ### Open MATLAB <a name="1.1"></a>
 
@@ -180,7 +183,9 @@ options = trainingOptions("sgdm", ...
     L2Regularization=l2reg, ...
     MiniBatchSize=batchSize, ...
     MaxEpochs=maxEpochs, ...
-    Plots="training-progress", ...
+    % WARNING - turning on plots uses massive amounts of RAM. Do not run for more than 3 or 4 epochs.
+    %Plots="training-progress", ...
+    Plots="none", ...
     ExecutionEnvironment='multi-gpu',...
     Verbose=true);
 
@@ -235,7 +240,9 @@ To train the network interactively, run the script from within the interactive M
 >> deep_learning_example
 ```
 
-Once the data is downloaded and compressed, a window will pop up to track the training progress.
+In the MATLAB script, you can change the 'Plotting' option to view a plot of the training status in real time.
+However, this uses massive amounts of RAM and should not be run for more than 3 or 4 epochs.
+You can use the plotting as verification that a model is actually training, but you should not attempt to fully train a model with the plotting enabled.
 
 Downloading and compressing the images can take quite a few minutes.
 Training the model takes up to 9 hours to complete 10 epochs on the dual GPU machines.
