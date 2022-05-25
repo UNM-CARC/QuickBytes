@@ -1,15 +1,35 @@
 # Using GPUs with MATLAB
 
-## Using a single GPU on Xena
+1. [Using a single GPU on Xena](#1)
+     1. [Use GPU in Interactive Session](#1.1)
+          1. [Identify and Select GPU](#1.1.1)
+          2. [Using Arrays on GPU](#1.1.2)
+          3. [Initialize Array](#1.1.3)
+          4. [Test if array is on GPU](#1.1.4)
+          5. [Retrieve Array from GPU](#1.1.5)
+          6. [Use functions on GPU Arrays](#1.1.6)
+     2. [Schedule a job](#1.2)
+          1. [MATLAB Script](#1.2.1)
+          2. [PBS Script](#1.2.2)
+          3. [Slurm Script](#1.2.3)
+          4. [Submit Job to Queue](#1.2.4)
+2. [Using Multiple GPUs on a single Xena node](#2)
+    1. [MATLAB Script](#2.2)
+    2. [Slurm Script](#2.2)
+    3. [Submit Job to Queue](#2.3) 
+3. [Using Multiple Nodes with their own GPUs](#3)
+
+
+## Using a single GPU on Xena <a name="1"></a>
 
 MATLAB allows the utilization of a single GPU that is part of a machine.
 The following sections show how to access and utilize a GPU on xena.
 
-### Use GPU in Interactive Session
+### Use GPU in Interactive Session <a name="1.1"></a>
 
 First, we will open MATLAB in an interactive session on a xena compute node.
 
-#### Identify and Select GPU
+#### Identify and Select GPU <a name="1.1.1"></a>
 
 Start by requesting an interactive session:
 
@@ -76,12 +96,12 @@ ans =
 
 ```
 
-#### Using Arrays on GPU
+#### Using Arrays on GPU <a name="1.1.2"></a>
 
 In order to utilize the GPU, data must be loaded into a `gpuArray` object.
 For a full description of the `gpuArray` object, please visit the official MathWorks Documentation at [https://www.mathworks.com/help/parallel-computing/gpuarray.html](https://www.mathworks.com/help/parallel-computing/gpuarray.html)
 
-##### Initialize Array
+##### Initialize Array <a name="1.1.3"></a>
 First, create a normal array using any method you like.
 In this example we will use the `magic(8)` function to create a magic square matrix that is 8x8.
 ```bash
@@ -93,7 +113,7 @@ This will copy the contents of a normal array into an array on the GPU.
 >> B = gpuArray(A)
 ```
 
-##### Test if array is on GPU
+##### Test if array is on GPU <a name="1.1.4"></a>
 The `isgpuarray` function tests if an array is on a GPU:
 ```bash
 >> isgpuarray(A)
@@ -114,7 +134,7 @@ ans =
 ```
 This confirms that array A is not on the GPU, but array B is.
 
-##### Retrieve Array from GPU
+##### Retrieve Array from GPU <a name="1.1.5"></a>
 In order to retrieve an array from the GPU and put it back in the MATLAB workspace, use the `gather` function.
 It will copy the contents of an array on the GPU into a normal array.
 This is neccesary if you want to to perform non-GPU actions on your data after using the GPU.
@@ -132,7 +152,7 @@ ans =
    0
 ```
 
-#### Use functions on GPU Arrays
+#### Use functions on GPU Arrays <a name="1.1.6"></a>
 To perform functions on `gpuArray` objects, use the `arrayfun` function.
 In this example, we will apply the MATLAB `sqrt` function to the array (B) that we created in the previous step:
 ```bash
@@ -155,13 +175,13 @@ To see a list of MATLAB functions that are supported using gpus, visit [https://
 
 You can also create your own functions to pass into `arrayfun`.
 
-### Schedule a job
+### Schedule a job <a name="1.2"></a>
 It is good idea to do everything using a batch script and avoid the mistakes associated with interactive computing.
 To get an idea of why performing functions on `gpuArray` objects is a good idea, let's create a simple MATLAB script that displays the amount of time it takes to perform the same computation on a cpu and on a gpu.
 We will then create a PBS script that schedules a job with a GPU to run the MATLAB script for us.
 
 
-#### MATLAB script
+#### MATLAB Script <a name="1.2.1"></a>
 We will perform the `sqrt` function on a 5000x5000 array.
 The use of `tic` and `toc` allow us to time the seperate applications of `sqrt`.
 
@@ -181,7 +201,7 @@ tic
 D = arrayfun(@sqrt,C);
 toc
 ```
-#### PBS Script
+#### PBS Script <a name="1.2.2"></a>
 
 Now, let's create a PBS script called `gpu_matlab.pbs`. 
 Replace the `<DIR>` with the path to the directory containing the MATLAB script created above. 
@@ -204,7 +224,7 @@ matlab -nodisplay -r gpu_matlab > gpu_matlab.out
 
 ```
 
-#### Slurm Script
+#### Slurm Script <a name="1.2.3"></a>
 
 Now, let's create a Slurm script called `gpu_matlab.sh`. 
 Replace the `<DIR>` with the path to the directory containing the MATLAB script created above. 
@@ -228,7 +248,7 @@ matlab -nodisplay -r gpu_matlab > gpu_matlab.out
 ```
 
 
-#### Submit Job to Queue
+#### Submit Job to Queue <a name="1.2.4"></a>
 
 Now we can submit the job to the scheduler from the xena head node:
 
@@ -247,7 +267,7 @@ View the results:
 xena:~$ cat gpu_matlab.out
 ```
 
-## Using Multiple GPUs on a single Xena node
+## Using Multiple GPUs on a single Xena node <a name="2"></a>
 
 Xena contains some nodes with two GPUs.
 MATLAB allows for the utilization of multiple GPUs on a single node in the same way you use multiple CPUs.
@@ -258,7 +278,7 @@ Each worker will grab it's own GPU when performing actions with `gpuArray` objec
 For this to work properly, ensure that you have been allocated an equal number of CPUs as GPUs on the machine.
 An example slurm script is included below to give an idea of how to ask for the proper resources to be allocated.
 
-#### MATLAB Script
+### MATLAB Script <a name="2.1"></a>
 
 Create the following MATLAB script called `gpu_logistic_map.m`
 This simple MATLAB script creates a Logistic Map by iterating the logistic equation on a set of random populations.
@@ -299,7 +319,7 @@ saveas(f,'logistic_map','jpg')
 return
 ```
 
-#### Slurm Script
+### Slurm Script <a name="2.2"></a>
 
 
 When using the `--partition dualGPU` flag on xena, you must also set `--cpus-per-task 2` and `-G 2` for MATLAB to correctly find and utilize the available GPUs.
@@ -334,7 +354,7 @@ matlab -nodisplay -r gpu_logistic_map > gpu_logistic_map.out
 
 ```
 
-#### Submit Job to Queue
+### Submit Job to Queue <a name="2.3"></a>
 
 Now we can submit the job to the scheduler from the xena head node:
 ```bash
@@ -348,6 +368,6 @@ xena:~$ cat gpu_logistic_map.out
 You can also view the `logistic_map.jpg` image using your preferred method.
 
 
-## Using Multiple Nodes with their own GPUs
+## Using Multiple Nodes with their own GPUs <a name="3"></a>
 
 Coming Soon! (Maybe)
