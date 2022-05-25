@@ -1,5 +1,18 @@
 #  MATLAB Deep Learning on Xena
 
+MATLAB has great tools for deep learning and convolutional neural networks (CNNs).
+These tools can make use of GPUs, which are available for use on the Xena cluster.
+This Quickbytes tutorial will mimic the official Mathworks tutorial on using deep learning for JPEG Image Deblocking.
+To see that tutorial, follow this [link.](https://www.mathworks.com/help/images/jpeg-image-deblocking-using-deep-learning.html#JPEGImageDeblockingUsingDeepLearningExample-2 "MathWorks Deep Learning Tutorial")
+
+Before we begin, create a directory named 'deepLearningExample' from within your home directory.
+```bash
+xena:~$ cd ~
+xena:~$ mkdir deepLearningExample
+```
+
+## Table of Contents
+
 1. [Train CNN Interactively](#1)
     1. [Open MATLAB](#1.1)
     2. [Get Required Example Functions](#1.2)
@@ -20,16 +33,6 @@
         1. [Different test image](#3.2.1)
         2. [Zoom in on specific ROI](#3.2.2)
 
-MATLAB has great tools for deep learning and convolutional neural networks (CNNs).
-These tools can make use of GPUs, which are available for use on the Xena cluster.
-This Quickbytes tutorial will mimic the official Mathworks tutorial on using deep learning for JPEG Image Deblocking.
-To see that tutorial, follow this [link.](https://www.mathworks.com/help/images/jpeg-image-deblocking-using-deep-learning.html#JPEGImageDeblockingUsingDeepLearningExample-2 "MathWorks Deep Learning Tutorial")
-
-Before we begin, create a directory named 'deepLearningExample' from within your home directory
-```bash
-xena:~$ cd ~
-xena:~$ mkdir deepLearningExample
-```
 
 ## Train CNN Interactively <a name="1"></a>
 It is possible to train the the example CNN in an interactive MATLAB session and track the progress.
