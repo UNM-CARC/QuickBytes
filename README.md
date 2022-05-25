@@ -22,6 +22,8 @@ Quickbytes are tutorials designed to help CARC users.
          * [Running MATLAB jobs at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/running_matlab_jobs.md)
          * [Parallel MATLAB Server](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabServer.md)
          * [Parallel MATLAB batch submission](https://github.com/UNM-CARC/QuickBytes/blob/parallel_matlab_profile_creation/Parallel%20MATLAB%20profile%20setup%20and%20batch%20submission.md)
+         * [Using GPUs with MATLAB](https://github.com/UNM-CARC/QuickBytes/blob/master/Using%20GPUs%20on%20Xena%20with%20MATLAB.md)
+         * [MATLAB Deep Learning on Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/MATLAB%20Deep%20Learning%20on%20Xena.md)
       * JupyterHub
          * [JupyterHub: Parallel Processing with MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/parallelization_with%20Jupyterhub_using_mpi.md)
          * [Conda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Conda_JupyterHub.md)
