@@ -1,4 +1,25 @@
 #  MATLAB Deep Learning on Xena
+
+1. [Train CNN Interactively](#1)
+    1. [Open MATLAB](#1.1)
+    2. [Get Required Example Functions](#1.2)
+        1. [Locate them interactively in MATLAB GUI](#1.2.1)
+        2. [Locate them using the terminal](#1.2.2)
+    3. [Create MATLAB script](#1.3)
+        1. [Subsequent uses of this Script](#1.3.1)
+    4. [Train Interactively](#1.4)
+2. [Train CNN via Scheduled Job](#2)
+    1. [Slurm Scripts](#2.1)
+        1. [Single GPU](#2.1.1)
+        2. [Dual GPU](#2.1.2)
+    2. [Submit Script](#2.2)
+    3. [View Results](#2.3)
+3. [Test Model](#3)
+    1. [MATLAB Script](#3.1)
+    2. [Changes you can make to the test_model.m script](#3.2)
+        1. [Different test image](#3.2.1)
+        2. [Zoom in on specific ROI](#3.2.2)
+
 MATLAB has great tools for deep learning and convolutional neural networks (CNNs).
 These tools can make use of GPUs, which are available for use on the Xena cluster.
 This Quickbytes tutorial will mimic the official Mathworks tutorial on using deep learning for JPEG Image Deblocking.
@@ -10,12 +31,12 @@ xena:~$ cd ~
 xena:~$ mkdir deepLearningExample
 ```
 
-## Train CNN Interactively
+## Train CNN Interactively <a name="1"></a>
 It is possible to train the the example CNN in an interactive MATLAB session and track the progress.
 This requires X11 fowarding.
 For a full guide on how to do that, please view our [Quickbytes youtube tutorial.](https://www.youtube.com/watch?v=-5ic9JWHuqI&t=224s&ab_channel=UNMCARC "Quickbytes X11 Forwarding Tutorial")  
 
-### Open MATLAB
+### Open MATLAB <a name="1.1"></a>
 
 It is highly reccommended to use the dualGPU partition and request two GPUs.
 The commands below will show you how to use both the single and dual GPU partitions.
@@ -43,7 +64,7 @@ This should bring up the MATLAB graphical user interface (GUI).
 
 Use the file brower on the left side of the window to move into your 'deepLearningExample' directory within MATLAB.
 
-### Get Required Example Functions
+### Get Required Example Functions <a name="1.2"></a>
 
 Before continuing, you must move the given MathWorks MATLAB functions (.m files) into yourly created 'deepLearningExample` directory. 
 There are two ways to locate these files.
@@ -51,7 +72,7 @@ There are two ways to locate these files.
 1. Locate them interactively in MATLAB GUI.
 2. Locate them using the terminal. 
 
-#### Locate them interactively in MATLAB GUI
+#### Locate them interactively in MATLAB GUI <a name="1.2.1"></a>
 
 Follow these steps to locate the files from with the MATLAB GUI opened in the above step.
 
@@ -66,7 +87,7 @@ Follow these steps to locate the files from with the MATLAB GUI opened in the ab
 6. Use the file brower on the left side to navigate back to your 'deepLearningExample' directory.
 7. Right click in the file brower and select paste to place all the files in this directory.
 
-#### Locate them using the terminal
+#### Locate them using the terminal <a name="1.2.2"></a>
 
 Follow these steps to copy the required example code into your new directory.
 
@@ -88,7 +109,7 @@ xena-01:~$ cp pretrianedJPEGDnCNN.mat ~/deepLearningExample
 ```
 
 
-### Create MATLAB script
+### Create MATLAB script <a name="1.3"></a>
 Now, create the following MATLAB script with the name 'deep_learning_example.m' and ensure it lives within the directory created above ('~/deepLearningExample/').
 ```bash
 dataDir = '~/deepLearningExample/data';
@@ -182,7 +203,7 @@ ExecutionEnvironment='gpu'
 ```
 
 
-#### Sbsequent uses of this Script
+#### Subsequent uses of this Script <a name="1.3.1"></a>
 
 The script uses the following booleans to allow you to skip various steps.
 
@@ -204,7 +225,7 @@ to this:
 isCompressed = true;
 ```
 
-### Train Interactively
+### Train Interactively <a name="1.4"></a>
 
 To train the network interactively, run the script from within the interactive MATLAB session's Command Window
 ```bash
@@ -219,19 +240,22 @@ Due to the way MATLAB trains a network with this depth (20 convolutional layers 
 One way to reduce memory usage and training time is top use fewer compressed images in the training set.
 Another option is to use a different layer setup with fewer hidden layers.
 
-## Train CNN via Scheduled Job
+## Train CNN via Scheduled Job <a name="2"></a>
 
 Since training this CNN can take many hours, it is a good idea to take advantage of the Slurm scheduler.
 Interactive jobs can be stopped and interrupted due to internet connection issues.
 In the options of the CNN itself we set `Verbose=true`, which will allow us to see the status of the model being trained in an ouput file that is updated in real time.
 
 
-### Slurm Scripts
+### Slurm Scripts <a name="2.1"></a>
 
 It is reccomended that you use the dual GPU machines.
 When using either of the scripts below, ensure the `ExecutionEnvironment` option in the above MATLAB script matches your choice of machine.
 
-#### Single GPU
+#### Single GPU <a name="2.1.1"></a>
+
+To request a job with a single GPU, create the following script with the name 'dncnn_single_gpu.sh':
+
 ```bash
 #!/bin/bash
 
@@ -254,7 +278,10 @@ matlab -nodisplay -r deep_learning_example > dncnn_single_training.out
 
 ```
 
-#### Dual GPU
+#### Dual GPU <a name="2.1.2"></a>
+
+To request a job with dual GPUs, create the following script with the name 'dncnn_dual_gpu.sh':
+
 ```bash
 #!/bin/bash
 
@@ -275,26 +302,39 @@ cd ~/deepLearningExample
 module load matlab
 matlab -nodisplay -r deep_learning_example > dncnn_dual_training.out
 ```
-### View Results
+
+### Submit Script <a name="2.2"></a>
+
+To submit a job request using the single GPU script, use the following command:
+```bash
+xena:~$ sbatch dncnn_single_gpu.sh
+```
+
+To submit a job request using the dual GPU script, use the following command:
+```bash
+xena:~$ sbatch dncnn_dual_gpu.sh
+```
+
+### View Results <a name="2.3"></a>
 
 While a network is being trained, you can see the results in real time with the `cat` command.
 
 If you used the single GPU slurm script, use this command to view the output:
 ```bash
-xena:~$ cat deepLearningExamples/dncnn_single_training.out
+xena:~$ cat ~/deepLearningExamples/dncnn_single_training.out
 ```
 
 If you used the dual GPU slurm script, use this command to view the output:
 ```bash
-xena:~$ cat deepLearningExamples/dncnn_dual_training.out
+xena:~$ cat ~/deepLearningExamples/dncnn_dual_training.out
 ```
 
-## Test the Model
+## Test the Model <a name="3"></a>
 
 Once a model has finished training, it will be saved to a .mat file with a name like: `trainedJPEGDnCNNyyyy-MM-dd-HH-mm-ss.mat`
 You can also use the pretrained example model (see the above instructions to get the example MATALB function files).
 
-### MATLAB Script
+### MATLAB Script <a name="3.1"></a>
 
 Use the following MATLAB Script to the results of a trianed model.
 To specify which model to use, replace the `<MODEL FILE>` with the name of your model.
@@ -382,21 +422,21 @@ end
 
 
 ```
-### Changes you can make to the test_model.m script
+### Changes you can make to the test_model.m script <a name="3.2"></a>
 
 The above script can be modified for two different kinds of functionality:
 
 1. Use a different test image
 2. Zoom in on a specific region of interest (ROI)
 
-#### Different test image
+#### Different test image <a name="3.2.1"></a>
 You can change the test image by changing the line: 
 ```bash
 testImage = "lighthouse.png";
 ```
 to any of the images in the list of filenames, directly above in the script.
 
-#### Zoom in on specific ROI
+#### Zoom in on specific ROI <a name="3.2.2"></a>
 To zoom in on a specific region of interest, change the following line:
 ```bash
 doROI = false;
