@@ -2,7 +2,7 @@
 
 ## What is Slurm accounting?
 
-Slurm accounting allows us to track resource usage at CARC and use that information to make scheduling decisions. When a job is run, the resources (CPUs/RAM) used by that job are tracked and associated with an account. When a cluster is under heavy utilization, accounts with less historical resource usage will have their priority increased over accounts with higher historical resource usage. As of now, Xena is the only cluster at CARC utilizing Slurm accounting, but we plan to eventually expand this to every cluster in the Center.
+Slurm accounting allows us to track resource usage at CARC and use that information to make scheduling decisions. When a job is run, the resources (CPUs/RAM) used by that job are tracked and associated with an account. When a cluster is under heavy utilization, accounts with less historical resource usage will have their priority increased over accounts with higher historical resource usage.
 
 ## Accounting Commands
 At CARC, accounts correspond to CARC projects. The account name is the project ID. `myaccounts` will show you all of the accounts you are a member of. Example:
