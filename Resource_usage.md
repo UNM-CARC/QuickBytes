@@ -8,16 +8,16 @@ Soft limits and hard limits are used to provide fair scheduling without wasting 
 
 ## Xena Configuration
 
-Parameters |	Soft Limit  |	Hardlimit
---- | --- | ---
-Number of Processors |	64 |	128
-Number of Nodes	|4 (xena) <br> 2(BigMem) |  8 (xena) <br> 4 (Bigmem)
-Processors per Node |	16(xena) <br> 32(BigMem)  | 16 (xena) <br>  32 (BigMem)
-
+| Queue | GPU | GPU | Bigmem | Bigmem | Debug | Debug |
+|---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Parameter | soft limit | hard limit | soft limit | hard limit | soft limit | hard limit |
+| Number of Processors | 64 | 128 | 64 | 128 | 4 | 4 |
+| Number of Nodes | 4 (singleGPU) <br> 4 (dualGPU) | 8 (singleGPU) <br> 4 (dualGPU) | 2 | 2 | 1 | 1 |
+| Processors per Node | 16 | 16 | 32 | 32 | 4 | 4 |
+| Walltime | 48:00:00 | 48:00:00 | 48:00:00 | 48:00:00 | 04:00:00 | 04:00:00 |
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
-
 
 
 ## Wheeler Configuration
@@ -47,3 +47,4 @@ Walltime |  72:00:00  | 72:00:00
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
+
