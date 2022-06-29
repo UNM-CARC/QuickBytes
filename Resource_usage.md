@@ -11,8 +11,8 @@ Soft limits and hard limits are used to provide fair scheduling without wasting 
 | Queue | GPU | GPU | Bigmem | Bigmem | Debug | Debug |
 |---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Parameter | soft limit | hard limit | soft limit | hard limit | soft limit | hard limit |
-| Number of Processors | 64 | 128 | 64 | 128 | 4 | 4 |
-| Number of Nodes | 4 (singleGPU) <br> 4 (dualGPU) | 8 (singleGPU) <br> 4 (dualGPU) | 2 | 2 | 1 | 1 |
+| Number of Processors | 64 | 192 | 64 | 128 | 4 | 4 |
+| Number of Nodes | 4 (singleGPU) <br> 4 (dualGPU) | 12 (singleGPU) <br> 4 (dualGPU) | 2 | 2 | 1 | 1 |
 | Processors per Node | 16 | 16 | 32 | 32 | 4 | 4 |
 | Walltime | 48:00:00 | 48:00:00 | 48:00:00 | 48:00:00 | 04:00:00 | 04:00:00 |
 
@@ -25,7 +25,7 @@ Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources 
 
 |                Queue: |   Default  |   Default  |    Debug   |   Debug    |
 |----------------------:|:----------:|:----------:|:----------:|:----------:|
-|             parameter | soft limit | hard limit | soft limit | hard limit |
+|             Parameter | soft limit | hard limit | soft limit | hard limit |
 | Number of Processors  |     160    |     400    |     32     |     32     |
 |      Number of Nodes  |     20     |     50     |      4     |      4     |
 |   Processors per Node |      8     |      8     |      8     |      8     |
@@ -43,7 +43,7 @@ Parameters |	Soft Limit  |	Hardlimit
 Number of Processors |	96 |	96
 Number of Nodes	|6 | 6
 Processors per Node |	16  | 16
-Walltime |  72:00:00  | 72:00:00
+Walltime |  96:00:00  | 96:00:00
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
