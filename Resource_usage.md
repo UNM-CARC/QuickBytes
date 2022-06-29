@@ -14,7 +14,7 @@ Soft limits and hard limits are used to provide fair scheduling without wasting 
 | Number of Processors | 64 | 192 | 64 | 128 | 4 | 4 |
 | Number of Nodes | 4 (singleGPU) <br> 4 (dualGPU) | 12 (singleGPU) <br> 4 (dualGPU) | 2 | 2 | 1 | 1 |
 | Processors per Node | 16 | 16 | 32 | 32 | 4 | 4 |
-| Walltime | 48:00:00 | 48:00:00 | 48:00:00 | 48:00:00 | 04:00:00 | 04:00:00 |
+| Walltime(H:M:S) | 48:00:00 | 48:00:00 | 48:00:00 | 48:00:00 | 04:00:00 | 04:00:00 |
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
@@ -29,7 +29,7 @@ Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources 
 | Number of Processors  |     160    |     400    |     32     |     32     |
 |      Number of Nodes  |     20     |     50     |      4     |      4     |
 |   Processors per Node |      8     |      8     |      8     |      8     |
-|              Walltime |  48:00:00  |  48:00:00  |  01:00:00  |  01:00:00  |
+|       Walltime(H:M:S) |  48:00:00  |  48:00:00  |  04:00:00  |  04:00:00  |
 
 Node Access Policy | Multi Job/Node ie (Multiple users may share resources across same node)
 --- | ---
@@ -43,7 +43,7 @@ Parameters |	Soft Limit  |	Hardlimit
 Number of Processors |	96 |	96
 Number of Nodes	|6 | 6
 Processors per Node |	16  | 16
-Walltime |  96:00:00  | 96:00:00
+Walltime(H:M:S) |  96:00:00  | 96:00:00
 
 Node Access Policy |	Single Job/Node ie (Multiple users can’t share resources across same node)
 --- | ---
