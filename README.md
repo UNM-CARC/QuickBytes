@@ -60,6 +60,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
       * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
       * [CuPy - Cuda in Python](https://github.com/UNM-CARC/QuickBytes/blob/master/CuPy_on_CARC.ipynb)
+      * [Installing Perl Libraries to Your Home Directory](https://github.com/UNM-CARC/QuickBytes/blob/master/install_perl_libraries.md) 
       
       
       
