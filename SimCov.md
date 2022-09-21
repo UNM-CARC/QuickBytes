@@ -8,7 +8,7 @@ cd ~
 ```
 Clone the simcov Github repository into your home directory:
 ```
-git clone --recurse-submodules https://github.com:AdaptiveComputationLab/simcov.git
+git clone --recurse-submodules https://github.com/AdaptiveComputationLab/simcov.git
 ```
 
 ## Build SimCov from Source
