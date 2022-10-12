@@ -107,7 +107,7 @@ Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspecto
     4. Startup Type: Manual
     5. Click on "Save"
 
-NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the qdel command on the cluster head node.
+NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the "scancel" command on the cluster head node.
 
 ## pvserver vs. pvrenderserver & pvdataserver
 
