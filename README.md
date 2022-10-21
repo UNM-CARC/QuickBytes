@@ -54,7 +54,9 @@ Quickbytes are tutorials designed to help CARC users.
          * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
       * Computational Immunology
          * [SimCov on Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/SimCov.md)
-      * [Paraview](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
+      * Paraview
+        * [Paraview Gibbs and Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
+        * [Paraview Hopper](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview_hopper.md)
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
       * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
