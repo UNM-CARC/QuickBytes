@@ -11,6 +11,8 @@ These steps will help you setup Paraview to work as a client/server mode, being 
 * ParaView User's Guide: https://docs.paraview.org/en/latest/UsersGuide/index.html
 * Wiki Page: https://www.paraview.org/Wiki/ParaView
 
+![](https://github.com/UNM-CARC/QuickBytes/blob/c5ceed0f01bca6b102c0393306e602aa48189ba3/paraview_overview.png)
+
 ## Hopper Cluster Connection
 
 The most common approach to use ParaView on Hopper is through the Client-Server mode support by ParaView, which requires an installation of ParaView on your local computer (Client). There are two methods to connect to Paraview Server (PVSERVER):
@@ -40,6 +42,7 @@ module load paraview/5.11.0-RC1
 ```bash
 mpiexec -np 64 pvserver --mpi --force-offscreen-rendering --server-port=11111
 ```
+![](https://github.com/UNM-CARC/QuickBytes/blob/c5ceed0f01bca6b102c0393306e602aa48189ba3/paraview_salloc_nodes_hopper.png)
 
 #### Terminal 2: Hopper SSH Tunneling
 The hopper### corresponds to the compute node allocated by slurm, and do not forget to change your username. 
@@ -47,6 +50,7 @@ The hopper### corresponds to the compute node allocated by slurm, and do not for
 ```bash
 ssh -L 11111:hopper###:11111 username@hopper.alliance.unm.edu
 ```
+![](https://github.com/UNM-CARC/QuickBytes/blob/c5ceed0f01bca6b102c0393306e602aa48189ba3/paraview_hopper_ssh.png)
 
 #### ParaView 5.11.0 RC1 Client and Setup Server Configuration
 
@@ -62,6 +66,8 @@ ssh -L 11111:hopper###:11111 username@hopper.alliance.unm.edu
 5. Click on "Save"
 
 _Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspector"_
+
+![](https://github.com/UNM-CARC/QuickBytes/blob/c5ceed0f01bca6b102c0393306e602aa48189ba3/paraview_memory_inspector.png)
 
 NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the "scancel" command on the cluster head node.
 
