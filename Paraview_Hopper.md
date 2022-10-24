@@ -17,7 +17,7 @@ These steps will help you setup Paraview to work as a client/server mode, being 
 
 The most common approach to use ParaView on Hopper is through the Client-Server mode support by ParaView, which requires an installation of ParaView on your local computer (Client). There are two methods to connect to Paraview Server (PVSERVER):
 
-### Method 1: Direct Connection (UNM On-Campus)
+### Method 1: Direct Connection (Off-Campus)
 
 The process to connecto to ParaView is, in one terminal you will ask Hopper to assign you compute nodes, where you will run the ParaView server. Once the ParaView server is listening for connections, you will open an ssh tunnel in another terminal window (This process is from your local computer to one of the compute nodes you were assigned). Then, you will tell the ParaView client on your computer to connect to the tunnel and so to the compute nodes at CARC, where it will perform the rendering.
 
@@ -71,7 +71,7 @@ _Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspect
 
 NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the "scancel" command on the cluster head node.
 
-### Method 2: Reverse Connection (UNM Off-Campus)
+### Method 2: Reverse Connection (UNM On-Campus)
 
 This process allows you to connect to Hopper service node. This process requires to know your localhost IP address "local_host_IP". Check your firewall setting if you are having firewall connectivity issues.
 
