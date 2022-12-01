@@ -8,11 +8,12 @@ ParaView was developed to analyze extremely large datasets using distributed mem
 
 The process to connecto to ParaView is, in one terminal you will ask Wheeler or Gibbs to give you compute nodes, where you will run the ParaView server. Once the ParaView server is listening for connections, you will open an ssh tunnel in another terminal window (This process is from your local computer to one of the compute nodes you were assigned). Then, you will tell the ParaView client on your computer to connect to the tunnel and so to the compute nodes at CARC, where it will perform the rendering.
 
-_NOTE: Be sure that the ParaView version installed on your local computer matches the same one that is installed on the ether Wheeler or Gibbs cluster. Gibbs's ParaView version is 5.9.1 and Wheeler's ParaView Ver. is 5.4.1._
+**_NOTE: Be sure that the ParaView version installed on your local computer matches the same one that is installed on ether Wheeler or Gibbs cluster. Gibbs's ParaView version is 5.9.1, Wheeler's version is 5.11.0-RC1 and for Hopper Cluster Information, [click here.](https://github.com/UNM-CARC/QuickBytes/blob/master/Paraview_Hopper.md)_ 
 
 * Downloads: https://www.paraview.org/download/
 
 * ParaView 4.9.1 Guide: https://docs.paraview.org/en/v5.9.1/
+* Paraview 5.11.0-RC1 Guide: https://docs.paraview.org/en/v5.11.0/UsersGuide/index.html
 
 * Wiki Page: https://www.paraview.org/Wiki/ParaView
 
@@ -91,13 +92,13 @@ NOTE: Wait until wheeler assigns you two compute nodes.
 #### Load ParaView Module
 
 ```bash
-module load paraview-5.4.1-gcc-4.8.5-python2-impi-wulnuwu
+module load paraview/5.11.0-RC1
 ```
 
 #### Run ParaView PVServer on the Compute Nodes
 
 ```bash
-mpirun -n 16 pvserver --use-offscreen-rendering -rc --client-host=local_host_IP
+mpiexec -np 16 pvserver --mpi --force-offscreen-rendering --rc --client-host=local_host_IP
 ```
 
 ### Opening ParaView 5.4.1 and Setup Server Configuration
