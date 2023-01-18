@@ -137,7 +137,7 @@ Although not a part of GATK's best practices, it is common practice to trim your
 	min_length=30
 	trimmomatic PE -threads 1 \
 		$read1 $read2 $paired_r1 $unpaired_r1 $paired_r2 $unpaired_r2 \
-		ILLUMINACLIP:${adapters}:2:30:10:2:keepBothReads \
+		ILLUMINACLIP:${adapters}:2:30:10:2:True \
 		LEADING:3 TRAILING:3 MINLEN:${min_length}
 	
 If you don't have access to the CARC directory with the adapters file, it can be found in the conda install/spack package. The exact path will vary, but they'll be something like this:
@@ -455,7 +455,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 		min_length=30
 		trimmomatic PE -threads 1 \
 			$read1 $read2 $paired_r1 $unpaired_r1 $paired_r2 $unpaired_r2 \
-			ILLUMINACLIP:${adapters}:2:30:10:2:keepBothReads \
+			ILLUMINACLIP:${adapters}:2:30:10:2:True \
 			LEADING:3 TRAILING:3 MINLEN:${min_length}'
 	
 	# Section for alignment and marking duplicates. 
