@@ -67,6 +67,8 @@ Quickbytes are tutorials designed to help CARC users.
 * Workshop Slides   
 These slides were used in CARC workshops. They are provided for your convenience.  
   [Current workshop schedule](https://carc.unm.edu/education--training/workshops-and-seminars.html)
+    * [Beginner Introduction](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/BeginnerIntro.pdf)
+    * [Intermediate Introduction](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntro.pdf)
     * [Biology 4/519](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/BIOL419_519.pdf)
     * [Chemistry 567](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CHEM567.pdf)
     * [Computer Science 442](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS442.pdf)
