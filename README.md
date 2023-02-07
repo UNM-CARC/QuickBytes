@@ -1,8 +1,6 @@
 # QuickBytes
 Quickbytes are tutorials designed to help CARC users.  
-
-  * [Workshop Slides](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides.md)
-  
+    
    * [Linux-Intro](https://github.com/UNM-CARC/QuickBytes/blob/master/linux_intro.md)
 
    * Running jobs
@@ -66,6 +64,18 @@ Quickbytes are tutorials designed to help CARC users.
       * [CuPy - Cuda in Python](https://github.com/UNM-CARC/QuickBytes/blob/master/CuPy_on_CARC.ipynb)
       * [Installing Perl Libraries to Your Home Directory](https://github.com/UNM-CARC/QuickBytes/blob/master/install_perl_libraries.md) 
       
+* Workshop Slides   
+These slides were used in CARC workshops. They are provided for your convenience.  
+  [Current workshop schedule](https://carc.unm.edu/education--training/workshops-and-seminars.html)
+    * [Biology 4/519](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/BIOL419_519.pdf)
+    * [Chemistry 567](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CHEM567.pdf)
+    * [Computer Science 442](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS442.pdf)
+    * [Computer Science 523](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS523.pdf)
+    * [Computer Science/Math 471](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS_Math_471.pdf)
+    * [Environmental Sciences 352](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/ENVS352.pdf)
+    * [Earth and Planetary Sciences 522](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/EPS522.pdf)
+    * [CARC Annual Meeting: Machine Learning](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/Machine_Learning.pdf)
+    * [PBS, Modules, GNU Parallel, Conda, and MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/PBS_Parallel_MPI.pdf)
       
       
       
