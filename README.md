@@ -63,6 +63,8 @@ Quickbytes are tutorials designed to help CARC users.
       * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
       * [CuPy - Cuda in Python](https://github.com/UNM-CARC/QuickBytes/blob/master/CuPy_on_CARC.ipynb)
       * [Installing Perl Libraries to Your Home Directory](https://github.com/UNM-CARC/QuickBytes/blob/master/install_perl_libraries.md) 
+    * Astronomy
+      * [CASA Radio Astronomy](https://github.com/UNM-CARC/QuickBytes/blob/master/mpiCASA.md)   
       
 * Workshop Slides   
 These slides were used in CARC workshops. They are provided for your convenience.  
