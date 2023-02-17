@@ -81,6 +81,7 @@ These slides were used in CARC workshops. They are provided for your convenience
     * [Earth and Planetary Sciences 400/522: Computational Methods for Geoscience](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/EPS522.pdf)
     * [CARC Annual Meeting: Machine Learning](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/Machine_Learning.pdf)
     * [PBS, Modules, GNU Parallel, Conda, and MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/PBS_Parallel_MPI.pdf)
+    * [Intermediate Intro to SLURM with NAMD](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntroToCARCWorkshopNAMD.pdf)
       
       
       
