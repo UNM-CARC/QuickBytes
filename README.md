@@ -68,7 +68,8 @@ Quickbytes are tutorials designed to help CARC users.
       
       
 * Workshop Slides   
-These slides were used in CARC workshops. They are provided for your convenience.  
+These slides were used in CARC workshops. They are provided for your convenience. Github does a poor job rendering PDFs. We recomment downloading the presentations.
+
   [Current workshop schedule](https://carc.unm.edu/education--training/workshops-and-seminars.html)
     * [Beginner Introduction: Basic Linux and Interactive SLURM](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/BeginnerIntro.pdf)
     * [Intermediate Introduction: High Performance Computing and Batch SLURM](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntro.pdf)
@@ -82,10 +83,6 @@ These slides were used in CARC workshops. They are provided for your convenience
     * [CARC Annual Meeting: Machine Learning](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/Machine_Learning.pdf)
     * [PBS, Modules, GNU Parallel, Conda, and MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/PBS_Parallel_MPI.pdf)
     * [Intermediate Intro to SLURM with NAMD](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntroToCARCWorkshopNAMD.pdf)
-      
-      
-      
-      
-  
+    
       
       
