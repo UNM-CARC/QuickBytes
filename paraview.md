@@ -12,7 +12,7 @@ The process to connecto to ParaView is, in one terminal you will ask Wheeler or 
 
 * Downloads: https://www.paraview.org/download/
 
-* ParaView 4.9.1 Guide: https://docs.paraview.org/en/v5.9.1/
+* ParaView 5.9.1 Guide: https://docs.paraview.org/en/v5.9.1/
 * Paraview 5.11.0-RC1 Guide: https://docs.paraview.org/en/v5.11.0/UsersGuide/index.html
 
 * Wiki Page: https://www.paraview.org/Wiki/ParaView
@@ -37,7 +37,7 @@ qsub -I -l nodes=1:ppn=4
 #### Loading ParaView Module 5.9.1 in Gibbs
 
 ```bash
-module load paraview/5.9.1
+module load paraview-5.9.1-gcc-10.2.0-enwua53
 ```
 
 #### Run ParaView PVServer on Compute Nodes
