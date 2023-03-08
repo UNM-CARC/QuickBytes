@@ -10,6 +10,7 @@ Since this script uses built-in Bash commands no software modules are
 loaded. That will be introduced in the next PBS script.
 
 ```bash
+#!/bin/bash
 ## Introduction for writing a PBS script
 ## The next lines specify what resources you are requesting.
 ## Starting with 1 node, 8 processors per node, and 2 hours of walltime. 
