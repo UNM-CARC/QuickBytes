@@ -23,8 +23,8 @@ Host wheeler
     hostname wheeler.alliance.unm.edu
     user CHANGEME
     port 22
-Host galles
-    hostname galles.alliance.unm.edu
+Host hopper
+    hostname hopper.alliance.unm.edu
     user CHANGEME
     port 22
 Host xena
