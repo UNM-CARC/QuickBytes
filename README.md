@@ -57,7 +57,7 @@ Quickbytes are tutorials designed to help CARC users.
       *  Astronomy
          * [CASA Radio Astronomy](https://github.com/UNM-CARC/QuickBytes/blob/master/mpiCASA.md) 
       * Paraview
-        * [Paraview Gibbs and Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
+        * [Paraview Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/paraview.md)
         * [Paraview Hopper](https://github.com/UNM-CARC/QuickBytes/blob/master/Paraview_Hopper.md)
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
