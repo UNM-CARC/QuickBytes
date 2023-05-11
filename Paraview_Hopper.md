@@ -4,12 +4,11 @@ ParaView is an open-source, multi-platform data analysis and visualization appli
 
 ParaView was developed to analyze extremely large datasets using distributed memory computing resources. It can be run on supercomputers to analyze datasets of petascale size.
 
-These steps will help you setup Paraview to work as a client/server mode, being your laptop/desktop computer a client and the cluster a server. Be sure that the ParaView version installed on your local computer matches the same one that is installed on Wheeler, Gibbs or Hopper clusters. 
-*NOTE: Hopper and Wheeler's Paraview version is 5.11.0-RC1 and Gibbs's ParaView version is 5.9.1*
+These steps will help you setup Paraview to work as a client/server mode, being your laptop/desktop computer a client and the cluster a server. Be sure that the ParaView version installed on your local computer matches the same one that is installed on Wheeler and Hopper clusters. 
+*NOTE: Hopper and Wheeler's Paraview version is 5.11.0-RC1*
 
 * Downloads: https://www.paraview.org/download/
 * ParaView User's Guide: https://docs.paraview.org/en/latest/UsersGuide/index.html
-* Wiki Page: https://www.paraview.org/Wiki/ParaView
 
 ![](https://github.com/UNM-CARC/QuickBytes/blob/c5ceed0f01bca6b102c0393306e602aa48189ba3/paraview_overview.png)
 
@@ -114,12 +113,6 @@ Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspecto
 
 NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the "scancel" command on the cluster head node.
 
-## pvserver vs. pvrenderserver & pvdataserver
+## ParaView executables
+ParaView comes with several executables that serve different purposes. These are: paraview, pvpython, pvbatch, pvserver, pvdataserver and pvrenderserver. To learn more about this executables, https://docs.paraview.org/en/latest/UsersGuide/introduction.html#paraview-executables. 
 
-There are two modes in which you can launch the ParaView server. In the first mode, all data processing and rendering are handled in the same parallel job. This server is launched with the pvserver command. In the second mode, data processing is handled in one parallel job and the rendering is handled in another parallel job launched with the pvdataserver and pvrenderserver programs, respectively.
-
-The point of having a separate data server and render server is the ability to use two different parallel computers, one with high performance CPUs and the other with GPU hardware. However, the server functionality split in two necessitates repartitioning and transfering the data from one to the other. This overhead is seldom much smaller than the cost of just performing both data processing and rendering in the same job.
-
-Thus, we recommend on almost all instances simply using the single pvserver. This document does not describe how to launch data server / render server jobs. Even if you really feel like this mode is right for you, it is best to first to configure your server in single server mode. From there, establishing the data server / render server should be easier. 
-
-More information Setting up ParaView Server, [Click Here.](https://www.paraview.org/Wiki/Setting_up_a_ParaView_Server) and If you would like to run paraview without a GUI interface, you can use the "pvpython" instead of pvserver https://www.paraview.org/Wiki/PvPython_and_PvBatch
