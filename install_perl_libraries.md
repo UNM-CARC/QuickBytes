@@ -6,7 +6,7 @@ First, load a perl module.
 Use `module spider perl` to view available perl modules on the cluster you are using.
 In this example we will use a perl module available on the Hopper cluster.
 ```bash
-$> module load module load intel/20.0.4
+$> module load intel/20.0.4
 $> module load perl/5.32.0-sw3s
 ``` 
 
