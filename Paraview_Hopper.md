@@ -4,8 +4,11 @@ ParaView is an open-source, multi-platform data analysis and visualization appli
 
 ParaView was developed to analyze extremely large datasets using distributed memory computing resources. It can be run on supercomputers to analyze datasets of petascale size.
 
-These steps will help you setup Paraview to work as a client/server mode, being your laptop/desktop computer a client and the cluster a server. Be sure that the ParaView version installed on your local computer matches the same one that is installed on Wheeler and Hopper clusters. 
-*NOTE: Hopper and Wheeler's Paraview version is 5.11.0-RC1*
+These steps will help you setup Paraview to work as a client/server mode, being your laptop/desktop computer a client and the cluster a server. Be sure that the ParaView version installed on your local computer matches the same one that is installed on Wheeler and Hopper clusters.
+
+To see a current list of paraview versions installed on CARC clusters login to the cluster and run
+
+```module spider paraview```
 
 * Downloads: https://www.paraview.org/download/
 * ParaView User's Guide: https://docs.paraview.org/en/latest/UsersGuide/index.html
