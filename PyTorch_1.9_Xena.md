@@ -58,8 +58,8 @@ cd /projects/shared/pytorch/PyTorch1.9-K40-Compatible
 This will change your command prompt to reflect the updated directory. If the command prompt does not reflect that you are in the PyTorch1.9-K40-Compatible directory, you will run into issues in later steps. 
 
 ```
-Updated command prompt:
-[(username)@(hostname) PyTorch1.9-K40-Compatible]$
+Make sure that the following appears in your command prompt: 
+[PyTorch1.9-K40-Compatible]$
 ```
 
 ### Create the Conda Environment
@@ -69,9 +69,9 @@ module load miniconda3
 ```
 You can then create the python environment by running the following command: 
 ```
-conda env create -f torch-1.9.0+cu11.1-K40.yml
+conda env create -f torch-1.9.0+cu11.1-K40.yml 
 ```
-WHAT DOES THIS DO - run on CS machine
+When asked to proceed, enter "y"
 
 ## Activate the Conda Environment
 
@@ -88,6 +88,29 @@ To install pytorch, run the following command:
 ```
 pip3 install --user torch-1.9.0+cu11.1-cp39-cp39-linux_x86_64.whl
 ```
-After the installation is complete, we can confirm that the torch install was sucessful in JupyterHub. 
+After the installation is complete, we can confirm that the torch install was sucessful in JupyterHub. Follow the link below to the CARC website. 
+```
+http://carc.unm.edu
+Navigate to Systems > JupyterHub Cluster Links > Xena
+```
+<img width="1265" alt="Screenshot 2023-09-05 at 9 36 45 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/eaeb6530-4627-4927-99c2-63b6cb34686f">
 
+Next, log in to JupyterHub with your CARC username and password. If you are legged in without being prompted to select a server, click on the control panel button in the upper right corner. Then select "Stop My Server", then select "Start Server"
+Once you are prompted to select a server, choose a Xena Server with 2 GPU's 
+```
+Example:
+Xena 1 hour, 2 GPUs, 16 cores, 60 GB RAM
+```
+Create a new notebook by selecting new > Python [conda env:.conda-pytorch-1.9-cuda-11-K40]
+
+
+<img width="1184" alt="Screenshot 2023-09-05 at 9 41 11 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/1e1505a7-a610-4ed4-a13a-e77d0a922738">
+
+
+In the first cell of the notebook, run the following code 
+```
+import torch
+torch.cuda.device_count()
+```
+With 2 GPUs, you should get an output of 2. 
 
