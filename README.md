@@ -83,7 +83,8 @@ These slides were used in CARC workshops. They are provided for your convenience
     * [CARC Annual Meeting: Machine Learning](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/Machine_Learning.pdf)
     * [PBS, Modules, GNU Parallel, Conda, and MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/PBS_Parallel_MPI.pdf)
     * [Intermediate Intro to SLURM with NAMD](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntroToCARCWorkshopNAMD.pdf)
-    * [ESCAPE Workshop with Jupyterhub](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CARC_ESCAPE_WORKSHOP-0.1.pdf) 
+    * [ESCAPE Workshop with Jupyterhub](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CARC_ESCAPE_WORKSHOP-0.1.pdf)
+    * [Parallel Processing with MPI and SLURM 50 min version](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS442_50min.pdf) 
     
       
       
