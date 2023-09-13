@@ -39,7 +39,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [Gurobi optimizer with R](https://github.com/UNM-CARC/QuickBytes/blob/master/Gurobi%20optimizer%20with%20R.md)
       * Machine Learning
          * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
-         * [Machine Learning Conda Environments (including PyTorch K40 GPU libraries)](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
+         * [PyTorch on Xena] (https://github.com/UNM-CARC/QuickBytes/blob/PyTorch-1.9-quick-byte/PyTorch_1.9_Xena.md)
          * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.ipynb)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * Bioinformatics
