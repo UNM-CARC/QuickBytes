@@ -2,9 +2,22 @@
 Alphafold predicts the 3D structure of proteins from their amino acid sequence. A deep learning system that uses a combination of sequence alignment, evolutionary information, and physical principles to generate its predictions.
 Primarily written in python, the first version of alphafold was released in 2016, and has been updated as recently as 2022.
 
-## Download ##
-The most recent version of alphafold can be found at [github.com/deepmind/alphafold]. Clone the repository to your machine with 
-`git clone git@github.com:deepmind/alphafold.git`
+## Choose your alphafold version ## 
+There are multiple versions of alphafold installed using singularity images. You can view each of the versions installed with the command:
+
+     ls /projects/shared/singularity/alphafold
+     
+ and hit tab. You'll see below we currently have version 2.0 and 3.2.1 installed. For this tutorial we will be using version 2.0. 
+
+![image](https://github.com/UNM-CARC/QuickBytes/assets/104543985/e2da6a62-a9f2-44ae-af04-b88e923daca9)
+
+Now we can create a new directory with
+
+    mkdir alphafold
+    
+and move into that directory with
+
+    cd alphafold
 
 ## Running Alphafold ##
 Inside the alphafold directory, you will be able to run the program using the slurm script, this script will differ based on the machine you are using. Xena is the machine at CARC that has GPU resources, so you will need to use xena if you hope to run using the gpus. 
@@ -45,7 +58,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
      --bind $ALPHAFOLD_OUTPUT_DIR:/alphafold_output \
      --bind $ALPHAFOLD_INPUT_FASTA:/input.fasta \
      --bind .:/etc \
-     --pwd  /app/alphafold $SINGULARITY_IMAGE_PATH/alphafold.sif \
+     --pwd  /app/alphafold $SINGULARITY_IMAGE_PATH/alphafold-2.0.sif \
      --fasta_paths=/input.fasta  \
      --uniref90_database_path=/data/uniref90/uniref90.fasta  \
      --data_dir=/data \
@@ -94,7 +107,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
      --bind $ALPHAFOLD_OUTPUT_DIR:/alphafold_output \
      --bind $ALPHAFOLD_INPUT_FASTA:/input.fasta \
      --bind .:/etc \
-     --pwd  /app/alphafold $SINGULARITY_IMAGE_PATH/alphafold.sif \
+     --pwd  /app/alphafold $SINGULARITY_IMAGE_PATH/alphafold-2.0.sif \
      --fasta_paths=/input.fasta  \
      --uniref90_database_path=/data/uniref90/uniref90.fasta  \
      --data_dir=/data \
@@ -107,23 +120,59 @@ While optimizing, you might find that switching to one of the nodes with multipl
      --max_template_date=2020-05-14   \
      --output_dir=/alphafold_output  \
      --model_names='model_1' \
-     --preset=casp4
+     --preset=casp14
 
-## TODO Parallel ##
-@ryan can it be run parallel?
-- adding `module load openmpi/4.1.4-7gqe` (newest openmpi version from `module spider mpi`) successfully submits the job, but only allocated one node. 
-- swtiched run command from `singularity run --nv` to `mpurun -np 2 singularity run` which gives an "oversubscribing" error. can be bypassed by adding `--oversubscribe` to the mpi run command, which alloows the run to go through and start, but only actually runs on one node.
-- link to paper on running alphafold parallel: [https://arxiv.org/pdf/2111.06340.pdf]
+At Choose one of the scripts above, in this case we will be using Hopper. Make a new file by typing 
 
-### Current run time estimates ###
-- hopper: (pending) previously ~ 8hrs (2:02 am)
-- xena singleGPU
- - job: 396593
- - runtime: 2:48 (1:12am -> 4:00 am)
-- xena dualGPU
- - job: 396594 
- - runtime: 3:30 (1:13am -> 4:33am)
+    vim alphafold.sh
+    
+then hit `i` to go into insert mode, and past the contents from the above script into this file. You can then add your email to get alerts about the run. When you are finished editing this file, type `ESC` to exit insert mode, followed by `:wq` to write & quite the file, this will save your changes. 
+
+#### Input File ####
+These scripts expect you to have a file named `input_test.fasta` where you will give your input sequence. This should be in the format:
+
+(alphafold/input_test.fasta)
+
+    > 350 residue example sequence   
+    MTANHLESPNCDWKNNRMAIVHMVNVTPLRMMEEPRAAVEAAFEGIMEPAVVGDMVEYWNKMISTCCNYYQMGSSRSHLEEKAQMVDRFWFCPCIYYASGKWRNMFLNILHVWGHHHYPRNDLKPCSYLSCKLPDLRIFFNHMQTCCHFVTLLFLTEWPTYMIYNSVDLCPMTIPRRNTCRTMTEVSSWCEPAIPEWWQATVKGGWMSTHTKFCWYPVLDPHHEYAESKMDTYGQCKKGGMVRCYKHKQQVWGNNHNESKAPCDDQPTYLCPPGEVYKGDHISKREAENMTNAWLGEDTHNFMEIMHCTAKMASTHFGSTTIYWAWGGHVRPAATWRVYPMIQEGSHCQC
+
+#### localtime ####
+Your job will fail within the first few moments if the input file is not formatted properly. It will also require you to have a `localtime` file in the directory in which you are running, which you can create with 
+
+    touch localtime
+    
+This file does not directly impact the simulation in any way, but is used to track the time to make your tests reproducible. If this file is empty, it will default to using the current time in UTC, but you could also place the correct time in:
+
+(alphafold/localtime)
+
+    2022-10-28T16:15:29
+    
+## Run ##
+You can now run your alphafold sequence with the command 
+
+    sbatch alphafold.sh 
+
+This will hand your script you made above to the slurm scheduler. If you added your email to the script, you will receive an email that it has been added to the queue, once it starts, and once it ends. It will also email if it fails before a successful completion. If your run fails, more information can be found in the `alphafold.out` & `alphafold.err` files which will be generated as each run begins.
+
+You can check if your run is still running with 
+
+    squeue --me 
+
+This will list all runs you currently have both queued & running. On the general partitions your time will be [limited to between 4 and 48 hours](https://github.com/UNM-CARC/webinfo/blob/main/resource_limits.md) of runtime. If you have determined your run is unable to be completed with these resources, please attend [office hours](https://github.com/UNM-CARC/webinfo/blob/main/office_hours.md) to discuss further with Dr. Fricke. 
 
 
+## Output ##
+After a successful job, you will notice multiple output files. They will be placed in the `./alphafold_output-<Timestamp>/input/*` Where you will have the resulting .pdb, .pkl, and .json files. 
 
+### Viewing output files ###
+If you'd like to visualize the output files from your successful run, you can do so using Secure Copy Protocol (SCP) which is a way of copying files over SSH. 
+First, type `exit` so that you log out of the CARC cluster you are currently on. You should now still be in your terminal, but on your local computer. 
+then type 
 
+    scp <unm username>@<cluster>.alliance.unm.edu:~/alphafold/alphafold_output-<timestamp>/input/<file> .
+    
+for example, copying my ranked_0 file from my last run would use the command 
+
+    scp rdscher@hopper.alliance.unm.edu:~/alphafold/alphafold_output-2023_09_11_7_29/input/ranked_0.pdb .
+    
+Now that it is on your local computer, you can now view this file on your computer if you have the proper software to view a pdb file. 
