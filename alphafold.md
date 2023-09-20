@@ -47,7 +47,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/
-    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data
+    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data/70
     ALPHAFOLD_MODELS=$ALPHAFOLD_DATA_PATH/params
     ALPHAFOLD_INPUT_FASTA=$SLURM_SUBMIT_DIR/input_test.fasta
     NOW=$(date +"%Y_%m_%d_%H_%M_%S")
@@ -96,7 +96,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/
-    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data
+    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data/70
     ALPHAFOLD_MODELS=$ALPHAFOLD_DATA_PATH/params
     ALPHAFOLD_INPUT_FASTA=$SLURM_SUBMIT_DIR/input_test.fasta
     NOW=$(date +"%Y_%m_%d_%H_%M_%S")
