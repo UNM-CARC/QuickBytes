@@ -6,35 +6,36 @@ ssh $USERNAME@xena.alliance.unm.edu
 ```
 
 ### Create the Condarc File
-To create the Condarc file that you will need, run the code below:
+To create the Condarc file that you will need, use your favorite text editor to create an empty file '.condarc'. For this tutorial I will use nano, which is an easy beginning text editor.
 ```
 nano .condarc
 ```
-This creates a blank file using the nano text editor. 
+The above code creates a blank file using the nano text editor. 
 
 In the condarc file you just created, paste the following then change the $USERNAME prompt to your username.
 ```
 auto_activate_base: false
 channels:
   - conda-forge
-  - bioconda
   - defaults
 envs_dirs:
   - /users/$USERNAME/.conda/envs
 pkgs_dirs:
   - /users/$USERNAME/.conda/pkgs
 ```
-Notice that at the bottom of the screen below, nano lists options for how users can interact with the open file. 
+If you are using nano, notice that at the bottom of the screen below, it lists options for how users can interact with the open file. 
 
 <img width="719" alt="Screenshot 2023-08-29 at 11 01 54 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/c647a39d-c6d8-437f-917d-f9e1cee8d7e5">
 
-To save the lines of code you just pasted into the file, hold down the control key and press 'O'. This "writes out" or saves the text. You can then exit the text editor by holding down the command key and pressing 'X'. To confirm that the file has been edited and contains the correct code, run the command. 
+To save the lines of code you just pasted into the file, hold down the control key and press 'O'. This "writes out" or saves the text. You can then exit the text editor by holding down the control key and pressing 'X'. 
+
+To confirm that the file has been edited and contains the correct code, run the command. 
 
 ```
 cat .condarc 
 ```
 
-The following text should appear on your command line rather than opening the file in nano.
+The following text should appear under your command line. 
 ```
 auto_activate_base: false
 channels:
@@ -55,11 +56,10 @@ Run the following code to change directories into the PyTorch1.9-K40-Compatible 
 cd /projects/shared/pytorch/PyTorch1.9-K40-Compatible
 
 ```
-This will change your command prompt to reflect the updated directory. If the command prompt does not reflect that you are in the PyTorch1.9-K40-Compatible directory, you will run into issues in later steps. 
-
+Assuming you have a default command line prompt, this will change your command prompt to reflect the updated directory. If you are not in the PyTorch1.9-K40-Compatible directory, you will run into issues in later steps. To confirm that you are in the correct directory, print your working directory with the following command.
 ```
-Make sure that the following appears in your command prompt: 
-[PyTorch1.9-K40-Compatible]$
+pwd
+
 ```
 
 ### Create the Conda Environment
@@ -95,8 +95,9 @@ Navigate to Systems > JupyterHub Cluster Links > Xena
 ```
 <img width="1265" alt="Screenshot 2023-09-05 at 9 36 45 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/eaeb6530-4627-4927-99c2-63b6cb34686f">
 
-Next, log in to JupyterHub with your CARC username and password. If you are legged in without being prompted to select a server, click on the control panel button in the upper right corner. Then select "Stop My Server", then select "Start Server"
-Once you are prompted to select a server, choose a Xena Server with 2 GPU's 
+Next, log in to JupyterHub with your CARC username and password. If you are logged in without being prompted to select a server, click on the control panel button in the upper right corner. Then select "Stop My Server", then select "Start Server"
+
+You will be prompted to choose a server. For this tutorial, I will choose a Xena server with 2 GPU's. 
 ```
 Example:
 Xena 1 hour, 2 GPUs, 16 cores, 60 GB RAM
@@ -107,7 +108,7 @@ Create a new notebook by selecting new > Python [conda env:.conda-pytorch-1.9-cu
 <img width="1184" alt="Screenshot 2023-09-05 at 9 41 11 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/1e1505a7-a610-4ed4-a13a-e77d0a922738">
 
 
-In the first cell of the notebook, run the following code 
+To test that the installation was successful, run the following code.
 ```
 import torch
 torch.cuda.device_count()
