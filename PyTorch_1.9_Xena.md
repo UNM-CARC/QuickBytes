@@ -40,7 +40,6 @@ The following text should appear under your command line.
 auto_activate_base: false
 channels:
   - conda-forge
-  - bioconda
   - defaults
 envs_dirs:
   - /users/{YOUR USERNAME HERE}/.conda/envs
