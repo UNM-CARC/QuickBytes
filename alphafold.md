@@ -1,15 +1,47 @@
 # Alphafold # 
 Alphafold predicts the 3D structure of proteins from their amino acid sequence. A deep learning system that uses a combination of sequence alignment, evolutionary information, and physical principles to generate its predictions.
-Primarily written in python, the first version of alphafold was released in 2016, and has been updated as recently as 2022.
+Primarily written in python, the first version of alphafold was released in 2016, and has been updated as recently as 2022. There are two ways to run alphafold here at CARC. Option 1 is to use [localcolabfold.](https://github.com/YoshitakaMo/localcolabfold) You may find that Localcolabfold is easier to get running, however it will come with tradeoffs in certain areas, For Example, localcolabfold uses the pdb70 database, and there is not a great way to choose a different database to use. If you are unsure which version is best for you, we recommend you review the readme & issues for localcolabfold to determine if there are any features you may need. 
+
+# Alphafold w/ LocalColabFold:
+
+Localcolabfold is set up as part of our module system at CARC. As with anything as part of the module system, you can use `module spider localcolabfold` to get more information about the module. This will also list other dependencies, if any, such as a different compiler. 
+
+localColabFold runs with the command `colabfold_batch`. The only other thing you will need to provide is the input fasta file. Below is an example of a slurm script to run using localcolabfold on Hopper. 
+
+
+     #!/bin/bash
+     #SBATCH --job-name alphafold
+     #SBATCH --mail-user=<your_email>
+     #SBATCH --partition general
+     #SBATCH --Nodes 1
+     #SBATCH --ntasks 1
+     #SBATCH --cpus-per-task 64
+     #SBATCH --time 1:00:00
+     
+     module load localcolabfold
+     
+     INPUT_FILE_PATH=/path/to/input.fasta
+     now=$(date +"%m_%d_%H_%M_%S")
+     OUTPUTDIR=$SLURM_SUBMIT_DIR/$SLURM_JOB_NAME-$now
+     
+     mkdir -p $OUTPUTDIR
+     
+     cd $SLURM_SUBMIT_DIR
+     
+     srun colabfold_batch $INPUT_FILE_PATH $OUTPUTDIR
+
+Reference the [localcolabfold documentation](https://github.com/YoshitakaMo/localcolabfold?tab=readme-ov-file#flags) for flags you may find useful.
+
+
+# Alphafold w/ Singularity Image:
 
 ## Choose your alphafold version ## 
 There are multiple versions of alphafold installed using singularity images. You can view each of the versions installed with the command:
 
      ls /projects/shared/singularity/alphafold
      
- and hit tab. You'll see below we currently have version 2.0 and 3.2.1 installed. For this tutorial we will be using version 2.0. 
+ and hit tab. You'll see below we currently have version 2.0 and 2.3.1 installed. For this tutorial we will be using version 2.0. 
 
-![image](https://github.com/UNM-CARC/QuickBytes/assets/104543985/e2da6a62-a9f2-44ae-af04-b88e923daca9)
 
 Now we can create a new directory with
 
@@ -163,16 +195,5 @@ This will list all runs you currently have both queued & running. On the general
 
 ## Output ##
 After a successful job, you will notice multiple output files. They will be placed in the `./alphafold_output-<Timestamp>/input/*` Where you will have the resulting .pdb, .pkl, and .json files. 
-
-### Viewing output files ###
-If you'd like to visualize the output files from your successful run, you can do so using Secure Copy Protocol (SCP) which is a way of copying files over SSH. 
-First, type `exit` so that you log out of the CARC cluster you are currently on. You should now still be in your terminal, but on your local computer. 
-then type 
-
-    scp <unm username>@<cluster>.alliance.unm.edu:~/alphafold/alphafold_output-<timestamp>/input/<file> .
-    
-for example, copying my ranked_0 file from my last run would use the command 
-
-    scp rdscher@hopper.alliance.unm.edu:~/alphafold/alphafold_output-2023_09_11_7_29/input/ranked_0.pdb .
     
 Now that it is on your local computer, you can now view this file on your computer if you have the proper software to view a pdb file. 
