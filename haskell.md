@@ -6,7 +6,7 @@ On Wheeler:
 
 First we will install and load the stack environment:
 
-1) `module load anaconda`
+1) `module load miniconda3`
 
 2) `conda create -n haskell stack -c conda-forge`
 
