@@ -37,7 +37,7 @@ salloc --nodes 2 --exclusive --partition general --time 00:30:00
 
 #### 3. Load Module
 ```bash
-module load paraview/5.11.0-RC1
+module load paraview/5.11.0
 ```
 
 #### 4. Running pvserver (this command will allow a connection between your local computer and Hopper).
@@ -91,7 +91,7 @@ salloc --nodes 2 --exclusive --partition general --time 00:30:00
 
 #### 3. Load Module
 ```bash
-module load paraview/5.11.0-RC1
+module load paraview/5.11.0
 ```
 
 #### 4. Running pvserver (this command will allow a connection between your local computer and Hopper).
