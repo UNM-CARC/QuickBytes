@@ -39,7 +39,8 @@ Quickbytes are tutorials designed to help CARC users.
          * [Gurobi optimizer with R](https://github.com/UNM-CARC/QuickBytes/blob/master/Gurobi%20optimizer%20with%20R.md)
       * Machine Learning
          * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
-         * [Machine Learning Conda Environments (including PyTorch K40 GPU libraries)](https://github.com/UNM-CARC/QuickBytes/blob/master/Install%20deep%20learning%20packages.md)
+         * [Installing PyTorch on Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/PyTorch_1.9_Xena.md)
+         * [Example PyTorch Image Classification on Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/PyTorch_Classifier_Xena%20.ipynb)
          * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.ipynb)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * Bioinformatics
@@ -52,6 +53,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
       * Computational Chemistry
          * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
+         * [Alphafold](https://github.com/UNM-CARC/QuickBytes/blob/master/alphafold.md)
       * Computational Immunology
          * [SimCov on Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/SimCov.md)
       *  Astronomy
@@ -83,7 +85,9 @@ These slides were used in CARC workshops. They are provided for your convenience
     * [CARC Annual Meeting: Machine Learning](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/Machine_Learning.pdf)
     * [PBS, Modules, GNU Parallel, Conda, and MPI](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/PBS_Parallel_MPI.pdf)
     * [Intermediate Intro to SLURM with NAMD](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntroToCARCWorkshopNAMD.pdf)
-    * [ESCAPE Workshop with Jupyterhub](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CARC_ESCAPE_WORKSHOP-0.1.pdf) 
+    * [ESCAPE Workshop with Jupyterhub](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CARC_ESCAPE_WORKSHOP-0.1.pdf)
+    * [Parallel Processing with MPI and SLURM 50 min version](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/CS442_50min.pdf)
+    * [SLURM and Gaussian 1 hr version](https://github.com/UNM-CARC/QuickBytes/blob/master/workshop_slides/IntermediateIntroToCARCWorkshopGaussian_1hr.pdf) 
     
       
       

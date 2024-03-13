@@ -38,9 +38,10 @@ Reference the [localcolabfold documentation](https://github.com/YoshitakaMo/loca
 ## Choose your alphafold version ## 
 There are multiple versions of alphafold installed using singularity images. You can view each of the versions installed with the command:
 
-     ls /projects/shared/singularity/alphafold
-     
+     ls /projects/shared/singularity/alphafold*
+
  and hit tab. You'll see below we currently have version 2.0 and 2.3.1 installed. For this tutorial we will be using version 2.0. 
+For this tutorial we will be using version 2.0. 
 
 
 Now we can create a new directory with
@@ -53,6 +54,12 @@ and move into that directory with
 
 ## Running Alphafold ##
 Inside the alphafold directory, you will be able to run the program using the slurm script, this script will differ based on the machine you are using. Xena is the machine at CARC that has GPU resources, so you will need to use xena if you hope to run using the gpus. 
+
+Choose one of the scripts below, in this case we will be using Hopper. Create a new file using your favorite editor. For example, 
+
+    vim alphafold.sh
+    
+then hit `i` to go into insert mode, and past the contents from the below script into this file. You can then add your email to get alerts about the run. When you are finished editing this file, type `ESC` to exit insert mode, followed by `:wq` to write & quite the file, this will save your changes. 
 
 ### Xena Script ###
 Here, we are passing two additional flags when running the script, the first is `--partition=singleGPU` which will make sure we are assigned a node that only has a single gpu. The second is `-G 1` which is what tells the program to use the gpu. 
@@ -68,14 +75,14 @@ While optimizing, you might find that switching to one of the nodes with multipl
     #SBATCH --error alphafold.err
     #SBATCH -G 1
     
-    #SBATCH --mail-user < your unm email > 
+    #SBATCH --mail-user < your email > 
     #SBATCH --mail-type all
     
     module load singularity
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/
-    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data
+    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data/70
     ALPHAFOLD_MODELS=$ALPHAFOLD_DATA_PATH/params
     ALPHAFOLD_INPUT_FASTA=$SLURM_SUBMIT_DIR/input_test.fasta
     NOW=$(date +"%Y_%m_%d_%H_%M_%S")
@@ -117,14 +124,14 @@ While optimizing, you might find that switching to one of the nodes with multipl
     #SBATCH --output alphafold.out
     #SBATCH --error alphafold.err
 
-    #SBATCH --mail-user < your unm email > 
+    #SBATCH --mail-user < your email > 
     #SBATCH --mail-type all
     
     module load singularity
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/
-    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data
+    ALPHAFOLD_DATA_PATH=/carc/scratch/shared/alphafold/data/70
     ALPHAFOLD_MODELS=$ALPHAFOLD_DATA_PATH/params
     ALPHAFOLD_INPUT_FASTA=$SLURM_SUBMIT_DIR/input_test.fasta
     NOW=$(date +"%Y_%m_%d_%H_%M_%S")
@@ -153,12 +160,6 @@ While optimizing, you might find that switching to one of the nodes with multipl
      --output_dir=/alphafold_output  \
      --model_names='model_1' \
      --preset=casp14
-
-At Choose one of the scripts above, in this case we will be using Hopper. Make a new file by typing 
-
-    vim alphafold.sh
-    
-then hit `i` to go into insert mode, and past the contents from the above script into this file. You can then add your email to get alerts about the run. When you are finished editing this file, type `ESC` to exit insert mode, followed by `:wq` to write & quite the file, this will save your changes. 
 
 #### Input File ####
 These scripts expect you to have a file named `input_test.fasta` where you will give your input sequence. This should be in the format:
@@ -190,7 +191,7 @@ You can check if your run is still running with
 
     squeue --me 
 
-This will list all runs you currently have both queued & running. On the general partitions your time will be [limited to between 4 and 48 hours](https://github.com/UNM-CARC/webinfo/blob/main/resource_limits.md) of runtime. If you have determined your run is unable to be completed with these resources, please attend [office hours](https://github.com/UNM-CARC/webinfo/blob/main/office_hours.md) to discuss further with Dr. Fricke. 
+This will list all jobs you currently have both queued & running. On the general partitions your time will be [limited to between 4 and 48 hours](https://github.com/UNM-CARC/webinfo/blob/main/resource_limits.md) of runtime.
 
 
 ## Output ##
