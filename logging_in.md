@@ -22,3 +22,4 @@ ssh yourusername@machinename.alliance.unm.edu
 ```
 
 Where yourusername is the username that CARC provided in your account letter, and machinename is the name of the system you are logging in to; Xena, Wheeler, Gibbs for example. If this is your first-time logging in you will likely be prompted to accept your computer as a new authorized host, go ahead and accept that. You will then be prompted to type your password. Use the password provided in your account letter.
+
