@@ -62,7 +62,7 @@ To make logging in to CARC even easier we also recommend setting up a ssh config
         port 22
 
 
-# Troubleshooting
+# Troubleshooting & Git
 
 Note that on the CARC clusters by default, your ssh configuration file will contain the following:
 
