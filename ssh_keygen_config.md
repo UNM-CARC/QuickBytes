@@ -83,3 +83,5 @@ You should then edit your `~/.ssh/config` file as mentioned above, and change th
     StrictHostKeyChecking=no
 
 This will ensure git will use the default key on the system when cloning with ssh (which will be the new one you just created), and will properly verify your credentials after adding the new public key to your github account. If you do not do this step, you will recevie a permision error when trying to clone or push to a git repo using ssh.
+
+*This quickbyte was validated on 5/22/2024*
