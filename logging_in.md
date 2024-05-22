@@ -21,4 +21,4 @@ Where `CARC-USERNAME` is the username you were assigned once your account was ap
 If you are unsure of your current password, please reference [the password reset quickbyte.](password_reset.md)
 
 
-*This quickbyte was revised on 5/11/2024*
+*This quickbyte was validated on 5/21/2024*
