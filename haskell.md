@@ -2,6 +2,7 @@
 
 Haskell is a strongly typed functional language. In this QuickByte you will learn how to setup Haskell at CARC and create a simple matrix multiplication project using stack.
 
+
 On Wheeler:
 
 First we will install and load the stack environment:
