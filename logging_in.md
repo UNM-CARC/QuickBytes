@@ -1,6 +1,6 @@
 # Logging in
 
-In order to use log in to CARC systems and start computing you will need a terminal that can log in to remote systems using Secure Shell (SSH). If you are using a Linux or Mac machine you are in luck as they come bundled with a terminal that is ready to use. The terminal application packaged with your OS is great, but if you would like something with a bit more customization, utility, and flexibility there are other free options available. Below are a couple of options that CARC recommends. Note that iterm2 is only available on Mac, and MobaXterm is only available on Windows.
+To log in to the CARC systems and start computing you will need a terminal that can log in to remote systems using Secure Shell (SSH). If you are using a Linux or Mac machine you are in luck as they come bundled with a terminal that is ready to use. The terminal application packaged with your OS is great, but if you would like something with a bit more customization, utility, and flexibility there are other free options available. Below are a couple of options that CARC recommends. Note that iterm2 is only available on Mac, and MobaXterm is only available on Windows.
 
 
 * iTerm2
