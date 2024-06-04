@@ -15,9 +15,7 @@ At CARC, accounts correspond to CARC projects. The account name is the project I
   tredfear    1000001
 ```
 
-
 To view more information about an account, you can use the command `sacctmgr show account <account_name>`. Example:
-
 
 ```
 [tredfear@xena]:~ $ sacctmgr show account 1000001
@@ -57,3 +55,5 @@ http://www.physik.uni-leipzig.de/wiki/files/slurm_summary.pdf
 https://slurm.schedmd.com/fair_tree.html  
 https://slurm.schedmd.com/sacctmgr.html  
 https://slurm.schedmd.com/sacct.html
+
+*This quickbyte was validated on 6/4/2024*
