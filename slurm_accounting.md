@@ -15,6 +15,7 @@ At CARC, accounts correspond to CARC projects. The account name is the project I
   tredfear    1000001
 ```
 
+
 To view more information about an account, you can use the command `sacctmgr show account <account_name>`. Example:
 
 
