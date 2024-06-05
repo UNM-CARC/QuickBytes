@@ -137,5 +137,4 @@ Below is the Slurm submission script to submit our python program named `submiss
 
 This brief tutorial should provide the basics necessary for submitting jobs to the Slurm Workload Manager on CARC machines. 
 
-
-
+*This quickbyte was validated on 6/5/2024*
