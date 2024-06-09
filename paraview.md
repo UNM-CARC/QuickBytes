@@ -39,6 +39,8 @@ The process to connecto to ParaView is, in one terminal you will ask Hopper to a
 
     mpiexec -np 32 pvserver --mpi --force-offscreen-rendering --server-port=11111
 
+![](/Images/paraview-img1.png)
+
 #### Terminal 2: Hopper SSH Tunneling
 The hopper### corresponds to the compute node allocated by slurm, and do not forget to change your username. 
 
@@ -54,11 +56,15 @@ The hopper### corresponds to the compute node allocated by slurm, and do not for
 * Host: localhost
 * Port: 11111
 
+![](/Images/paraview-img2.png)
+
 3. Click on "Configure"
 4. Startup Type: Manual
 5. Click on "Save"
 
-_Note: To Verify, Client - Server setup, go to "View" and select "Memory Inspector"_
+You can then click connect. It will take about 30 seconds to connect and let you start using paraview normally. Once connected, you can test it worked by going to view > Memory Inspector. You should see the following:
+
+![](/Images/paraview-img3.png)
 
 NOTE: When you are finished make sure to end the interactive job on the compute nodes. You can do this by exiting "Exit" the compute node or the "scancel" command on the cluster head node.
 
