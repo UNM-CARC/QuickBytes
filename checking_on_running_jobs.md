@@ -127,3 +127,5 @@ In the case that a node as multiple gpus, you will only be able to see the ones 
 Once your job has completed, you will see a file called slurm-<job-id>.out with all of the information pertaining to the job. 
 
 Any output from the job sent to “standard output” will be written to the output file, if you specify to have an error file, any output sent to "standard error" will be placed in slurm-<job-id>.err in the same directory. If you do not specify an error file, it will be sent to the output file along with any other output.
+
+*This quickbyte was validated on 6/10/2024*
