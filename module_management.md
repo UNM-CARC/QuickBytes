@@ -159,3 +159,5 @@ Some users also like to create environment scripts, for example env.sh:
 in order to load all of the things they need on the head node. Specifically, this may be helpful when you're working on compiling a program. You should keep in mind that if you'd like to load your modules in this way, you should run the script using `source env.sh`. Running it using bash, or ./, will not result in the modules being loaded inside of your current terminal session.
 
 You should also note that each cluster has different base compiler versions, and likewise have differnet modules installed. Often times if there is a module installed on xena, but you need to use it on hopper, you can submit a ticket and have it installed for you, although this is not necessarily always the case. To create a ticket, send an email to help@carc.unm.edu.
+
+*This quickbyte was validated on 6/10/2024*
