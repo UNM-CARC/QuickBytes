@@ -103,8 +103,7 @@ As mentioned above and on other CARC web pages, we suggest that users use Anacon
 ```wheeler-sn> module load anaconda3-4.4.0-gcc-4.8.5-ubgzkkv
 wheeler-sn> conda create –n spark python=27 numpy scipy pandas matplotlib
 ```
-![SparkLogo](https://github.com/UNM-CARC/QuickBytes/blob/master/apache_spark_logo.jpeg) 
-
+![](/Images/spark-img1.jpeg)
 Once this is done, we just activate that environment and can add new things to it as needed after we launch our Spark cluster, to interactively look at a lot of data. First, we bring up Spark with this customized environment:
 
 ```wheeler-sn> qsub –I –l nodes=1:ppn=8 -l walltime=01:00:00
@@ -172,7 +171,7 @@ plt.xticks(size = 18)
 plt.yticks(size = 18)
 plt.savefig("crimes-by-month.pdf")
 ```
-![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image1.jpg) 
+![](/Images/spark-img2.jpg)
 
 Similarly, this code generates a file which charts Chicago crime by location type:
 
@@ -192,7 +191,7 @@ plt.xticks(size = 24)
 plt.yticks(size = 24)
 plt.savefig("crimes-by-location.pdf")
 ```
-![Crimes](https://github.com/UNM-CARC/QuickBytes/blob/master/spark-image2.jpg) 
+![](/Images/spark-img3.jpg)
 
 
 ## More Information
