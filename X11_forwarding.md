@@ -7,8 +7,14 @@ CARC cluster compute node. This QuickByte will show you how to do X11 forwarding
 ## On a Mac
 
 Before getting started, make sure you have [XQuartz](https://www.xquartz.org) downloaded and installed. This allows the X11 
-forwarding. 
+forwarding.
 
+**NOTE:** On Apple computers with Applic silicon chips there is an issue with the background of X11 windows being rendered black. [One solution](https://www.mathworks.com/matlabcentral/answers/1622355-matlab-gui-displays-black-with-xquartz) to this problem is to create a file in your home directory named `java.opts` with the following text:
+
+```
+-Dsun.java2d.xrender=false
+-Dsun.java2d.pmoffscreen=false
+```
 
 ## On a PC
 
@@ -23,16 +29,10 @@ Before getting started, download [MobaXterm](https://mobaxterm.mobatek.net) and 
 $ ssh -X username@wheeler.alliance.unm.edu
 ```
 
-2. Start an interactive session using qsub, but again include the -X flag. 
+2. Start an interactive session using srun.
 
 ```
-$ qsub -IX -l nodes=1:ppn=1
-```
-
-Note that the equivalent command using slurm would be as follows:
-
-```
-srun --x11 --nodes=1 --ntasks=1 xterm
+srun --pty --x11 --nodes=1 --ntasks=1 bash
 ```
 
 3. Once you have been assigned a node, load the MATLAB module. Then start MATLAB. You should automatically get a MATLAB GUI 
@@ -56,3 +56,4 @@ https://www.youtube.com/watch?v=-5ic9JWHuqI&list=PLvr5gRBLi7VAzEB_t5aXOLHLfdIu2s
 
 If you have any trouble at any point please reach out to us at help@carc.unm.edu 
 
+*This QuickByte was validated on 6/17/2024*
