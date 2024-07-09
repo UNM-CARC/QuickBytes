@@ -1,118 +1,130 @@
 # Checking on running jobs
-### Checking on the status of your Job:
-If you would like to check the status of your job, you can use the `qstat` command to do so. Typing `qstat` without any options will output all currently running or queued jobs to your terminal window, but there are many options to help display relevant information. To find more of these options type `man qstat` when logged in to a CARC machine. To see which jobs are running and queued in the standard output type the following in a terminal window:
 
-```bash
-qstat
-Job ID                    Name             User            Time Use S Queue
-------------------------- ---------------- --------------- -------- - -----
-127506.wheeler-sn.alliance.un pebble30_80      user        288:43:2 R default
-127508.wheeler-sn.alliance.un pebble30_90      user        279:41:4 R default
-127509.wheeler-sn.alliance.un pebble30_70      user        323:06:0 R default
-128012.wheeler-sn.alliance.un canu_wheeler.sh  user               0 Q default
-```
+### Viewing your job in the queue:
 
-The output of `qstat` give you the Job ID, the name of the Job, which user owns that Job, CPU time, the status of the Job, either queued (Q), running (R), and sometimes on hold (H), and lastly, which queue the Job is in. To look at a specific job without seeing everything running you can use the Job ID by typing `qstat Job ID`, or by using the `-u` flag followed by the username, `qstat -u user`.  
-For example:
+CARC clusters use slurm for job resource management. Slurm has a Queue system for determining who gets to use resources at what time. You can check the slurm queue with the `squeue` command. This will show you all jobs that are currently submitted to the slurm queue on your cluster. (Note, each cluster will have their own individual queue).
 
-```bash
-qstat 127506
-Job ID                    Name             User            Time Use S Queue
-------------------------- ---------------- --------------- -------- - -----
-127506.wheeler-sn.alliance.un pebble30_80      user        289:04:1 R default
-```
- 
- A useful option is the `-a` flag which shows more information about jobs than `qstat` alone. As well as the information above, the `-a` option also outputs requested nodes, processors, memory, wall time, and actual runtime instead of CPU time. 
- 
-```bash
- Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
------------------------ ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
-127506.wheeler-sn.alli  user        default  pebble30_80        8739     1      8       --  240:00:00 R 229:13:18
-127508.wheeler-sn.alli  user        default  pebble30_90       25507     1      8       --  240:00:00 R 229:09:10
-127509.wheeler-sn.alli  user        default  pebble30_70       20372     1      8       --  240:00:00 R 229:08:46
-128012.wheeler-sn.alli  user        default  canu_wheeler.sh     --      1      8      64gb  24:00:00 Q
+    [rdscher@hopper ~]$ squeue
+    JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+    2562894     condo 216-5.05   lzhang  R 1-05:45:57      1 hopper015
+    2462342     debug ethylben   eattah PD       0:00      8 (PartitionNodeLimit)
+    2563197     debug jupyterh  ejoseph  R      38:46      1 hopper011
+    2562985   general test2.sl dctorney  R   11:40:32      2 hopper[003,005]
+    2563194   general   run.sh  ejoseph  R    3:46:13      1 hopper001
+    2561221   general       rf   lzhang  R   10:30:06      1 hopper006
+    2561222   general       rf   lzhang  R   10:30:06      1 hopper007
+    2563029    geodef jupyterh zacharys  R    8:43:01      1 hopper065
 
-```
-`qstat -f` Specifies a "full" format display of information.  It displays the informations regarding job name,owner,cpu_time, memory usage, walltime, job staus, error and output file path, executing host, nodes and core allocation and others.  
-`qstat -f  <jobid>` displays the information corresponding to that jobid. 
-Example 
+While this can be helpful, there are often so many jobs in the queue it is hard to find the information you're looking for. We can use a variety of differnet flags to help parse this data for the information we want. 
 
-    (user) xena:~$ qstat qstat -f 67048
-    Job Id: 67048.xena.xena.alliance.unm.edu
-        Job_Name = BipolarCox_138
-        Job_Owner = user@xena.xena.alliance.unm.edu
-        resources_used.cput = 00:35:53
-        resources_used.energy_used = 0
-        resources_used.mem = 31427708kb
-        resources_used.vmem = 31792364kb
-        resources_used.walltime = 00:35:58
-        job_state = R
-        queue = singleGPU
-        server = xena.xena.alliance.unm.edu
-        Checkpoint = u
-        ctime = Mon Feb 18 16:19:19 2019
-        Error_Path = xena.xena.alliance.unm.edu:/users/user/experiments/newsui
-            cidality-injury/BipolarCox_138.e67048
-        exec_host = xena21/0-1
-        Hold_Types = n
-        Join_Path = n
-        Keep_Files = n
-        Mail_Points = a
-        mtime = Tue Feb 19 12:47:56 2019
-        Output_Path = xena.xena.alliance.unm.edu:/users/user/experiments/newsu
-            icidality-injury/BipolarCox_138.o67048
-        Priority = 0
-        qtime = Mon Feb 18 16:19:19 2019
-        Rerunable = True
-        Resource_List.nodect = 1
-        Resource_List.nodes = 1:ppn=2
-        Resource_List.walltime = 03:00:00
-        session_id = 74594
-        Shell_Path_List = /bin/bash
-        euser = dccannon
-        egroup = users
-        queue_type = E
-        etime = Mon Feb 18 16:19:19 2019
-        submit_args = -N BipolarCox_138 -v run_id=138 runRScript.sh
-        start_time = Tue Feb 19 12:47:56 2019
-        Walltime.Remaining = 8598
-        start_count = 1
-        fault_tolerant = False
-        job_radix = 0
-        submit_host = xena.xena.alliance.unm.edu
-        request_version = 1
+1) `squeue --me` - show only your jobs in the queue
+2) `squeue -p debug` - show all jobs in the debug partition (You can replace this with any partition)
+3) `squeue -S PD` - show all jobs in the pending (PD) state.
 
-`watch qstat -u <username>` allows an interactive statistics of jobs for that user which updates for every 2sec.  Example
+Note there are many other flags you can pass, use `man squeue` to read more. Note also that you can use any combination of the above flags to further narrow down on the information you are looking for. 
 
-    (user) xena:~$watch qstat -u ceodspsp
-    Every 2.0s: qstat -u ceodspsp                                                           Tue Feb 19 13:45:50 2019
+You can also use the `watch squeue --me` command. This will use your terminal to run the `squeue --me` command every 2 seconds by default, that way you can watch your job as it runs and know as soon as it completes.
 
 
-    xena.xena.alliance.unm.edu:
-                                                                                      Req'd       Req'd       Elap
-    Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
-    ----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
-    66908.xena.xena.allian  ceodspsp    dualGPU  smoke_1_5        103419     2     32       --   48:00:00 R  21:50:33
-    67438.xena.xena.allian  ceodspsp    dualGPU  smoke_5_10        66632     2     32       --   48:00:00 R  09:39:00
+### Viewing other information about your job:
 
-### Determining which nodes your Job is using:
-If you would like to check which nodes your job is using, you can pass the `-n` option to qstat. When your job is finished, your processes on each node will be killed by the system, and the node will be released back into the available resource pool.
+`sacct` has multiple different ways to check information about your job after it's completed as long as you have the job id. For example, you can check general information with `sacct -j <JOB_ID>`. If you enter just `sacct` it will give you the information for your most recently ran job.
 
-```bash
-qstat -an
-wheeler-sn.alliance.unm.edu:                                                                                                                            
-Job ID                           Username  Queue      Jobname     SessID   NDS  TSK  Memory   Time        S  Time
----------------------------  ------------  --------   ----------  -------  ---  ---  ------  --------    --  --------
-55811.wheeler-sn.alliance.u        user    default    B19F_re5e4        0    4   32     - -  48:00:00     R  47:30:42
-      wheeler296/0-7+wheeler295/0-7+wheeler282/0-7+wheeler280/0-7
-```
-Here,  the nodes that this job is running on are wheeler296, wheeler295, wheeler282, and wheeler280, with 8 processors per node.
+    [rdscher@hopper ~]$ sacct -j 2563198
+    JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+    ------------ ---------- ---------- ---------- ---------- ---------- --------
+    2563198            bash      debug    2016365          1     FAILED      2:0
+    2563198.ext+     extern               2016365          1  COMPLETED      0:0
+    2563198.0          bash               2016365          1     FAILED      2:0
+
+You can view the other flags that can be passed to sacct with `man sacct`.
+
+You can view more information about your job, including what resources were used, using scontrol. For example;
+
+    [rdscher@hopper ~]$ scontrol show job 2563198
+    JobId=2563198 JobName=bash
+    UserId=rdscher(3792) GroupId=users(100) MCS_label=N/A
+    Priority=10526 Nice=0 Account=2016365 QOS=normal
+    JobState=FAILED Reason=NonZeroExitCode Dependency=(null)
+    Requeue=1 Restarts=0 BatchFlag=0 Reboot=0 ExitCode=130:0
+    RunTime=00:02:01 TimeLimit=04:00:00 TimeMin=N/A
+    SubmitTime=2024-06-10T22:40:02 EligibleTime=2024-06-10T22:40:02
+    AccrueTime=Unknown
+    StartTime=2024-06-10T22:40:02 EndTime=2024-06-10T22:42:03 Deadline=N/A
+    PreemptEligibleTime=2024-06-10T22:40:02 PreemptTime=None
+    SuspendTime=None SecsPreSuspend=0 LastSchedEval=2024-06-10T22:40:02 Scheduler=Main
+    Partition=debug AllocNode:Sid=hopper:433043
+    ReqNodeList=(null) ExcNodeList=(null)
+    NodeList=hopper011
+    BatchHost=hopper011
+    NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+    ReqTRES=cpu=1,mem=2938M,node=1,billing=1
+    AllocTRES=cpu=1,mem=2938M,node=1,billing=1
+    Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+    MinCPUsNode=1 MinMemoryCPU=2938M MinTmpDiskNode=0
+    Features=(null) DelayBoot=00:00:00
+    OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+    Command=bash
+    WorkDir=/users/rdscher
+    Power=
+
+More information about scontrol flags can be found with `man scontrol`.
+
+### Interactively watching your jobs:
+
+If you would like to verify your job is running as expected, you can start by checking `squeue` after your job starts to run;
+
+    [rdscher@hopper gcc-11]$ squeue --me
+    JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+    2563200   general hpl.slur  rdscher  R       0:27      1 hopper002
+
+Here, we can see that my job is currently in the `R` (Running) state, and I now can see the specific node it is running on (hopper002). While my job is running, I will be able to ssh into the node using `ssh hopper002`. Keep in mind you can only ssh into a compute node whilst your job is currently running on that specific node. 
+
+Once on the node, I can use a variety of differnet commands to see if my job is running properly. For example, one thing I can do is run the `htop` command, and see if I am utilizing all the resources I requested. In this example, I requested
+
+    #SBATCH --nodes 1
+    #SBATCH --ntasks 32
+
+This means I should be utilizing all 32 cores on the compute node. When I ssh into the compute node I can tell my program is working properly because all of the resources are being used;
+
+![](checking_on_running_jobs-img1.png)
+
+If I were to check this screen and not see many of the resources being used, that would be a good sign that I need to either verify my program is running properly, or reduce the number of resources I'm requesting for this particular job.
+
+If you are running a program on gpus and would like to verify everything is running there, you can use the `nvidia-smi` command;
+
+    [rdscher@hopper054 gcc-11]$ nvidia-smi
+    Mon Jun 10 22:57:28 2024
+    +---------------------------------------------------------------------------------------+
+    | NVIDIA-SMI 545.23.08              Driver Version: 545.23.08    CUDA Version: 12.3     |
+    |-----------------------------------------+----------------------+----------------------+
+    | GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+    | Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+    |                                         |                      |               MIG M. |
+    |=========================================+======================+======================|
+    |   0  NVIDIA A100-PCIE-40GB          On  | 00000000:D8:00.0 Off |                    0 |
+    | N/A   14C    P0              30W / 250W |      4MiB / 40960MiB |      0%      Default |
+    |                                         |                      |             Disabled |
+    +-----------------------------------------+----------------------+----------------------+
+
+    +---------------------------------------------------------------------------------------+
+    | Processes:                                                                            |
+    |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+    |        ID   ID                                                             Usage      |
+    |=======================================================================================|
+    |  No running processes found                                                           |
+    +---------------------------------------------------------------------------------------+
+
+This will show all gpus you're able to see, as well as other information like the amount of memory you're using the gpu. Running processes would show up at the bottom here as well. 
+
+Note that you will only see anything from the `nvidia-smi` command at all if you both on a node that has a gpu, and have requested that gpu through slurm on your specific job. 
+
+In the case that a node as multiple gpus, you will only be able to see the ones you have access to via requesting them with slurm. 
  
 ### Viewing Output and Error Files:
-Once your job has completed, you should see two files, one output file and one error file, in the directory from which you submitted the Job: Jobname.oJobID and Jobname.eJobID (where Jobname refers to the name of the Job returned by `qstat`, and JobID refers to the numerical portion of the job identifier returned by `qstat`).  
-For the example job above, these two files would be named `B19F_re5E4.o55811` and `B19F_re5E4.e55811` respectively.  
-Any output from the job sent to “standard output” will be written to the output file, and any output sent to “standard error” will be written to the error file. The amount of information in the output and error files varies depending on the program being run and how the PBS batch script was set up. 
 
+Once your job has completed, you will see a file called slurm-<job-id>.out with all of the information pertaining to the job. 
 
+Any output from the job sent to “standard output” will be written to the output file, if you specify to have an error file, any output sent to "standard error" will be placed in slurm-<job-id>.err in the same directory. If you do not specify an error file, it will be sent to the output file along with any other output.
 
-
+*This quickbyte was validated on 6/10/2024*
