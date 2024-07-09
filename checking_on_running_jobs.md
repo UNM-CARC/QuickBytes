@@ -1,7 +1,6 @@
 # Checking on running jobs
 
 ### Viewing your job in the queue:
-If you would like to check the status of your job, you can use the `qstat` command to do so. Typing `qstat` without any options will output all currently running or queued jobs to your terminal window, but there are many options to help display relevant information. To find more of these options type `man qstat` when logged in to a CARC machine. To see which jobs are running and queued in the standard output type the following in a terminal window:
 
 CARC clusters use slurm for job resource management. Slurm has a Queue system for determining who gets to use resources at what time. You can check the slurm queue with the `squeue` command. This will show you all jobs that are currently submitted to the slurm queue on your cluster. (Note, each cluster will have their own individual queue).
 
