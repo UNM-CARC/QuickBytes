@@ -13,7 +13,7 @@ localColabFold runs with the command `colabfold_batch`. The only other thing you
      #SBATCH --job-name alphafold
      #SBATCH --mail-user=<your_email>
      #SBATCH --partition general
-     #SBATCH --Nodes 1
+     #SBATCH -N 1
      #SBATCH --ntasks 1
      #SBATCH --cpus-per-task 64
      #SBATCH --time 1:00:00
