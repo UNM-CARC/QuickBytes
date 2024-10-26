@@ -1,6 +1,11 @@
 # Submitting jobs
-There are two ways you can run your jobs, namely submitting a PBS script and running a job interactively. Either way, jobs are submitted to CARC by the command `qsub`. For more information on available options type `man qsub`
-### Submitting the PBS Script to the Batch Scheduler
+There are two ways you can run your jobs, namely submitting a slurm script and running a job interactively. Either way, jobs are submitted to CARC by the `sbatch` and `srun` commands respectively. More information about both commands can be found with 
+
+`man sbatch`
+
+`man srun`
+
+### Submitting the Slurm Script to the Batch Scheduler
 In order to run our simple PBS script, we will need to submit it to the batch scheduler using the command `qsub` followed by the name of the script we would like to run. For more information please see our page on writing a [PBS batch script](www.carc.unm.edu/needtoaddlinkhere).
 In the following example, we submit our simple `hello.pbs` script to the batch scheduler using `qsub`. Note that it returns the job identifier when the job is successfully submitted. You can use this job identifier to query the status of your job from your shell.  
 For example:
