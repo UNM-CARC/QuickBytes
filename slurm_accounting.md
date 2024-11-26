@@ -55,3 +55,5 @@ http://www.physik.uni-leipzig.de/wiki/files/slurm_summary.pdf
 https://slurm.schedmd.com/fair_tree.html  
 https://slurm.schedmd.com/sacctmgr.html  
 https://slurm.schedmd.com/sacct.html
+
+*This quickbyte was validated on 6/4/2024*
