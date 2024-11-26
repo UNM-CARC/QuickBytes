@@ -23,16 +23,24 @@ Before getting started, download [MobaXterm](https://mobaxterm.mobatek.net) and 
 $ ssh -X username@wheeler.alliance.unm.edu
 ```
 
-2. Start an interactive session using qsub, but again include the -X flag. 
+If you get the error "/usr/bin/xauth: file /users/user/.Xauthority does not exist", use the command:
+
+```
+touch ~/.Xauthority
+```
+
+Log out and back in, and then move on to the next step. 
+
+2. Start an interactive session using slurm, and include the X11 flag. 
+
+```
+$ srun --x11 --pty bash
+```
+
+Note that the equivalent command using qsub would be as follows:
 
 ```
 $ qsub -IX -l nodes=1:ppn=1
-```
-
-Note that the equivalent command using slurm would be as follows:
-
-```
-srun --x11 --nodes=1 --ntasks=1 xterm
 ```
 
 3. Once you have been assigned a node, load the MATLAB module. Then start MATLAB. You should automatically get a MATLAB GUI 
