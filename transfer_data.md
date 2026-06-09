@@ -63,3 +63,5 @@ bbcp your-username@easley.alliance.unm.edu:your-file /target-directory/
 ```
 
 As you can see, the syntax for using the various programs is very similar, however, the options for advanced usage are unique to each program. The examples provided above are for very basic data transfers, but you should refer to the links provided, or for the CLI options use the command `man programname`, in order to optimize each for maximum data transfer efficiency and speed. The necessity for transfer optimization increases as file size increases.
+
+*This quickbyte was validated on 6/9/2026*

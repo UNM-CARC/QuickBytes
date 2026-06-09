@@ -1,66 +1,46 @@
-Conversion of PBS script to Slurm script
-===================================
+# Conversion of SLURM Script to PBS Script
 
- 
- Most of the machines at CARC uses PBS/TORQUE for scheduling jobs in HPC. However, Taos uses the Simple Linux Utility for Resource Management, or SLURM, for scheduling jobs. Slurm is a little different from PBS in terms of syntax, commands used for resource allocation, job submission and monitoring, and setting of environment variables. Detailed documentation of Slurm can be found in this [link](https://slurm.schedmd.com/documentation.html). For submitting a job on Taos, you have to submit a Slurm script. If you already have a PBS script, it can be easily converted to Slurm without worrying about the technical details of Slurm. More details of submitting a [PBS](http://carc.unm.edu/user-support-2/using-carc-systems1/running-jobs/submitting-jobs.html) and [Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md) can be found in their quickbytes links.
- 
-## Conversion of PBS to Slurm
+Most machines at CARC use SLURM for scheduling jobs in HPC. However, if you need to run jobs on a system that uses PBS/TORQUE, your SLURM scripts can be easily converted without needing to learn all the technical details of PBS. More details on submitting a [SLURM job](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md) can be found in the SLURM quickbyte. Detailed documentation of PBS/TORQUE can be found at this [link](https://adaptivecomputing.com/cherry-services/torque-resource-manager/).
 
-For this purpose, we can use the cheet sheet tables below. The first table lists the most commonly used commands in PBS for submitting and monitoring jobs.
+## Conversion of SLURM to PBS
 
-|  PBS Command        |  Slurm Command   | Command definition                  |
-|  ------------       |  -------------   | ------------------                  |
-| qsub \<job_script.pbs> |  sbatch \<job_script.slurm>  | Submit \<job-script>  to the queue|
-| qsub -I \<options>  |  salloc \<options> |  Requesting interactive job|
-|qstat -u \<user>    |   squeue -u \<user> | Status of jobs submitted by \<user> |
-| qstat -f \<job-id> | scontrol show job \<job-id\> | Display details of \<job-id> |
-| qdel \<job-id>     | scancel \<job-id> | Delete the listed \<job-id>|
-|pbsnodes \<options> | sinfo | Display all nodes with their information|
+The tables below can be used as a reference when converting your scripts. The first table lists the most commonly used commands for submitting and monitoring jobs.
 
-Now let's take a look at the commands used for resource allocation which goes into the PBS/SLURM script. In both cases, the script has to be initialized by the shell interpreter. Bash shell can be initialized in both PBS and SLURM by `#!/bin/bash/`
-The resource allocation in PBS is precceded by `#PBS`
- and `#SBATCH` in SLURM. Let's look at various commands used for allocating resources.
- 
-|  PBS Command        |  Slurm Command   | Command definition                  |
-|  ------------       |  -------------   | ------------------                  |
-|-N <name> | --job-name= \<name>| Name of the job to submit|
-|-l procs= \<N> |--ntasks= \<N> | N processes to run|
-|-l nodes=a:ppn=b | --ntasks= \<product of a and b> | a*b processes to run |
-|-l walltime=\<HH:MM:SS>|--time=\<HH:MM:SS> | Maximum time required to finish the job|
-|-l mem=\<Memory> | --mem = \<Memory> | Memory required per node|
-|-l M \<email> | --mail-user=\<email>| Email ID for sending the job alerts to the user |
-|-l m \<a,b,e\> |  --mail-type=\<BEGIN,END,FAIL,REQUEUE,ALL> | Sending email alerts at different situations|
-|-o \<out_file>|--output=\<out_file>| Name of the output file|
-|-e \<error_file> | --error=\<error_file>| Name of the file to write out the error/warning during execution|
-|-j oe| Default in Slurm | Merge output and error files|
+| SLURM Command | PBS Command | Command Definition |
+| ------------- | ----------- | ------------------ |
+| `sbatch <job_script.sh>` | `qsub <job_script.pbs>` | Submit a job script to the queue |
+| `salloc <options>` | `qsub -I <options>` | Request an interactive job |
+| `squeue -u <user>` | `qstat -u <user>` | Status of jobs submitted by a user |
+| `scontrol show job <job-id>` | `qstat -f <job-id>` | Display details of a job |
+| `scancel <job-id>` | `qdel <job-id>` | Cancel a job |
+| `sinfo` | `pbsnodes <options>` | Display all nodes with their information |
 
-Let's look at different ways to set environment variable within the PBS/Slurm job.
+Now let's look at the resource allocation flags that go inside the job script. In both cases the script is initialized with `#!/bin/bash`. In SLURM, resource allocation lines are preceded by `#SBATCH`; in PBS they are preceded by `#PBS`.
 
-|  PBS Variable        |  Slurm Variable   | Variable definition                  |
-|  ------------       |  -------------   | ------------------                  |
-|$PBS\_O_HOST | $SLURM\_SUBMIT_HOST | Hostname from which job was submitted|
-|$PBS\_JOBID | $SLURM\_JOB_ID | ID of the job sumitted|
-|$PBS\_O_WORKDIR | $SLURM\_SUBMIT_DIR| Name of the directory from which job was submited|
-|cat $PBS\_NODEFILE | $SLURM\_JOB_NODELIST| In PBS, a file containing allocated nodes/hostnames. In Slurm, a variable containing allocated nodes/hostnames.|
+| SLURM Flag | PBS Flag | Definition |
+| ---------- | -------- | ---------- |
+| `--job-name=<name>` | `-N <name>` | Name of the job |
+| `--ntasks=<N>` | `-l procs=<N>` | Number of processes to run |
+| `--ntasks=<a*b>` | `-l nodes=a:ppn=b` | Processes spread across nodes |
+| `--time=<HH:MM:SS>` | `-l walltime=<HH:MM:SS>` | Maximum time to finish the job |
+| `--mem=<Memory>` | `-l mem=<Memory>` | Memory required per node |
+| `--mail-user=<email>` | `-M <email>` | Email address for job alerts |
+| `--mail-type=<BEGIN,END,FAIL>` | `-m <b,e,a>` | When to send email alerts |
+| `--output=<out_file>` | `-o <out_file>` | Name of the output file |
+| `--error=<error_file>` | `-e <error_file>` | Name of the error file |
 
-Now using the commands in the above tables,  we can easily convert a PBS script to a Slurm script. First let us look at a sample PBS script to run a python script test.py.
+The following table shows the equivalent environment variables available inside your running job.
 
-```bash
-#!/bin/bash
+| SLURM Variable | PBS Variable | Definition |
+| -------------- | ------------ | ---------- |
+| `$SLURM_SUBMIT_HOST` | `$PBS_O_HOST` | Hostname from which the job was submitted |
+| `$SLURM_JOB_ID` | `$PBS_JOBID` | ID of the submitted job |
+| `$SLURM_SUBMIT_DIR` | `$PBS_O_WORKDIR` | Directory from which the job was submitted |
+| `$SLURM_JOB_NODELIST` | `cat $PBS_NODEFILE` | Allocated nodes/hostnames |
 
-#PBS -l nodes=1:ppn=1
-#PBS -l walltime=01:00:00
-#PBS -N test
-#PBS -o test_out
-#PBS -e test_error
-#PBS -m bae
-#PBS -M user@unm.edu
+## Example Conversion
 
-cd $PBS_O_WORKDIR/
-python test.py
-
-```
-The corresponding Slurm script for the above PBS script can be written as
+Here is a sample SLURM script to run a Python script `test.py`:
 
 ```bash
 #!/bin/bash
@@ -75,8 +55,23 @@ The corresponding Slurm script for the above PBS script can be written as
 
 cd $SLURM_SUBMIT_DIR/
 python test.py
-
 ```
 
+The equivalent PBS script for the above is:
 
+```bash
+#!/bin/bash
 
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=01:00:00
+#PBS -N test
+#PBS -o test_out
+#PBS -e test_error
+#PBS -m bae
+#PBS -M user@unm.edu
+
+cd $PBS_O_WORKDIR/
+python test.py
+```
+
+*This quickbyte was validated on 6/9/2026*
