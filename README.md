@@ -8,7 +8,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [Reset Password](https://github.com/graviton28/QuickBytes/blob/master/password_reset.md)
       * [SSH keys and Config file](https://github.com/graviton28/QuickBytes/blob/table-of-contents-readme/ssh_keygen_config.md)
       * [Transferring data](https://github.com/graviton28/QuickBytes/blob/master/transfer_data.md)
-      * [SBatch/Slurm](https://github.com/graviton28/QuickBytes/blob/master/slurm-sbatch.md)
+      * [SBatch/Slurm](https://github.com/graviton28/QuickBytes/blob/master/sbatch-slurm.md)
       * [Sample Slurm script](https://github.com/graviton28/QuickBytes/blob/master/sbatch_scripts2.md)
       * [Submitting jobs](https://github.com/graviton28/QuickBytes/blob/master/submitting_jobs.md)
       * [Check running jobs](https://github.com/graviton28/QuickBytes/blob/master/checking_on_running_jobs.md)
