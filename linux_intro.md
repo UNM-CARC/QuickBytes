@@ -10,9 +10,9 @@ Commands that you should enter at the prompt (also file, directory, and applicat
 
 NOTE: The program that interprets your commands on a Unix-based computer is called the shell. Shells come in different varieties, such as csh (C shell), tsch (Tenex C shell), ksh (Korn shell), and bash (Bourne-Again Shell). Many of the basic commands are the same across shells, but there are also some important differences.
 
-1. Begin by ssh-ing into [easley.alliance.unm.edu](http://easley.alliance.unm.edu) from an XTerm. Type in your username, followed by your easley password. (Note: you can also ssh into IT Linux machines by connecting to [linux.unm.edu](http://linux.unm.edu) and using your UNM IT password (different from your CARC easley password).
+1. Begin by ssh-ing into [easley.alliance.unm.edu](http://easley.alliance.unm.edu) from an XTerm. Type in your username, followed by your easley password.
 
-2. Note that when you login to a Unix machine, there is always a prompt. The default prompt is `$`, but sometimes it will appear as the machine name, followed by a number which tells you how many commands you have entered up to that point in the session, e.g., `username@easley-sn:~$`. All commands in Unix are issued sequentially, each at a new prompt (there are ways to combine commands, but we won't worry about this for now).
+2. Note that when you log in to a Unix machine, there is always a prompt. The default prompt is `$`, but sometimes it will appear as the machine name, followed by a number which tells you how many commands you have entered up to that point in the session, e.g., `username@easley-sn:~$`. All commands in Unix are issued sequentially, each at a new prompt (there are ways to combine commands, but we won't worry about this for now).
 
 3. If your password is new, you should change it immediately to one that is known only to you. If you have not done so already, type `passwd` at the Unix prompt and follow the instructions. You can change your password as often as you like in this fashion.
 
