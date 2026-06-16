@@ -64,10 +64,10 @@ JobId=67048 JobName=BipolarCox_138
    WorkDir=/users/user/experiments/newsuicidality-injury
 ```
 
-`watch squeue -u <username>` allows an interactive view of job statistics for that user, which updates every 2 seconds. Example:
+`watch squeue -u <username>` allows an interactive view of job statistics for that user, which updates every 2 seconds.
 
 ```bash
-(user) easley:~$ watch squeue -u ceodspsp
+watch squeue -u ceodspsp
 ```
 ```bash
 Every 2.0s: squeue -u ceodspsp                          Tue Feb 19 13:45:50 2019
@@ -78,7 +78,7 @@ JOBID    USER      PARTITION  NAME        ST  TIME       NODES  CPUS
 ```
 
 ### Determining which Nodes your Job is using:
-If you would like to check which nodes your job is using, you can use `squeue -l` or `scontrol show job <jobid>` to see the node list. When your job is finished, your processes on each node will be killed by the system, and the node will be released back into the available resource pool.
+If you would like to check which nodes your job is using, you can use `squeue -l` or `scontrol show job <jobid>` to see the node list. When your job is finished, the system will kill your processes on each node, and the node will be released back into the available resource pool.
 
 ```bash
 squeue -l --job 55811
