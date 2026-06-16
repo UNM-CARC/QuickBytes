@@ -4,7 +4,7 @@ The goal of this tutorial is to familiarize you with the minimal set of commands
 
 In this tutorial, we use the generic term Unix to refer to any operating system (OS) based on the original Unix OS developed in the 1970s (1969 is typically cited as the year that Unix was "born.") Although numerous flavors and variants of the OS have appeared in the intervening years, they are all based on the same underlying design, and preserve a core set of commands in common. What this means is that if you are familiar with any contemporary Unix-like system, you will be able to immediately work on any other Unix-like system, and it will be very easy for you to come up to speed on the idiosyncrasies of the new environment. Examples of Unix-based systems that you may have heard of include Linux, SGI IRIX, Mac OS X, Sun Solaris, and SunOS.
 
-This tutorial provides step-by-step instructions for exploring the Unix-like operating systems running on UNM IT and CARC machines, such as [linux.unm.edu](http://linux.unm.edu) and [easley.alliance.unm.edu](http://easley.alliance.unm.edu).
+This tutorial provides step-by-step instructions for exploring the Unix-like operating systems running on UNM IT and CARC machines, such as [easley.alliance.unm.edu](http://easley.alliance.unm.edu).
 
 Commands that you should enter at the prompt (also file, directory, and application names) will appear as a code block, while names of files will appear in **bold**. You may wish to take a look at the IT documentation for Linux and X Windows available at [http://it.unm.edu/quickrefs/unix.html](http://it.unm.edu/quickrefs/unix.html). Numerous "cheat sheets" for Linux and for editors such as vi (see below) can also be found online.
 
