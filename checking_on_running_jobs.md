@@ -5,6 +5,10 @@ If you would like to check the status of your job, you can use the `squeue` comm
 
 ```bash
 squeue
+```
+
+Which should output:
+```bash
 JOBID    NAME             USER            TIME       ST  PARTITION
 127506   pebble30_80      user            288:43:22  R   default
 127508   pebble30_90      user            279:41:40  R   default
@@ -17,6 +21,9 @@ The output of `squeue` gives you the Job ID, the name of the Job, which user own
 For example:
 ```bash
 squeue --job 127506
+```
+Which gives:
+```bash
 JOBID    NAME          USER       TIME       ST  PARTITION
 127506   pebble30_80   user       289:04:10  R   default
 ```
@@ -25,6 +32,8 @@ A useful option is the `-l` (long format) flag which shows more information abou
 
 ```bash
 squeue -l
+```
+```Bash
 JOBID    USER   PARTITION  NAME            ST  TIME        NODES  CPUS  MIN_MEMORY  TIME_LIMIT
 127506   user   default    pebble30_80     R   229:13:18   1      8     --          240:00:00
 127508   user   default    pebble30_90     R   229:09:10   1      8     --          240:00:00
@@ -37,6 +46,8 @@ JOBID    USER   PARTITION  NAME            ST  TIME        NODES  CPUS  MIN_MEMO
 Example:
 ```bash
 (user) easley:~$ scontrol show job 67048
+```
+```bash
 JobId=67048 JobName=BipolarCox_138
    UserId=user GroupId=users
    Priority=0 SubmitTime=2019-02-18T16:19:19
@@ -52,10 +63,12 @@ JobId=67048 JobName=BipolarCox_138
    WorkDir=/users/user/experiments/newsuicidality-injury
 ```
 
-`watch squeue -u <username>` allows an interactive view of job statistics for that user which updates every 2 seconds. Example:
+`watch squeue -u <username>` allows an interactive view of job statistics for that user, which updates every 2 seconds. Example:
 
 ```bash
 (user) easley:~$ watch squeue -u ceodspsp
+```
+```bash
 Every 2.0s: squeue -u ceodspsp                          Tue Feb 19 13:45:50 2019
 
 JOBID    USER      PARTITION  NAME        ST  TIME       NODES  CPUS
@@ -68,6 +81,8 @@ If you would like to check which nodes your job is using, you can use `squeue -l
 
 ```bash
 squeue -l --job 55811
+```
+```bash
 JOBID   USER   PARTITION  NAME        ST  TIME       NODES  NODELIST
 55811   user   default    B19F_re5e4  R   47:30:42   4      easley280,easley282,easley295,easley296
 ```
