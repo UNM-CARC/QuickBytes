@@ -43,11 +43,11 @@ JOBID    USER   PARTITION  NAME            ST  TIME        NODES  CPUS  MIN_MEMO
 
 `scontrol show job <jobid>` displays a full format output of information. It displays information about job name, owner, CPU time, memory usage, walltime, job status, error and output file paths, executing host, nodes, core allocation, and other details.
 
-Example: Inputting
+Example: inputting
 ```bash
 scontrol show job 67048
 ```
-Should output
+should output
 ```bash
 JobId=67048 JobName=BipolarCox_138
    UserId=user GroupId=users
