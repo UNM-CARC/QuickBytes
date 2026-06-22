@@ -17,7 +17,7 @@ FileZilla is available for both Windows and Unix systems, whereas WinSCP is Wind
 
 ### Command-line interface (CLI) options
 
-For larger files, it is recommended that you use one of several programs implemented as a command-line interface. These programs have several benefits over their GUI-based counterparts, including higher transfer speeds and the ability to resume a transfer if it is interrupted, without having to restart from the beginning. Below are several popular options with example commands and links for more advanced usage.
+For larger files, it is recommended that you use one of several programs implemented as a command-line interface. These programs have several benefits over their GUI-based counterparts, including higher transfer speeds and the ability to resume a transfer if it is interrupted, without having to restart from the beginning. Below are two popular options with example commands and links for more advanced usage.
 
 #### Secure Copy (SCP)
 
@@ -45,18 +45,6 @@ rsync -vhatP your-username@easley.alliance.unm.edu:your-file /target-directory/
 
 The `-vhatP` flags instruct rsync to print the progress of the transfer verbosely and in a human-readable format.
 
-#### BaBar Copy (BBCP)
-
-Transfer from local machine to CARC:
-```bash
-bbcp /your-file your-username@easley.alliance.unm.edu:target-directory/
-```
-
-Transfer from CARC to local machine:
-```bash
-bbcp your-username@easley.alliance.unm.edu:your-file /target-directory/
-```
-
-As you can see, the syntax for these various programs is very similar; however, the options for advanced usage are unique to each one. The examples above cover only basic data transfers — refer to the links provided, or use `man programname` for the CLI options, to optimize each tool for maximum data transfer efficiency and speed.
+As you can see, the syntax for these two programs is very similar; however, the options for advanced usage are unique to each one. The examples above cover only basic data transfers — refer to the links provided, or use `man programname` for the CLI options, to optimize each tool for maximum data transfer efficiency and speed.
 
 *This quickbyte was validated on 6/22/2026*
