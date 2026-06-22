@@ -8,7 +8,7 @@ First, set up your SSH key. To do this, type in the terminal prompt:
 ```bash
 ssh-keygen
 ```
-Just keep hitting enter until the program finishes. We recommend that you decline setting up a passphrase, as this defeats the convenience of having an SSH key. Now that your SSH key has been generated, you need to copy it to your home directory at CARC. To do this, open a terminal and type:
+Just keep hitting enter until the program finishes. We recommend that you decline setting up a passphras,e as this defeats the convenience of having an SSH key. Now that your SSH key has been generated, ed you need to copy it to your home directory at CARC. To do this, open a terminal and type:
 
 ```bash
 ssh-copy-id yourusername@machinename.alliance.unm.edu
@@ -16,7 +16,7 @@ ssh-copy-id yourusername@machinename.alliance.unm.edu
 Since your home directory is shared across all machines at CARC, you only need to do this step once to enable SSH key access across all CARC machines. 
 
 ### SSH config file
-To make logging in to CARC even easier, we also recommend setting up an SSH config file, which allows you to simply type `ssh machinename` instead of your username at the machine address. To set up this file, simply copy the example below and save it to a text document in your `ssh` folder, which is found at `~/.ssh/`. Change the user to your CARC username, and you are set to log in quickly and efficiently. You can add machines based on which ones you have access to. 
+To make logging in to CARC even easier,sier we also recommend setting up an SSH config file, which allows you to simply type `ssh machinename` instead of your username at the machine address. To set up this file, simply copy the example below and save it to a text document in your `ssh` folder, which is found at `~/.ssh/`. Change the user to your CARC username, and you are set to log in quickly and efficiently. You can add machines based on which ones you have access to. 
 
 ```bash
 Host easley
@@ -28,5 +28,7 @@ Host wheeler
     user CHANGEME
     port 22
 ```
+
+We recommend using Easley for most workloads — it offers roughly double the compute power, storage, and speed compared to Wheeler.
 
 *This quickbyte was validated on 6/22/2026*
