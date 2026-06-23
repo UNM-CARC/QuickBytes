@@ -4,7 +4,7 @@ Bayesian Evolutionary Analysis by Sampling Trees [(BEAST)](https://beast.communi
 phylogenetic tree analysis with user specified molecular clock models using the widely popular Bayesian Markov chain Monte Carlo 
 (MCMC) methods. BEAST has its origins in modeling pathogen evolution in near real time but is also popular for other phylogenetic 
 applications. BEAST is a well documented and flexible tool for modeling phylogenetics. Using BEAST at CARC offers more power for 
-rigorous computations.
+rigorous computations. This is a change. 
 
 ## Generating BEAST imput files: BEAUti
 
