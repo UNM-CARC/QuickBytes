@@ -1,134 +1,369 @@
-## Parallel MATLAB Server
-MATLAB supports parallelization on desktop computers which can be used to increase the speed of analysis drastically. MATLAB also provides the MATLAB Parallel Server (previously the MATLAB Distributed Computing Server) which allows you to write MATLAB code on your local desktop or laptop computer and perform the computation using the CARC high-performance clusters. This QuickByte leads you through the steps needed to set this up. If you run into problems please send an email to help@carc.unm.edu and we will be happy to help.
+# Parallel MATLAB Server
 
-Please ensure you have the MATLAB Parallel Toolbox installed on your local comnputer.
+## Overview
 
-## How MATLAB Parallel Works Behind the Scenes
-MATLAB parallel allows the MATLAB session you interact with on your local computer, also known as the MATLAB client, with the PBS scheduler at CARC to create jobs that run on a core, also known as the MATLAB worker. The PBS (Portable BAtch system) scheduler allocates resources requested to users. One of the advantages of using MATLAB at CARC is the ability to scale up, or use many nodes for data intensive and/or computationally complex computations. To do this, you will request more workers from the PBS scheduler by following the tutorial bellow (Workers window). If you request multiple workers, it is important to keep in mind that one worker will be running the batch script you have sent from your MATLAB client. This worker is sending your scripts to the other workers that will perform your computations. You can think about this lead MATLAB worker as a mirror of your MATLAB client that communicates with the PBS scheduler and your scripts to accomplish your job. For more help on how to alter your scripts to take advantage of the scaleing up abilities at CARC please visit the Mathworks [tutorials](https://www.mathworks.com/help/parallel-computing/what-is-parallel-computing.html).
+MATLAB supports parallelization on desktop computers through the Parallel Computing Toolbox, which can significantly speed up computation.
 
+MATLAB also provides MATLAB Parallel Server (formerly MATLAB Distributed Computing Server), which allows you to run MATLAB code locally while offloading computation to CARC high-performance computing clusters.
 
-### MATLAB Parallel Server Client Configuration
+This QuickByte explains how to configure and use MATLAB Parallel Server with CARC systems.
 
-Once MATLAB is installed on your local machine (the MATLAB version on your local machine must match the version on the CARC cluster) click "add-ons" to open Add-on explorer. Search for PBS. 
+If you run into issues, contact: [help@carc.unm.edu](mailto:help@carc.unm.edu)
 
-Click on the link "Parallel Computing Toolbox plugin for MATLAB Parallel Server with PBS" (there is a plugin for slurm as well).
+> Ensure that the MATLAB version on your local machine matches the version installed on the CARC cluster.
 
-Click the "install" button and the plugin will install and a wizard is started.
+---
 
-![Install](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabInstall.png)
+## How MATLAB Parallel Server Works
 
-![Wizard1](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard1.png)
-Choose UNIX in the cluster type
+MATLAB Parallel Server connects your local MATLAB session (the client) to the CARC cluster scheduler.
 
-![Wizard2](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard2.png)
+* The MATLAB client runs on your local machine
+* The cluster scheduler (Slurm at CARC) manages job submission
+* Workers are launched on compute nodes
+* Each worker executes part of your MATLAB computation
 
-Select no for shared job location.
+At CARC:
 
-![Wizard3](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard3.png)
+* Slurm is used for scheduling
+* All computation runs on compute nodes
+* Login/head nodes must not be used for computation
 
-Enter the address of the cluster you would like to use: for example, wheeler.alliance.unm.edu or xena.alliance.unm.edu.
+You can scale computations by requesting multiple workers, each of which runs a portion of your workload.
 
-Enter </users/> for the path to the PBS scripts (remote job storage location) that MATLAB will create on the cluster.
+---
 
-Select unique subfolders.
-  
-![Wizard4](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard4.png)
+## MATLAB Parallel Server Client Configuration
 
-Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. For set up and validation leave the number of workers at 1. Leave the threads per worker at 1 unless your software requires more threads.
+Before starting:
 
-Specify the path to the matlab installation on the compute nodes: /opt/local/MATLAB/R2019a (or 2020a) for the Xena cluster, and /opt/local/MATLAB/R2019a for the Wheeler cluster. It is important that you are running the same version of MATLAB as you are 
-running on the wheeler cluster. 
+* Install MATLAB on your local machine
+* Install MATLAB Parallel Computing Toolbox
+* Install the "Parallel Computing Toolbox plugin for MATLAB Parallel Server with Slurm"
+* Ensure your MATLAB version matches the CARC module
 
-![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard6.png)
+### Installing the Plugin
 
-Choose flexnet for the license
+1. Open MATLAB
+2. Click **Add-Ons → Get Add-Ons**
+3. Search for:
 
-![Wizard7](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard7.png)
+   * "Parallel Computing Toolbox plugin for MATLAB Parallel Server with Slurm"
+4. Click **Install**
+5. The cluster configuration wizard will start automatically
 
-Name your profile. For example "R2019a_Wheeler_PBS"
+---
 
-![Wizard8](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard8.png)
+### Cluster Type Configuration
 
-Review your profile settings and create the profile.
+In the wizard:
 
-![Wizard10](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard10.png)
+* Select **UNIX** as cluster type
+* Select **Slurm** as scheduler
+* Select **No shared job folder**
 
-You can create multiple profiles for different CARC clusters and numbers of workers.
+---
 
+### Cluster Connection Settings
+
+Enter:
+
+* Cluster address:
+
+  * `easley.alliance.unm.edu`
+* Remote job storage location:
+
+  * `/users/yourUsername/`
+* Select:
+
+  * **Unique subfolders**
+
+---
+
+### Workers Configuration
+
+* Number of workers: depends on workload
+* Threads per worker: usually 1
+
+For initial setup and validation:
+
+* Set workers = 1
+* Set threads per worker = 1
+
+Each worker corresponds to one CPU core.
+
+---
+
+### Remote MATLAB Path
+
+Specify the MATLAB installation path on the cluster.
+
+This corresponds to the MATLAB module path on CARC systems. Check `module avail matlab` on the cluster to confirm the path and version available.
+
+Make sure the local and cluster MATLAB versions match.
+
+---
+
+### License Configuration
+
+* Choose **FlexNet license**
+
+---
+
+### Profile Setup
+
+* Name your profile (example):
+
+  * `Easley_Slurm`
+
+You can create multiple profiles for different CARC systems or configurations.
+
+---
+
+### Complete Setup
+
+Review settings and finish the wizard.
+
+You can also run:
+
+```matlab
 parallel.cluster.generic.runProfileWizard()
-
-## Setting your IP Address
-
-In the next steps MATLAB will need to know your local IP address to allow incoming/outgoing connections on your computer.
-
-You will likely have to tell the system the IP address or hostname of your local machine. This is so the CARC cluster can communicate with your laptop or desktop. You will set the hostname with pctconfig (Parallel Config Toolbox). You can either type the hostname in directly or attempt to have MATLAB find it for you with the following commands:
-
-OS X
-```
-[~,name]=system('ipconfig getifaddr en0');
-pctconfig('hostname',name);
 ```
 
-Linux
-```
-%%
-[~,name]=system('hostname -i');
-pctconfig('hostname',name);
-```
+---
 
-Windows 10
+## Setting Your IP Address
 
-Look up your computers IP address and enter:
+MATLAB must know your local machine IP so the cluster can communicate with your MATLAB client.
 
-```
-%%
-pctconfig('hostname',"<your IP address>");
+### macOS
+
+```matlab
+[~,name] = system('ipconfig getifaddr en0');
+pctconfig('hostname', strtrim(name));
 ```
 
+### Linux
 
-### Validating the Configuration
-
-Select "parallel" then create/manage clusters. 
-
-Choose the profile you just created. In this example, the profile name is "R2019a_Wheeler_PBS"
-
-![Validating1](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabValidate1.png)
-
-Select the profile you just created and select the validation tab. Press the validate button.
-
-![Validating2](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabValidate2.png)
-
-It will ask for your CARC username, and here you can also select your ssh keyfile if you use one (cmd+shift+. to reveal hidden directories so you can see you ~/.ssh folder and select your private key), or just enter your password.
-
-MATLAB will now validate your setup. If you run into trouble please contact CARC support at help@carc.unm.edu.
-
-This completes the install and configuration.
-
-We have found it best to restart MATLAB at this point, otherwise setting the hostname in the next step may not work.
-
-### Writing Parallel Matlab Code
-
-
-Once you have set the hostname you can run your parallel MATLAB code. Mathworks provides extensive documentation on using parallelism in MATLAB: [Mathworks Docs](https://www.mathworks.com/help/parallel-computing/getting-started-with-parallel-computing-toolbox.html)
-
-The very simple program that follows demonstrates how to run parallel code using MATLAB. The code uses parfor, which can often be used to replace a for loop in serial MATLAB code, to distibute the work across 10 parallel workers.
-
+```matlab
+[~,name] = system('hostname -i');
+pctconfig('hostname', strtrim(name));
 ```
-n_workers = 10;                  % We will request 10 workers to run in parallel
-p = parpool('R2019a_Wheeler_PBS', n_workers); % Create the pool of workers using the profile created earlier with 10 workers.
-parfor i = 1:100                % Define a parallel loop that will be distributed accross the 10 workers.
-i                               % Print the value of i for this iteration.
-end                   
-delete(p);                      % Clean up the worker pool
+
+### Windows 10
+
+Manually find your IP address and run:
+
+```matlab
+pctconfig('hostname', "<your IP address>");
 ```
+
+---
+
+## Validating the Configuration
+
+1. Open MATLAB
+2. Go to:
+
+   * Parallel → Create and Manage Clusters
+3. Select your configured profile
+4. Open the **Validation** tab
+5. Click **Validate**
+
+You will be prompted for:
+
+* CARC username
+* Password or SSH key (optional)
+
+After validation completes successfully:
+
+* Restart MATLAB (recommended)
+
+---
+
+## Writing Parallel MATLAB Code
+
+Once configured, you can use `parfor` to distribute work across workers.
+
+### Example: Simple Parallel Loop
+
+```matlab
+n_workers = 10;
+
+p = parpool('easley', n_workers);
+
+parfor i = 1:100
+    disp(i)
+end
+
+delete(p);
+```
+
+This:
+
+* Opens a pool of workers on CARC compute nodes
+* Distributes loop iterations across workers
+* Closes the pool after completion
+
+---
 
 ## Monitoring MATLAB Jobs
-To check that your jobs are indeed running at CARC, you can log in (ssh) to the cluster you have submitted your job to and check your job status. The command bellow shows only your jobs. 
 
+Log into CARC:
+
+```bash
+ssh yourUsername@easley.alliance.unm.edu
 ```
-ssh username@wheeler.alliance.unm.edu 
 
-qstat -u <username>
+Check running jobs:
+
+```bash
+squeue -u yourUsername
 ```
 
-If you are testing small scripts, they may run before you can type qstat. To watch your jobs, you can type watch before the qstat (or anyother) command and it will re-run the command every 2sec. This is a good way to watch progress. 
+Monitor continuously:
+
+```bash
+watch squeue -u yourUsername
+```
+
+---
+
+## Writing Test Files
+
+### Example MATLAB script
+
+```bash
+nano test_parallel.m
+```
+
+```matlab
+parpool('easley', 4);
+
+parfor i = 1:20
+    disp(i)
+end
+
+delete(gcp('nocreate'));
+```
+
+---
+
+### Example input file
+
+```bash
+nano input.txt
+```
+
+```text
+1
+2
+3
+4
+5
+```
+
+---
+
+## Debugging Commands
+
+### File and environment checks
+
+```bash
+pwd
+```
+
+Show current directory (important when submitting from home directory).
+
+```bash
+ls -lh
+```
+
+List files and confirm scripts exist.
+
+```bash
+module avail matlab
+```
+
+Check available MATLAB versions.
+
+```bash
+module load matlab
+```
+
+Load MATLAB environment on the cluster.
+
+---
+
+### Slurm job monitoring
+
+```bash
+squeue -u yourUsername
+```
+
+Check running jobs.
+
+```bash
+scancel yourJobId
+```
+
+Cancel a job.
+
+```bash
+scontrol show job yourJobId
+```
+
+Detailed job information.
+
+---
+
+### MATLAB execution debugging
+
+```bash
+matlab -batch "my_program"
+```
+
+Run MATLAB script in batch mode.
+
+```bash
+matlab -batch "my_program" > matlab.output
+```
+
+Save MATLAB output.
+
+---
+
+### Interactive compute debugging
+
+```bash
+srun --pty bash
+```
+
+Start an interactive session on a compute node.
+
+```bash
+module load matlab
+matlab -batch "my_program"
+```
+
+Run MATLAB interactively on a compute node.
+
+---
+
+### Parallel Server troubleshooting
+
+```matlab
+parallel.cluster.generic.clusterProfileList
+```
+
+List available cluster profiles.
+
+```matlab
+delete(gcp('nocreate'))
+```
+
+Close the active parallel pool.
+
+---
+
+*This QuickByte was validated on 6/23/2026.*
