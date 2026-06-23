@@ -51,6 +51,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [Metabarcoding with QIIME2, Mothur, and USEARCH](https://github.com/UNM-CARC/QuickBytes/blob/master/Metabarcoding.md)
          * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
          * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
+         * [Trimmomatic Slurm smoke test](https://github.com/UNM-CARC/QuickBytes/blob/master/test_trimmomatic_quickbyte.md)
       * Computational Chemistry
          * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
          * [Alphafold](https://github.com/UNM-CARC/QuickBytes/blob/master/alphafold.md)
