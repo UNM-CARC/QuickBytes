@@ -135,4 +135,4 @@ Submit the job with:
 sbatch job_script.slurm
 ```
 
-*This quickbyte was validated on 6/23/2026*
+*This QuickByte was validated on 6/23/2026*
