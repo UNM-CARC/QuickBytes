@@ -54,6 +54,7 @@ Quickbytes are tutorials designed to help CARC users.
       * Computational Chemistry
          * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
          * [Alphafold](https://github.com/UNM-CARC/QuickBytes/blob/master/alphafold.md)
+         * [MolecularDynamics2 Slurm smoke test](https://github.com/UNM-CARC/QuickBytes/blob/master/test_molecular_dynamics2_quickbyte.md)
       * Computational Immunology
          * [SimCov on Wheeler](https://github.com/UNM-CARC/QuickBytes/blob/master/SimCov.md)
       *  Astronomy
