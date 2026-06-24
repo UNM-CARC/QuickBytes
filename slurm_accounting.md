@@ -18,7 +18,8 @@ Example:
 
 ```bash
 [yourUsername@easley ~]$ myaccounts
-
+```
+```bash
 User            Account
 yourUsername    systems
 yourUsername    yourIdNumber
@@ -36,7 +37,8 @@ Example:
 
 ```bash
 [yourUsername@easley ~]$ sacctmgr show account yourIdNumber
-
+```
+```bash
 Account          Descr                  Org
 yourIdNumber     hpc@unm sys admin      download
 ```
@@ -112,7 +114,8 @@ Example:
 
 ```bash
 [yourUsername@easley ~]$ sacctmgr show user yourUsername
-
+```
+```bash
 User            Def Acct       Admin
 yourUsername    yourIdNumber   None
 ```
