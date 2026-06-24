@@ -46,6 +46,8 @@ To see all currently loaded modules, use the command `module list`. As an exampl
 ```bash
 module load openmpi gcc
 module list
+```
+```bash
 Currently Loaded Modules:
   1) miniconda3/latest             3) gcc/14.2.0-j33x             5) openmpi/4.1.7-762w
   2) binutils/2.43.1-ifi2qjn (H)   4) openssh/9.9p1-d4o73h6 (H)
