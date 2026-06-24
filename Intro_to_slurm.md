@@ -11,8 +11,11 @@ The sections below supplement that guide with information specific to CARC Easle
 ## CARC Easley Partitions
 
 When you run `sinfo` on Easley, you will see output similar to the following:
-[username@easley ~]$ sinfo
 
+```bash
+[username@easley ~]$ sinfo
+```
+```bash
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 
 PARTITION   AVAIL  TIMELIMIT  NODES  STATE NODELIST
@@ -55,7 +58,7 @@ Key partitions you may have access to:
 - **scavenger** - Whenever a purchased/reserved node is not in use, this partition grabs them and allows them to be used by the public, but be warned you will be kicked off if the owner begins a job on it.
 
 To see detailed node information including CPU count, memory, and disk:
-
+```
 ```bash
 sinfo -N -l
 ```
