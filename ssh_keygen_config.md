@@ -16,17 +16,20 @@ ssh-copy-id yourusername@machinename.alliance.unm.edu
 Since your home directory is shared across all machines at CARC, you only need to do this step once to enable SSH key access across all CARC machines. 
 
 ### SSH config file
-To make logging in to CARC even easier, we also recommend setting up an SSH config file, which allows you to simply type `ssh machinename` instead of your username at the machine address. To set up this file, simply copy the example below and save it to a text document in your `ssh` folder, which is found at `~/.ssh/`. Name the file "config". Change the user to your CARC username, and you are set to log in quickly and efficiently. You can add machines based on which ones you have access to. 
+To make logging in to CARC even easier, we also recommend setting up an SSH config file, which allows you to simply type `ssh machinename` instead of your username at the machine address. To set up this file, simply copy the example below, change the user to your CARC username, and save it to a text document in your `ssh` folder, which is found at `~/.ssh/`. 
+If you are using Windows, use Notepad and save the File name as "config" (with quotation marks), and leave the Save as type as TextDocuments(*.txt). You can also save the File name as "config" (NO quotation marks), and change the Save as type to "All files". 
+If you are using a Mac, save the file name as "config" (NO quotation marks) and uncheck the box that says "If no extension is provided, use '.txt'". 
+Now you are set to log in quickly and efficiently. You can add machines based on which ones you have access to. 
 
 ```bash
 Host easley
     hostname easley-sn.alliance.unm.edu
     user CHANGEME
     port 22
-Host wheeler
-    hostname wheeler-sn.alliance.unm.edu
+Host hopper
+    hostname hopper-sn.alliance.unm.edu
     user CHANGEME
     port 22
 ```
 
-*This quickbyte was validated on 6/22/2026*
+*This quickbyte was validated on 6/24/2026*
