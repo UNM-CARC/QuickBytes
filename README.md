@@ -41,7 +41,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [Tensorflow](https://github.com/UNM-CARC/QuickBytes/blob/master/Tensorflow_documentation.md)
          * [Installing PyTorch on Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/PyTorch_1.9_Xena.md)
          * [Example PyTorch Image Classification on Xena](https://github.com/UNM-CARC/QuickBytes/blob/master/PyTorch_Classifier_Xena%20.ipynb)
-         * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.ipynb)
+         * [Tensorflow with multiple GPUs](https://github.com/UNM-CARC/QuickBytes/blob/master/multiGPU_tensorflow_tutorial.md)
          * [Parallelization with JupyterHub using Dask and SciKit-learn](https://github.com/UNM-CARC/QuickBytes/blob/master/parallel_jupyterhub_with_dask_and_scikit-learn.md)
       * Bioinformatics
          * [Genomic variant calling with GATK](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md)
