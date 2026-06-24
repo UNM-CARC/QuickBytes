@@ -1,170 +1,125 @@
-# Using TensorFlow on Multiple GPUs
+# Introduction to TensorFlow
 
-TensorFlow is a popular open source platform for machine learning that enables parallelism across GPU cores. This parallelism results in considerably reduced computation times, as performance scales with data size in a way that CPU-based operations cannot match.
+The relatively recent mainstream availability of complex algorithms and computationally efficient hardware has created a platform for innovations never before available to the scientific computing world. Since the development of early computer systems, computing times have been drastically reduced, making more complex computations feasible. The continuous cycle of improvements in computation speed and hardware, driving ever more complex computation goals, can be seen in how hardware has scaled to meet those goals. A key part of this cycle is the use of GPUs in high-performance computing for machine learning and deep learning algorithms.
 
-## Setting Up Your Environment
+Most complex computing strategies can be simplified into basic linear algebra operations such as addition, multiplication, subtraction, and inversion. Of these, matrix multiplication and inversion are the most computationally expensive.
 
-Before getting started, you will need to create a Miniconda environment with TensorFlow and its dependencies.
+Most matrix operations are performed sequentially on the CPU, resulting in computation time that scales with the size of the matrix by a factor of &theta;(n<sup>3</sup>). As a result, the time required for computation is proportional to matrix size, constrained further by limited cache memory and RAM. This same problem persists with multicore or distributed systems due to those same resource thresholds. A GPU, on the other hand, is composed of several thousand cores, providing several GBs of computational memory compared to the MBs available in CPU cache. This configuration enables parallelism across GPU cores and a much higher data bandwidth, massively reducing computation time as the device scales its performance with data size.
 
-### Create the Conda Environment
+These gains in computation time give researchers good reason to move computationally heavy operations from CPUs to GPUs, particularly where CPU-based operations don't scale with data at a constant rate. This benefits computationally heavy domains such as machine learning, deep learning, linear algebra, optimization, and data structures broadly.
 
-From the Easley login node, load the Miniconda module and create a new environment:
+### CARC Benchmarks
 
-```bash
-module load miniconda3
-conda create --name tf_env python=3.13
-conda activate tf_env
+To illustrate the CPU-vs-GPU performance gap, here are benchmarks run on the (legacy) Xena system at CARC using intensive linear algebra operations — matrix multiplication and matrix inversion — comparing CPU-only execution to GPU-accelerated execution.
+
+The CPU version was deployed on a multicore processor with 16 cores and 64GB of RAM, using NumPy arrays in Python. The GPU version was deployed on an NVIDIA Tesla K40 with 11GB of GPU memory, using TensorFlow. The CPU implementations were tested with two different NumPy builds: `mkl_mul` refers to multiplication using NumPy compiled with Intel's Math Kernel Library (MKL), while `nomkl_mul` refers to NumPy without MKL. MKL-based NumPy was installed in a Conda environment, whereas NumPy installed via pip does not integrate MKL.
+
+The old Xena cluster had nodes with both single- and dual-GPU configurations. A dual-GPU node offered 2×11GB of GPU memory, allowing larger batch sizes and roughly double the cores for faster training of larger, more complex models. `gpu_mul` corresponds to multiplication on a single-GPU node, and `dualgpu_mul` corresponds to multiplication on a dual-GPU node. A similar benchmark was run for matrix inversion.
+
+![](Images/matrix_inverse.png)
+
+Fig 1. Time for matrix inversion vs. size of matrix N
+
+![](Images/matrix_multiplication.png)
+
+Fig 2. Time for matrix multiplication vs. size of matrix N
+
+The implementation code for these benchmarks can be found [here](https://github.com/ceodspspectrum/CARC_WORK/tree/master/master).
+
+### TensorFlow Basics
+
+TensorFlow is an open-source deep learning library originally developed by Google. It provides primitives for defining functions over tensors and automatically computing their derivatives. A tensor represents any multidimensional array of numbers, similar in spirit to a NumPy array.
+
+**Comparing NumPy and TensorFlow**
+
+Both libraries store data in N-dimensional arrays — NumPy's `ndarray` and TensorFlow's `tf.Tensor`. However, NumPy doesn't support automatic differentiation or GPU acceleration. For workloads that need either of those — like training neural networks — TensorFlow's GPU support and built-in autograd typically make it the better choice, especially as data dimensionality grows.
+
+**NumPy vs. TensorFlow: Matrix Addition**
+
+***NumPy:***
+```python
+import numpy as np
+
+a = np.zeros((2, 2))
+b = np.zeros((2, 2))
+np.sum(b, axis=0)
+a.shape
+np.reshape(b, (1, 4))
 ```
 
-### Install TensorFlow and Dependencies
+***TensorFlow (2.x, eager execution):***
+```python
+import tensorflow as tf
 
-```bash
-pip install "tensorflow[and-cuda]"
-pip install nvidia-cudnn-cu12
-pip install numpy matplotlib scikit-learn ipykernel
+a = tf.zeros((2, 2))
+b = tf.ones((2, 2))
+tf.reduce_sum(b, axis=1)
+a.shape
+tf.reshape(b, (1, 4))
 ```
 
-### Configure GPU Libraries
+Unlike older versions of TensorFlow, TensorFlow 2.x uses **eager execution** by default — operations run and return values immediately, just like NumPy, with no separate "session" step required.
 
-TensorFlow requires the NVIDIA GPU libraries to be on your library path. Run the following commands to configure this automatically whenever you activate your environment:
+For example, in NumPy:
+```python
+a = np.zeros((2, 2))
+print(a)
+```
+This immediately prints the value of `a`. In modern TensorFlow, the same is true:
+```python
+a = tf.zeros((2, 2))
+print(a)
+```
+This also prints the value of `a` right away — no `.eval()` or session needed. (Older TensorFlow 1.x code required wrapping everything in a `tf.Session()` and explicitly calling `.eval()` or `sess.run()` to get a value; that pattern is obsolete in TensorFlow 2.x.)
 
-```bash
-mkdir -p $CONDA_PREFIX/etc/conda/activate.d
-cat > $CONDA_PREFIX/etc/conda/activate.d/tf_gpu_libs.sh << 'EOF'
-NVIDIA_LIB_DIR=$(python -c "import site; print(site.getsitepackages()[0])")/nvidia
-export LD_LIBRARY_PATH=$(find $NVIDIA_LIB_DIR -type d -name lib | tr '\n' ':')$LD_LIBRARY_PATH
-EOF
+**TensorFlow Variables**
+
+Like other programming languages, TensorFlow uses a `Variable` object to store and update parameters that change during training (e.g. model weights). In TensorFlow 2.x, variables are initialized immediately when created — no separate initialization step is needed:
+
+```python
+import tensorflow as tf
+
+W = tf.Variable(tf.zeros((2, 2)), name="weights")
+R = tf.Variable(tf.random.normal((2, 2)), name="random_weights")
+
+print(W)
+print(R)
 ```
 
-### Register the Environment as a Jupyter Kernel
-
-To use this environment in JupyterHub, register it as a kernel:
-
-```bash
-python -m ipykernel install --user --name tf_env --display-name "Python (tf_env)"
-```
-
-### Verify GPU Access
-
-To confirm TensorFlow can see the GPUs, request an interactive session on a GPU node and run the following:
-
-```bash
-srun -G 2 -p l40s --pty bash
-conda activate tf_env
-python -c "import tensorflow as tf; print(tf.__version__); print(tf.config.list_physical_devices('GPU'))"
-```
-
-You should see output similar to:
-2.21.0
-
-[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU'), PhysicalDevice(name='/physical_device:GPU:1', device_type='GPU')]
-
-## Multi-GPU Training with TensorFlow
-
-This tutorial covers single-host, multi-GPU synchronous training using the `MirroredStrategy` API in Keras. The example below trains a neural network on a synthetic dataset, distributing the work across all available GPUs. Save the full script as `tf_multiGPU_test.py` and run it from an interactive GPU session (as shown in the "Verify GPU Access" step above), or submit it as a Slurm batch job.
+**Converting NumPy Data to a Tensor**
 
 ```python
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers, models
-from sklearn.datasets import make_multilabel_classification
-from sklearn.model_selection import train_test_split
 
-Nin = 10
-Nout = 3
-
-learning_rate = 1e-3
-epochs = 10
-batch_size = 32
-neurons_per_hidden_layer = 32
-
-xin, yin = make_multilabel_classification(
-    n_samples=100000,
-    n_features=Nin,
-    n_classes=Nout,
-    n_labels=2
-)
-
-def create_model(n_neurons):
-    model = models.Sequential([
-        layers.Input(shape=(Nin,)),
-        layers.Dense(n_neurons, kernel_initializer='he_uniform', activation='relu'),
-        layers.Dropout(0.2),
-        layers.Dense(n_neurons, kernel_initializer='he_uniform', activation='relu'),
-        layers.Dropout(0.2),
-        layers.Dense(Nout, activation='sigmoid')
-    ])
-    return model
-
-def get_dataset():
-    x_train, x_test, y_train, y_test = train_test_split(xin, yin)
-
-    num_val_samples = 10 * y_train.shape[0] // 100
-
-    x_val = x_train[-num_val_samples:]
-    x_train = x_train[:-num_val_samples]
-    y_val = y_train[-num_val_samples:]
-    y_train = y_train[:-num_val_samples]
-
-    return (
-        tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(batch_size, drop_remainder=True),
-        tf.data.Dataset.from_tensor_slices((x_val, y_val)).batch(batch_size, drop_remainder=True),
-        tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size, drop_remainder=True),
-        y_test
-    )
-
-strategy = tf.distribute.MirroredStrategy()
-print(f'Number of devices: {strategy.num_replicas_in_sync}')
-
-opt = keras.optimizers.Adam(learning_rate=learning_rate)
-
-with strategy.scope():
-    model = create_model(neurons_per_hidden_layer)
-    model.compile(
-        optimizer=opt,
-        loss='binary_crossentropy',
-        metrics=['binary_accuracy']
-    )
-
-train_dataset, val_dataset, test_dataset, ytest = get_dataset()
-
-history = model.fit(
-    train_dataset,
-    epochs=epochs,
-    validation_data=val_dataset,
-    verbose=1
-)
-
-plt.figure()
-plt.title('Loss')
-plt.plot(history.history['loss'], label='train')
-plt.plot(history.history['val_loss'], label='validation')
-plt.legend()
-plt.savefig('training_loss.png')
-print('Saved training loss plot to training_loss.png')
-
-score = model.evaluate(test_dataset)
-print(f'Test accuracy: {score[1]:.4f}')
-
-ypred = model.predict(test_dataset)
-
-randind = np.random.randint(ytest.shape[0])
-
-plt.figure()
-plt.title('Predictions vs Ground Truth')
-plt.plot(ytest[randind], 'o', label='ground truth')
-plt.plot(ypred[randind], '.', label='predicted')
-plt.ylim([-0.05, 1.05])
-plt.legend()
-plt.savefig('predictions_vs_groundtruth.png')
-print('Saved predictions plot to predictions_vs_groundtruth.png')
-print('Test complete.')
+a = np.zeros((3, 3))
+t_a = tf.convert_to_tensor(a)
+print(t_a)
 ```
 
-The core idea this script demonstrates is **data parallelism**. Rather than splitting the neural network itself across GPUs, TensorFlow keeps an identical copy of the full model on each GPU and splits each training batch between them. Every GPU computes gradients on its own slice of the data; those gradients are averaged across devices, and the resulting update is applied to all copies of the model in sync — so the model trains as if it saw the whole batch, just faster. This is what `tf.distribute.MirroredStrategy` does for you automatically: by default, it detects every available GPU on the node. It mirrors the model across them, and the only thing you have to do differently from a single-GPU training script is create and compile the model inside `strategy.scope()` so TensorFlow knows to set up that mirroring. Everything else — the dataset, the training loop, the `fit()` call — looks like ordinary single-GPU Keras code. This kind of synchronous multi-GPU training is most worth using when your model or batch size is large enough that a single GPU is a bottleneck; for a small toy network like this one, the speedup mostly demonstrates the mechanism rather than reflecting a realistic workload. To confirm the parallelism is actually happening, open a separate terminal, SSH into the compute node, and run `nvidia-smi` during training — you should see roughly even GPU utilization split across the devices you requested. The rest of the script is standard supporting plumbing: it generates a synthetic dataset since the focus is the multi-GPU mechanics rather than the data itself, saves plots to disk instead of calling `plt.show()` (compute nodes have no display, so `Agg` is used as a non-interactive backend), and finishes by printing test accuracy and a sample prediction plot as a sanity check that training actually worked.
+**Functions and Custom Operations**
 
-*This quickbyte was validated on 6/24/2026.*
+Older TensorFlow code used `tf.placeholder` to define inputs that were filled in later via a `feed_dict`. In TensorFlow 2.x, you simply write a regular Python function — optionally decorated with `@tf.function` for performance — and call it directly with your data:
+
+```python
+import tensorflow as tf
+
+@tf.function
+def multiply(input1, input2):
+    return tf.multiply(input1, input2)
+
+result = multiply(7.0, 2.0)
+print(result)
+```
+
+This replaces the old pattern of defining `tf.placeholder` variables and feeding them through a `tf.Session()`.
+
+### Learning More TensorFlow
+
+Rather than reproduce a full general-purpose TensorFlow walkthrough here, we recommend going straight to the source: the [official TensorFlow tutorials](https://www.tensorflow.org/tutorials) maintained by Google. These are kept up to date with the current TensorFlow API and run as ready-to-use Jupyter/Colab notebooks with no local setup required.
+
+A good starting point is the [TensorFlow 2 quickstart for beginners](https://www.tensorflow.org/tutorials/quickstart/beginner), which walks through loading a dataset, building a simple Keras model, and training/evaluating it. For a deeper, lower-level walkthrough, the [quickstart for experts](https://www.tensorflow.org/tutorials/quickstart/advanced) covers the same task using TensorFlow's more customizable API.
+
+> **Note:** if you've used TensorFlow before and your code still uses `tf.Session()`, `tf.placeholder`, or `tf.initialize_all_variables()` — that's the TensorFlow 1.x API, fully superseded by eager execution in TensorFlow 2.x. See Google's [Effective TensorFlow 2](https://www.tensorflow.org/guide/effective_tf2) guide and the official [migration guide](https://www.tensorflow.org/guide/migrate) if you need to update older code.
+
+*This quickbyte was validated on 6/22/2026*
