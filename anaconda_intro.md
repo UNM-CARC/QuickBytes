@@ -1,20 +1,20 @@
-# Anaconda
+# Miniconda
 
-### What is Anaconda?
+### What is Miniconda?
 
-Fundamentally, Anaconda is a distribution of Python and R with a collection of associated packages optimized for data science. The installation and management of these packages is handled with the Anaconda package manager Conda. Conda is more than just a package manager however, it also creates and manages the environments that packages are installed in to. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory which is then appended to your `PATH` when that environment is activated.
+Fundamentally, Miniconda is a minimal distribution of Python and R with a collection of associated packages optimized for data science. The installation and management of these packages is handled with the Miniconda package manager Conda. Conda is more than just a package manager, however — it also creates and manages the environments that packages are installed in. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory, which is then appended to your `PATH` when that environment is activated.
 
-### Creating a new conda environment
+### Creating a New Conda Environment
 
-Let's create an environment on Wheeler to run a python machine learning script that uses the TensorFlow library, python version 3.5, and the pandas library. Once you log in to Wheeler using `ssh` load the anaconda software module with the command:
+Let's create an environment on Easley to run a Python machine learning script that uses the TensorFlow library, Python version 3.5, and the pandas library. Once you log in to Easley using `ssh`, load the Miniconda software module with the command:
 
-`module load anaconda3`
+`module load miniconda3`
 
-We use `conda` to create new environments and install/upgrade packages within environments. To create our machine learning environment we type:
+We use `conda` to create new environments and install or upgrade packages within environments. To create our machine learning environment, we type:
 
 `conda create --name TensorFlow python=3.5 pandas tensorflow`
 
-The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages python version 3.5 specifically, pandas, and tensorflow. When you enter this command `conda` prints out the plan for this environment to `stdout`:
+The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages Python version 3.5 specifically, pandas, and tensorflow. When you enter this command, `conda` prints out the plan for this environment to `stdout`:
 
 ```bash
 Solving environment: done
@@ -110,9 +110,9 @@ The following NEW packages will be INSTALLED:
 Proceed ([y]/n)?
 ```
 
-This gives you the list of all packages you requested to be installed and their dependencies, as well as the package version and build. Of note is the environment location pathway at the top of the package plan, you will notice that `conda` by default installs into your local directory and does not need administrative access to install packages. This means that you can administer your own Anaconda environments at CARC. 
+This gives you the list of all packages you requested to be installed, along with their dependencies, versions, and builds. Of note is the environment location path at the top of the package plan — you will notice that `conda` by default installs into your local directory and does not need administrative access to install packages. This means that you can administer your own Miniconda environments at CARC.
 
-When you verify the package plan `conda` will proceed with downloading package binaries and installing them into the environment directory. You will see the progress of installation and a message with how to activate your environment once complete:
+When you verify the package plan, `conda` will proceed with downloading package binaries and installing them into the environment directory. You will see the progress of the installation and a message with how to activate your environment once complete:
 
 ```bash
 Downloading and Extracting Packages
@@ -140,21 +140,23 @@ Verifying transaction: done
 Executing transaction: done
 #
 # To activate this environment, use:
-# > source activate TensorFlow
+# > conda activate TensorFlow
 #
 # To deactivate an active environment, use:
-# > source deactivate
+# > conda deactivate
 #
 ```
 
-Now we have our machine learning environment created to run our machine learning python script. To activate the environment we just created you use the command `source activate my_environment_name`, which is `source activate TensorFlow` for this example. Remember to include the lines below in your PBS script when working with Anaconda environments:
+Now we have our machine learning environment created to run our machine learning Python script. To activate the environment we just created, use the command `conda activate my_environment_name`, which is `conda activate TensorFlow` for this example. Remember to include the lines below in your Slurm script when working with Miniconda environments:
 
 ```bash
-# load anaconda software module
-module load anaconda3
+# load miniconda software module
+module load miniconda3
 
-# activate your desired anaconda environment
-source activate environment_name
+# activate your desired conda environment
+conda activate environment_name
 ```
-For more information on managing environments visit the Conda documentation site at this [link](https://conda.io/docs/user-guide/index.html), or by adding the flag `--help` to any `conda` command, for example, `conda create --help` will print a help page for creating environments.
 
+For more information on managing environments, visit the Conda documentation site at this [link](https://conda.io/docs/user-guide/index.html), or by adding the flag `--help` to any `conda` command — for example, `conda create --help` will print a help page for creating environments.
+
+*This quickbyte was validated on 6/23/2026.*
