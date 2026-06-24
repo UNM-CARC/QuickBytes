@@ -103,7 +103,7 @@ Below is a sample PBS script that runs `test.py`.
 
 cd "$PBS_O_WORKDIR"
 
-python test.py
+srun python test.py
 ```
 
 ---
@@ -126,7 +126,7 @@ The equivalent Slurm script is:
 
 cd "$SLURM_SUBMIT_DIR"
 
-python test.py
+srun python test.py
 ```
 
 Submit the job with:
