@@ -1,112 +1,127 @@
-# Introduction to Tensorflow
+# Introduction to TensorFlow
 
-The relatively recent mainstream availability of complex algorithms and computationally efficient hardware is creating a platform for new innovations never before available to the scientific computing world. Since the development of computer systems, computing times have been drastically reduced, making more complex computations feasible. The continuous cycle of improvements in computation speeds and hardware leading to ever more complex computations can be seen in the scaling of hardware to meet these more complex computation goals. A resolution to this cycle can be found in the utilization of GPU's in high-performance computing for Machine learning and deep learning algorithms.
-Most of the complex computing strategies can be simplified into basic linear algebra operations such as addition, multiplication, subtraction, inversion and such. Out of the listed operations, matrix multiplication and inversion are the most computationally expensive operations.
+The relatively recent mainstream availability of complex algorithms and computationally efficient hardware has created a platform for innovations never before available to the scientific computing world. Since the development of early computer systems, computing times have been drastically reduced, making more complex computations feasible. The continuous cycle of improvements in computation speed and hardware, driving ever more complex computation goals, can be seen in how hardware has scaled to meet those goals. A key part of this cycle is the use of GPUs in high-performance computing for machine learning and deep learning algorithms.
 
-Most matrix operations are performed sequentially on the CPU resulting in computation time that scales with the size of the matrix as a factor &theta;(n<sup>3</sup>). Hence, computation cycles and duration of time to be allocated towards computation is proportional to the size of matrices under the constrained hardware with limited cache memory and RAM. The same problem still exists with multicore systems or distributed systems due to the threshold on the resources mentioned. On the other hand, a GPU is composed of several thousand cores, combining to provide the user with several GBs of computational memory compared to the MBs provided by CPU cache memory. The distributed computing this configuration provides enables parallelism across GPU cores and allows a super fast flow of data resulting from incredibly high bandwidth. This distribution across multiple cores amounts to massively reduced computation time as the device is able to scale its performance with data size.
+Most complex computing strategies can be simplified into basic linear algebra operations such as addition, multiplication, subtraction, and inversion. Of these, matrix multiplication and inversion are the most computationally expensive.
 
-The enormous gains in computation time should give researchers a valid reason to switch from CPUs to GPUs for computationally heavy operations where the CPU-based operations do not scale with the data at a constant rate. Utilization of this methodology will provide enormous benefits for the computationally heavy domains such as machine learning, deep learning, linear algebra, optimization, data structures, etc. To illustrate this statement, we've included some benchmarks run on the Xena system at CARC using intensive linear algebra operations, i.e., matrix multiplication and matrix-inversion, on a CPU only compared to CPU utilizing the GPU as well.
+Most matrix operations are performed sequentially on the CPU, resulting in computation time that scales with the size of the matrix by a factor of &theta;(n<sup>3</sup>). As a result, the time required for computation is proportional to matrix size, constrained further by limited cache memory and RAM. This same problem persists with multicore or distributed systems due to those same resource thresholds. A GPU, on the other hand, is composed of several thousand cores, providing several GBs of computational memory compared to the MBs available in CPU cache. This configuration enables parallelism across GPU cores and a much higher data bandwidth, massively reducing computation time as the device scales its performance with data size.
 
-The CPU version was deployed on a multicore processor with 16 cores and 64GB of RAM with using numpy arrays in python. The GPU Version was deployed on NVIDIA Tesla K40 with 11GB of GPU memory using Tensorflow.  Here the CPU implementations were carried with two different types of numpy compilations. mkl_mul stands for multiplication operation carried with numpy compiled with math kernel library. Nomkl_mul stands for the numpy without math kernel library. mkl based numpy was installed in an anaconda enviroment using conda to install numpy whereas the numpy installed with pip doesn't integrate math kernel library. Xena has nodes with single GPU and dual GPU. Dual GPU node offers users 2x11GB of computational GPU memory which allows the use of a larger batch size and double the number of cores for faster implementation of highly complex models with a large number of parameters. The GPU_mul corresponds to multiplication operations utilizing single GPU node and dualgpu_mul corresonds to the one utilizing a dual GPU node. Another interesting benchmark was performed for inversion operations similar to those done for multiplication
+These gains in computation time give researchers good reason to move computationally heavy operations from CPUs to GPUs, particularly where CPU-based operations don't scale with data at a constant rate. This benefits computationally heavy domains such as machine learning, deep learning, linear algebra, optimization, and data structures broadly.
+
+### CARC Benchmarks
+
+To illustrate the CPU-vs-GPU performance gap, here are benchmarks run on the (legacy) Xena system at CARC using intensive linear algebra operations — matrix multiplication and matrix inversion — comparing CPU-only execution to GPU-accelerated execution.
+
+
+
+The CPU version was deployed on a multicore processor with 16 cores and 64GB of RAM, using NumPy arrays in Python. The GPU version was deployed on an NVIDIA Tesla K40 with 11GB of GPU memory, using TensorFlow. The CPU implementations were tested with two different NumPy builds: `mkl_mul` refers to multiplication using NumPy compiled with Intel's Math Kernel Library (MKL), while `nomkl_mul` refers to NumPy without MKL. MKL-based NumPy was installed in a Conda environment, whereas NumPy installed via pip does not integrate MKL.
+
+The old Xena cluster had nodes with both single- and dual-GPU configurations. A dual-GPU node offered 2×11GB of GPU memory, allowing larger batch sizes and roughly double the cores for faster training of larger, more complex models. `gpu_mul` corresponds to multiplication on a single-GPU node, and `dualgpu_mul` corresponds to multiplication on a dual-GPU node. A similar benchmark was run for matrix inversion.
 
 ![](https://raw.githubusercontent.com/ceodspspectrum/CARC_WORK/master/download2.png)
 
-Fig 1. Time for Matrix Inversion vs size of Matrix N
-
+Fig 1. Time for matrix inversion vs. size of matrix N
 
 ![](https://raw.githubusercontent.com/ceodspspectrum/CARC_WORK/master/download1.png)
 
-Fig 2. Time for Matrix Multiplication vs size of Matrix N
+Fig 2. Time for matrix multiplication vs. size of matrix N
 
-The implementations can be found [here.](https://github.com/ceodspspectrum/CARC_WORK/tree/master/master)
+The implementation code for these benchmarks can be found [here](https://github.com/ceodspspectrum/CARC_WORK/tree/master/master).
 
+### TensorFlow Basics
 
-Tensorflow is an open source deep learning library provided by Google. It provides primitives for functions definitions on tensor and a mechanism to compute their derivatives automatically. It uses a tensor to represent any multidimensional array of numbers.
+TensorFlow is an open source deep learning library originally developed by Google. It provides primitives for defining functions over tensors and automatically computing their derivatives. A tensor represents any multidimensional array of numbers, similar in spirit to a NumPy array.
 
-**Comparision between Numpy and Tensorflow**
+**Comparing NumPy and TensorFlow**
 
-TensorFlow's computational housing is a tensor, similar to Numpy's housing of data in Ndarray's making both of them N-d array libraries.
+Both libraries store data in N-dimensional arrays — NumPy's `ndarray` and TensorFlow's `tf.Tensor`. However, NumPy doesn't support automatic differentiation or GPU acceleration. For workloads that need either of those — like training neural networks — TensorFlow's GPU support and built-in autograd typically make it the better choice, especially as data dimensionality grows.
 
-However, Numpy does not offer a method to create tensor functions and automatically compute derivatives, nor does it support GPU implementation. Thus, for processing data of higher dimensions,Tensorflow outperforms Numpy arrays due largely to its GPU implementations.
+**NumPy vs. TensorFlow: Matrix Addition**
 
-**Numpy vs Tensorflow Implementations**
+***NumPy:***
+```python
+import numpy as np
 
-***Numpy Implementation of Matrix Addition***
+a = np.zeros((2, 2))
+b = np.zeros((2, 2))
+np.sum(b, axis=0)
+a.shape
+np.reshape(b, (1, 4))
+```
 
-		import numpy as np
-		a=np.zeros((2,2))
-		b=np.zeros((2,2))
-		np.sum(b,axis=0)
-		a.shape
-		np.reshape(b,(1,3))
+***TensorFlow (2.x, eager execution):***
+```python
+import tensorflow as tf
 
+a = tf.zeros((2, 2))
+b = tf.ones((2, 2))
+tf.reduce_sum(b, axis=1)
+a.shape
+tf.reshape(b, (1, 4))
+```
 
+Unlike older versions of TensorFlow, TensorFlow 2.x uses **eager execution** by default — operations run and return values immediately, just like NumPy, with no separate "session" step required.
 
-***Tensorflow Implementation of Matrix Addition***
+For example, in NumPy:
+```python
+a = np.zeros((2, 2))
+print(a)
+```
+This immediately prints the value of `a`. In modern TensorFlow, the same is true:
+```python
+a = tf.zeros((2, 2))
+print(a)
+```
+This also prints the value of `a` right away — no `.eval()` or session needed. (Older TensorFlow 1.x code required wrapping everything in a `tf.Session()` and explicitly calling `.eval()` or `sess.run()` to get a value; that pattern is obsolete in TensorFlow 2.x.)
 
-		import tensorflow as tf
-		tf.InteractiveSession()
-		a=tf.zeros((2,2))
-		b=tf.ones((2,2))
-		tf.reduce_sum(b,reduction_indices=1).eval()
-		a.get_shape()
-		tf.reshape(b,(1,3)).eval()
+**TensorFlow Variables**
 
-It is important to note that tensorflow requires explicit evaluation, i.e, tensorflow computation defines a computational graph which only gets initialized with values after a session has been evaluated.
+Like other programming languages, TensorFlow uses a `Variable` object to store and update parameters that change during training (e.g. model weights). In TensorFlow 2.x, variables are initialized immediately when created — no separate initialization step is needed:
 
-Numpy for example
+```python
+import tensorflow as tf
 
-		a=np.zeros((2,2)) ; print(a)
+W = tf.Variable(tf.zeros((2, 2)), name="weights")
+R = tf.Variable(tf.random.normal((2, 2)), name="random_weights")
 
-will immediately give the value of "a".
+print(W)
+print(R)
+```
 
-However, for tensorflow:
+**Converting NumPy Data to a Tensor**
 
-		a=tf.zeros((2,2))
-		print(a)
+```python
+import numpy as np
+import tensorflow as tf
 
-will not return the value of "a" until it is evaluated with
+a = np.zeros((3, 3))
+t_a = tf.convert_to_tensor(a)
+print(t_a)
+```
 
-               print(ta.eval())
+**Functions and Custom Operations**
 
-So It is important to understand how tensorflow works and initializes the environment.
+Older TensorFlow code used `tf.placeholder` to define inputs that were filled in later via a `feed_dict`. In TensorFlow 2.x, you simply write a regular Python function — optionally decorated with `@tf.function` for performance — and call it directly with your data:
 
-Tensorflow uses a "session object" which encapsulates the environment in which the tensors are evaluated.
+```python
+import tensorflow as tf
 
-A  Tensorflow (tf) session for performing multiplication is demonstrated below:
+@tf.function
+def multiply(input1, input2):
+    return tf.multiply(input1, input2)
 
-		a= tf.constant(9999999)
-		b=tf.constant(111111111)
-		c=a*b
-		with tf.Session() as sess:
-		     print(sess.run(c))
-		     print(c.eval())
+result = multiply(7.0, 2.0)
+print(result)
+```
 
-Tensorflow firstly structures the program, creates a graph integrating the variables, and uses session to exectute the process.
+This replaces the old pattern of defining `tf.placeholder` variables and feeding them through a `tf.Session()`.
 
-*** Tensorflow Variables ***
-Similar to other programming language variables, tensorflow uses a variable object to store and update the parameters. They are stored in memory buffers that contain tensors. TensorFlow variables must be initialized before they have values! This is in contrast with constant tensors:
+### Learning More TensorFlow
 
-		W=tf.Variable(tf.zeros((2,2)), name="weights")
-		R=tf.Variable(tf.random_normal((2,2)), name="Random_weights")
+Rather than reproduce a full general-purpose TensorFlow walkthrough here, we recommend going straight to the source: the [official TensorFlow tutorials](https://www.tensorflow.org/tutorials) maintained by Google. These are kept up to date with the current TensorFlow API and run as ready-to-use Jupyter/Colab notebooks with no local setup required.
 
-		with tf.Session() as sess:
-		        sess.run(tf.initialize_all_variables())
-			print(sess.run(W))
-			print(sess.run(R))
+A good starting point is the [TensorFlow 2 quickstart for beginners](https://www.tensorflow.org/tutorials/quickstart/beginner), which walks through loading a dataset, building a simple Keras model, and training/evaluating it. For a deeper, lower-level walkthrough, the [quickstart for experts](https://www.tensorflow.org/tutorials/quickstart/advanced) covers the same task using TensorFlow's more customizable API.
 
-Converting numpy data to tensor:
+> **Note:** if you've used TensorFlow before and your code still uses `tf.Session()`, `tf.placeholder`, or `tf.initialize_all_variables()` — that's the TensorFlow 1.x API, fully superseded by eager execution in TensorFlow 2.x. See Google's [Effective TensorFlow 2](https://www.tensorflow.org/guide/effective_tf2) guide and the official [migration guide](https://www.tensorflow.org/guide/migrate) if you need to update older code.
 
-		a=np.zeros((3,3))
-		t_a=tf.convert_to_tensor(a)
-		with tf.Session() as sess:
-			print(sess.run(t_a))
-
-For scalable variables for performing operations we can use `tf.placeholder` which defines a placeholder and provides entry points for the data to be viewed in a computational graph.  `feed_dict` is used in the below example to map from `tf.placeholder` variables to data (np arrays, list, etc).
-
-
-		input1= tf.placeholder(tf.float32)
-		input2 = tf.placeholder(tf.float32)
-		output = tf.multiply(input1, input2)
-		with tf.Session() as sess:
-			print(sess.run([output], feed_dict={input1:[7.], input2:[2.]}))
+*This quickbyte was validated on 6/22/2026*
