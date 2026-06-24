@@ -6,6 +6,8 @@ If you would like to check the status of your job, you can use the `squeue` comm
 
 ```bash
 squeue
+```
+```bash
  JOBID  PARTITION     NAME     USER   ST  TIME  NODES NODELIST(REASON)
  155161  bigmem       job1     usr1 PD  0:00      1  (Resources)
  155071  bigmem       job2     usr2  R  17:17:00  1  easley050
@@ -18,6 +20,8 @@ The output of `squeue` shows the job ID, partition, job name, job owner, job sta
 For example:
 ```bash
 squeue -j 155161
+```
+```bash
 JOBID PARTITION   NAME   USER   ST   TIME  NODES NODELIST(REASON)
 155161  bigmem    job1   user1  PD   0:00    1    (Resources)
 ```
@@ -34,6 +38,8 @@ If you would like to check which nodes your job is using, you can pass the `-j` 
 
 ```bash
 squeue -j 156510
+```
+```bash
  JOBID PARTITION     NAME     USER   ST     TIME  NODES NODELIST(REASON)
  156510   l40s     interact    usr   R       2:02     1   easley056
 ```
