@@ -117,11 +117,7 @@ Example output:
 
 ## Running MATLAB at Scale with Slurm
 
-Running large numbers of MATLAB jobs directly on login nodes is not recommended.
-
-Use Slurm to allocate compute resources.
-
-> Note: PBS is not supported on Easley. Although PBS may still be available on Hopper, we recommend using Slurm for all new workflows.
+Running large numbers of MATLAB jobs directly on login nodes is not recommended, so please use Slurm to allocate compute resources.
 
 Example Slurm submission script:
 
