@@ -8,7 +8,7 @@ This QuickByte describes msprime 1.0, which is a major update from the widely us
 
 ## How msprime Works ##
 
-[The paper describing msprime](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842) has been cited hundreds of time, but represents an extension of [the simulation program ms](https://academic.oup.com/bioinformatics/article/18/2/337/225783), which has been cited a couple thousand times. The goal of this extension is to scale simulations up to the large sample sizes of individuals and loci used in modern day genomic studies. Msprime's fast speed and ease of analysis is achieved by by adding novel ways of keeping track of geneologies being analyzed through sparse trees and coalescence records, collectively refer to ass tree sequences.
+[The paper describing msprime](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842) has been cited hundreds of time, but represents an extension of [the simulation program ms](https://academic.oup.com/bioinformatics/article/18/2/337/225783), which has been cited a couple thousand times. The goal of this extension is to scale simulations up to the large sample sizes of individuals and loci used in modern day genomic studies. Msprime's fast speed and ease of analysis is achieved by by adding novel ways of keeping track of geneologies being analyzed through sparse trees and coalescence records, collectively referred to as tree sequences.
 
 ## How to run msprime ##
 
@@ -80,13 +80,13 @@ And we'll add mutations like this, using a yearly rate of 2.3e-9 and a generatio
 
 ## Running MSPrime replicates on CARC ##
 
-It is best practice to run many replicates of any simulation you run to assess the robustness of any estimates you make. You can use [GNU Parallel (specifically env_parallel)](https://github.com/UNM-CARC/QuickBytes/blob/master/GNU%20Parallel.md) to run these simulations, and can add these replicates directly to an output file. The following examples your python simulation script takes population size (popsize) and population divergence time (divtime) and have an output file like "$popsize_$divtime.out" that the script writes to. First we'll run 30 replicates. Note that the "echo {}" just to deal with the parallel iterator, so GNU parallel doesn't append it to the end of our python call by default.
+It is best practice to run many replicates of any simulation you run to assess the robustness of any estimates you make. You can use [GNU Parallel (specifically env_parallel)](https://github.com/UNM-CARC/QuickBytes/blob/master/GNU%20Parallel.md) to run these simulations, and can add these replicates directly to an output file. In the following example the python simulation script takes population size (popsize) and population divergence time (divtime) and has an output file like "$popsize_$divtime.out" that the script writes to. First we'll run 30 replicates. Note that the "echo {}" is just to deal with the parallel iterator, so GNU parallel doesn't append it to the end of our python call by default.
 
 	env_parallel --sshloginfile $PBS_NODEFILE \
 		'echo {}; /path/to/python msprime_script.py --popsize 2000 --divtime 10000 \
 		--output ./outputs/1000_10000.out' ::: {1..30}
 
-You could also use GNU parallel to iterate over multiple parameter combinations, here we test multiple population sizes (2000, 3000, and 5000) and divergence times (1000, 5000, and 10000 generations). We'll assume the script has replicates coded into it.
+You could also use GNU parallel to iterate over multiple parameter combinations. Here we test multiple population sizes (2000, 3000, and 5000) and divergence times (1000, 5000, and 10000 generations). We'll assume the script has replicates coded into it.
 
 	env_parallel --sshloginfile $PBS_NODEFILE \
 		'/path/to/python msprime_script.py --popsize {1} --divtime {2} \
@@ -94,7 +94,7 @@ You could also use GNU parallel to iterate over multiple parameter combinations,
 
 ## Case study: Divergence between connected islands ##
 
-Here we look at three islands interconnected at glacial maxima, modeled after Choiseul, Isabel, and Guadalcanal of the Solomon Islands. These islands are arranged from west to east, with Guadalcanal arguably not being fully connected to the rest. Our goal is to assess [F<sub>ST</sub>](https://onlinelibrary.wiley.com/doi/10.1111/j.1558-5646.1984.tb05657.x) between islands, for which which will use the scikit-allel package. Empirically, we find that F<sub>ST</sub> between Isabel and Choiseul is much higher than between Guadalcanal and Isabel, consistent with the slight break between those two islands. However, F<sub>ST</sub> increases faster after divergence with lower population size, so we want to know what density of birds on Guadalcanal would be required to produce this result given knowledge that a density of 25 birds/km<sup>2</sup> produced the empirical F<sub>ST</sub> between Isabel and Choiseul. We will test 5 densities for Guadalcanal (5, 10, 15, 20, 25, and 30), each with 30 replicates, holding the population density on Isabel as a constant 25 birds/km<sup>2</sup>.
+Here we look at three islands interconnected at glacial maxima, modeled after Choiseul, Isabel, and Guadalcanal of the Solomon Islands. These islands are arranged from west to east, with Guadalcanal arguably not being fully connected to the rest. Our goal is to assess [F<sub>ST</sub>](https://onlinelibrary.wiley.com/doi/10.1111/j.1558-5646.1984.tb05657.x) between islands, for which which we will use the scikit-allel package. Empirically, we find that F<sub>ST</sub> between Isabel and Choiseul is much higher than between Guadalcanal and Isabel, consistent with the slight break between those two islands. However, F<sub>ST</sub> increases faster after divergence with lower population size, so we want to know what density of birds on Guadalcanal would be required to produce this result given knowledge that a density of 25 birds/km<sup>2</sup> produced the empirical F<sub>ST</sub> between Isabel and Choiseul. We will test 5 densities for Guadalcanal (5, 10, 15, 20, 25, and 30), each with 30 replicates, holding the population density on Isabel as a constant 25 birds/km<sup>2</sup>.
 
 First, we have to write our python script. We'll use the argparse module to hand our arguments. Note that we'll set Isabel as the first population and Guadalcanal as the second (in a more complete version we can take island names as input and have a function to determine their sizes). It will output the population size of the first (Isabel) and second (Guadalcanal) island along with the F<sub>ST</sub>.
 
@@ -148,7 +148,7 @@ First, we have to write our python script. We'll use the argparse module to hand
 	if __name__ == '__main__':
 		main()
 	
-Now that we have our scripted simulation, we'll write a PBS script to run it in parallel! We assumes you have a directory in your working directory called "output" and named your script "island_msp_twopop.py". We'll name files based on the denisty on Guadalcanal. We don't have it written in the script, but if you already have something in "output", this just appends to those files (i.e. "rm output\/*" beforehand). Note that this script excludes the header.
+Now that we have our scripted simulation, we'll write a PBS script to run it in parallel! We assumes you have a directory in your working directory called "output" and named your script "island_msp_twopop.py". We'll name files based on the density on Guadalcanal. We don't have it written in the script, but if you already have something in "output", this just appends to those files (i.e. "rm output\/*" beforehand). Note that this script excludes the header.
 	
 	# prepare GNU parallel
 	module load parallel-20170322-gcc-4.8.5-2ycpx7e
