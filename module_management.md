@@ -16,9 +16,15 @@ To load a module, use the `module load` command. For example, to load the module
 module load intel
 ```
 
-Another useful command related to module management is `module spider`. For example, if you issue the command `module spider intel`, you will see output similar to:
+Another useful command related to module management is `module spider`. For example, if you issue the command:
 
 ```bash
+module spider intel
+```
+
+you will see output similar to:
+
+```
 --------------------------------------------------------------------------------------------------------------------
   intel:
 --------------------------------------------------------------------------------------------------------------------
@@ -45,9 +51,13 @@ To see all currently loaded modules, use the command `module list`. As an exampl
 
 ```bash
 module load openmpi gcc
+```
+
+```bash
 module list
 ```
-```bash
+
+```
 Currently Loaded Modules:
   1) miniconda3/latest             3) gcc/14.2.0-j33x             5) openmpi/4.1.7-762w
   2) binutils/2.43.1-ifi2qjn (H)   4) openssh/9.9p1-d4o73h6 (H)
@@ -55,22 +65,37 @@ Currently Loaded Modules:
    H:  Hidden Module
 ```
 
-Modules are usually loaded as part of a Slurm script, and that environment doesn't persist beyond the job, so `module avail` and `module load` are the main commands you'll be using day to day. However, if you're working on a node interactively, you may need to unload modules manually. The command `module unload modulename` unloads modules one at a time — for example, after loading the modules above, `module unload openssh` unloads only OpenSSH, leaving the rest of your loaded modules intact:
+Modules are usually loaded as part of a Slurm script, and that environment doesn't persist beyond the job, so `module avail` and `module load` are the main commands you'll be using day to day. However, if you're working on a node interactively, you may need to unload modules manually. The command `module unload modulename` unloads modules one at a time — for example, after loading the modules above:
 
 ```bash
 module unload openssh
+```
+
+```
 Lmod Warning: 
 --------------------------------------------------------------------------------------------------------
 The following dependent module(s) are not currently loaded: openssh/9.9p1-d4o73h6 (required by:
 openmpi/4.1.7-762w)
 --------------------------------------------------------------------------------------------------------
+```
+
+This warning is expected and can be safely ignored — Lmod is just noting that OpenMPI normally depends on OpenSSH, but it doesn't stop the module from being unloaded. Running `module list` again confirms OpenSSH is gone while the rest remain loaded:
+
+```bash
 module list
+```
+
+```
 Currently Loaded Modules:
   1) binutils/2.43.1-ifi2qjn (H)   2) gcc/14.2.0-j33x   3) openmpi/4.1.7-762w
   Where:
    H:  Hidden Module
 ```
 
-This warning is expected and can be safely ignored — Lmod is just noting that OpenMPI normally depends on OpenSSH, but it doesn't stop the module from being unloaded. To unload all modules at once, use the command `module purge`.
+To unload all modules at once, use the command:
+
+```bash
+module purge
+```
 
 *This quickbyte was validated on 6/22/2026*
