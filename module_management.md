@@ -8,7 +8,7 @@ For more information, visit [this page](https://lmod.readthedocs.io/en/latest/01
 
 ### Using modules to set application environments
 
-Modules are used to set environment variables and dependencies for the purpose of managing access to applications and libraries on CARC systems. The command `module avail` lists all the modules available on the system you are logged in to. Note that this list can be extremely long — if you'd like to stop it from printing, use Ctrl+C (this works the same way on Mac, Windows, and Linux terminals, since you're connected to a remote Linux system either way).
+Modules are used to set environment variables and dependencies for the purpose of managing access to applications and libraries on CARC systems. The command `module avail` lists all the modules available on the system you are logged into. Note that this list can be extremely long — if you'd like to stop it from printing, use Ctrl+C (this works the same way on Mac, Windows, and Linux terminals, since you're connected to a remote Linux system either way).
 
 To load a module, use the `module load` command. For example, to load the module for the Intel compiler, use the command:
 
@@ -97,5 +97,71 @@ To unload all modules at once, use the command:
 ```bash
 module purge
 ```
+
+### Checking job resource utilization with `jobeff` and `seff`
+
+Requesting the right amount of CPU and memory for a job is closely tied to module and software setup, since over- or under-requesting resources wastes either your queue time or shared cluster capacity. Easley provides two commands to help you spot mismatches between what you requested and what your job actually used.
+
+For a currently running job, use `jobeff` to compare real-time CPU and memory utilization against your Slurm allocation. Run it with no arguments to see all of your currently running jobs:
+
+```bash
+jobeff
+```
+
+```
+[##############################] 100% (1/1) Done
+
+ [###############               ]  50% (1/2) Round 1/1: your_username (6 pids on 1 node
+
+[##############################] 100% (2/2) Done
+Samples: 1 completed as a single sample using a 5s window.
+NODE          USER          PARTITIONS          JOBS  ALLOC_CPU   BUSY_CPU   CPU_EFF%  ALLOC_GPU  GPU_PROCS      VRAM%   ALLOC_MEM          MEM_USED   MEM_EFF%     PROCS          LOCAL_IO            NET_IO
+easley0XX     your_username l40s                   1       16.0       0.22        1.4        1.0          0        0.0    32.0 GiB         560.4 MiB        1.7         5         2.5 MiB/s         6.1 MiB/s
+```
+
+The same output, broken out for readability:
+
+| Field | Value | Meaning |
+|---|---|---|
+| Node | `easley0XX` | Node the job is running on |
+| Partition | `l40s` | GPU partition used |
+| Allocated CPUs | 16.0 | CPUs requested |
+| Busy CPUs | 0.22 | CPUs actually in use |
+| **CPU Efficiency** | **1.4%** | Busy ÷ allocated CPU |
+| Allocated GPUs | 1.0 | GPUs requested |
+| GPU Processes | 0 | Processes currently using the GPU |
+| VRAM Usage | 0.0% | GPU memory in use |
+| Allocated Memory | 32.0 GiB | Memory requested |
+| Memory Used | 560.4 MiB | Memory actually in use |
+| **Memory Efficiency** | **1.7%** | Used ÷ allocated memory |
+| Processes | 5 | Active process count |
+| Local I/O | 2.5 MiB/s | Disk read/write rate |
+| Network I/O | 6.1 MiB/s | Network transfer rate |
+
+In this example, the job requested 16 CPUs but is only using a small fraction of that (`CPU_EFF%` of 1.4) and barely touching its 32 GiB memory allocation (`MEM_EFF%` of 1.7) — a sign that future submissions of this job could likely request far fewer resources.
+
+Once a job has finished, use `seff` to get the same kind of comparison for the completed run:
+
+```bash
+seff <jobID>
+```
+
+```
+Job ID: <jobID>
+Cluster: easley
+User/Group: your_username/your_username
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:01:10
+CPU Efficiency: 8.41% of 00:13:52 core-walltime
+Job Wall-clock time: 00:00:52
+Memory Utilized: 4.34 GB
+Memory Efficiency: 13.57% of 32.00 GB (32.00 GB/node)
+```
+
+Here too, the job finished using only 8.41% of its requested CPU time and 13.57% of its requested memory — both strong indicators that the next submission of this job could request fewer cores and less memory, freeing up those resources for other jobs (including your own) and likely reducing queue wait times.
+
+Both commands are useful for catching allocation vs. usage mismatches — for example, requesting 16 CPUs but only using 2, or requesting far more memory than the job ever touches. Adjusting future job submissions based on this feedback helps your jobs queue faster and leaves more resources available for other users.
 
 *This quickbyte was validated on 6/22/2026*
