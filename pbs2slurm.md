@@ -23,7 +23,7 @@ Additional references:
 The table below lists commonly used PBS commands and their Slurm equivalents.
 
 | PBS Command             | Slurm Command                | Description                                     |
-| ----------------------- | ---------------------------- | ----------------------------------------------- |
+| ----------------------- | ----------------------------- | ----------------------------------------------- |
 | `qsub <job_script.pbs>` | `sbatch <job_script.slurm>`  | Submit a batch job                              |
 | `qsub -I <options>`     | `salloc <options>`           | Request an interactive job                      |
 | `qstat -u <user>`       | `squeue -u <user>`           | Display jobs submitted by a user                |
@@ -67,12 +67,22 @@ Common resource allocation options are shown below.
 
 ---
 
+## Running Commands with `srun`
+
+In Slurm, program execution lines within a batch script should generally be prefixed with `srun`. This ensures the command is properly launched on the allocated compute resources (rather than just on the node that happens to execute the script), and lets Slurm track and account for the resources that command actually uses. For single-task jobs the difference may not be obvious, but for multi-task or multi-node jobs, omitting `srun` can cause your program to run incorrectly or only on a single task/node instead of being distributed as requested.
+
+```bash
+srun python test.py
+```
+
+---
+
 ## Environment Variables
 
 PBS and Slurm expose similar environment variables during job execution.
 
 | PBS Variable        | Slurm Variable        | Description                                |
-| ------------------- | --------------------- | ------------------------------------------ |
+| ------------------- | ---------------------- | ------------------------------------------ |
 | `$PBS_O_HOST`       | `$SLURM_SUBMIT_HOST`  | Host where the job was submitted           |
 | `$PBS_JOBID`        | `$SLURM_JOB_ID`       | Job ID                                     |
 | `$PBS_O_WORKDIR`    | `$SLURM_SUBMIT_DIR`   | Directory from which the job was submitted |
@@ -103,7 +113,7 @@ Below is a sample PBS script that runs `test.py`.
 
 cd "$PBS_O_WORKDIR"
 
-srun python test.py
+python test.py
 ```
 
 ---
@@ -117,14 +127,14 @@ The equivalent Slurm script is:
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=01:00:00
+#SBATCH --time=00:05:00
 #SBATCH --job-name=test
 #SBATCH --output=test.out
 #SBATCH --error=test.err
-#SBATCH --mail-type=BEGIN,FAIL,END
-#SBATCH --mail-user=user@unm.edu
 
 cd "$SLURM_SUBMIT_DIR"
+
+module load miniconda3
 
 srun python test.py
 ```
@@ -135,4 +145,4 @@ Submit the job with:
 sbatch job_script.slurm
 ```
 
-*This QuickByte was validated on 6/23/2026*
+*This quickbyte was validated on 6/25/2026*
