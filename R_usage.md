@@ -24,7 +24,7 @@ Note: Some versions of R may have compiler dependencies and require a compiler m
 
 After loading the R module, begin R programming by typing
 
-`R`
+`srun --pty R`
 
 This will show
 
