@@ -42,12 +42,15 @@ me.
 ```
 This command returns much more detailed information on a module of interest. You can see that there are actually multiple versions of the Intel compilers available for use, as is the case for most software installed on CARC systems.
 
-To see all currently loaded modules use the command `module list`. As an example, lets load the software module for openmpi and gcc, and then use `module list`:
+To see all currently loaded modules use the command `module list`. For example, load the software module for openmpi and gcc using `module load openmpi gcc`, and then use `module list`:
 
 ```bash
 module load openmpi gcc
+module list
 Currently Loaded Modules:
   1) gcc/14.1.0-vgbo   2) openmpi/5.0.6-lcny
 ```
 
 Usually, modules are loaded as part of Slurm script and subsequently unloaded automatically after the completion of that Job, so `module avail` and `module load` are the main commands you will be using. However, if you are working on a node interactively you may need to unload modules manually. The command `module unload modulename` will unload modules one at a time, for example `module unload ncurses-6.0-intel-18.0.2-crfixrx` only unloads ncurses but leaves the rest of the modules still loaded. To unload all modules use the command `module purge`.
+
+*This quickbyte was validated on 6/26/2026*
