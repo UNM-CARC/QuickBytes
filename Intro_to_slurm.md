@@ -22,7 +22,7 @@ Example :
     biocomp      up 7-00:00:00      1  alloc hopper052
 
 
-From the output above we can see that one node (taos02) is allocated under a normal partition. Similarly, we can see that two nodes (taos01 and taos09) are in a mixed state meaning multiple users have resources allocated on the same node. The final line in the output shows that all other nodes (taos03-08) are currently idle.
+From the output above we can see that two nodes (hopper002-003) are allocated under a general partition. Similarly, we can see another node (hopper017) is in a mixed state, meaning multiple users have resources allocated on the same node. We can also see which nodes are idle, for example in the second to last line (hopper 046,048). 
 
 From the output above, we can see that 2 nodes on the general partition are allocated, and 8 are idle. The corresponding node id's are also listed. In this case, hopper002 and hopper003 specifically are the ones which are allocated on the general partition.
 
@@ -41,7 +41,7 @@ From the output above, we can see that 2 nodes on the general partition are allo
     hopper008      1  general*        idle 32     2:16:1  95027        0      1   (null) none
 
 
-More information regarding `sinfo` can be found by typing `man sinfo` at the command prompt while logged in to Hopper.
+More information regarding `sinfo` can be found by typing `man sinfo` in the command prompt while logged into a CARC machine.
 
 `squeue` provides information regarding currently running jobs and the resources allocated to those jobs. 
 
@@ -63,7 +63,7 @@ To cancel a job, you can use `scancel <JOBID>` where `<JOBID>` refers to the Job
 
 ## Slurm Job Submission
 
-To submit a job in slurm you do so by submitting a shell script that outlines the resources you are requesting from the scheduler, the software needed for your job, and the commands you wish to run. The beginning of your submission scrip usually contains the #Hashbang specifying which interpreter should be used for the rest of the script, in this case we are using a `bash` shell as indicated by the code `#!/bin/bash`. The next portion of your submission script tells Slurm what resources you are requesting and is always preceeded by `#SBATCH` followed by flags for various parameters detailed below.
+To submit a job in slurm you do so by submitting a shell script that outlines the resources you are requesting from the scheduler, the software needed for your job, and the commands you wish to run. The beginning of your submission script usually contains the #Hashbang specifying which interpreter should be used for the rest of the script, in this case we are using a `bash` shell as indicated by the code `#!/bin/bash`. The next portion of your submission script tells Slurm what resources you are requesting and is always preceeded by `#SBATCH` followed by flags for various parameters detailed below.
 
 
 Example of a Slurm submission script : `slurm_submission.slurm`
@@ -86,13 +86,13 @@ The above script will request 4 cpu cores with 100MB of memory per cpu core. It 
 
 The arguments `–-job-name` and `–-output` correspond to name of the job you are submitting and the name of the output file where the any output not defined by the program being executed is saved. For example, anything printed to `stdout` will be saved in your `--output` file. 
 
-Of note here is the `--partition=general` (or `-p general`) command. This command specifies which partition, or queue, to submit your job to. If you are a member of a specific partition you likely are aware of the name of your partition, however you can see which partition you have access to with the `sinfo` command. If you leave this blank you will be submitted to the default or community partition. 
+Of note here is the `--partition=general` (or `-p general`) command. This command specifies which partition, or queue, to submit your job to. If you are a member of a specific partition, you likely are aware of the name of your partition; however, you can see which partition you have access to with the `sinfo` command. If you leave this blank, you will be submitted to the default or community partition. 
 
-To submit the job you execute the `sbatch` command followed by the name of your submission script, for example:
+To submit the job, you execute the `sbatch` command followed by the name of your submission script, for example:
 
 `sbatch submission.slurm`
 
-Once you execute the above command the job is queued until the requested resources are available for to be allocated to your job. 
+Once you execute the above command the job is queued until the requested resources are available to be allocated to your job. 
 
 Below is an example of a Slurm submission script that runs a small python program that takes an integer as an argument, creates a random number matrix with the dimensions defined by the integer you provided, then inverts that matrix and writes it to a CSV file. 
 
