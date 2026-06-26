@@ -1,6 +1,6 @@
 # Checking on running jobs
 ### Checking on the status of your Job:
-If you would like to check the status of your job, you can use the `squeue` command to do so. Typing `squeue` without any options will output all currently running or queued jobs to your terminal window, but there are many options to help display relevant information. To find more of these options type `man squeue` when logged in to a CARC machine. To see which jobs are running and queued in the standard output type the following in a terminal window:
+If you would like to check the status of your job, you can use the `squeue` command to do so. Typing `squeue` without any options will output all currently running or queued jobs to your terminal window, but there are many options to help display relevant information. To find more of these options type `man squeue` when logged in to a CARC machine. To see which jobs are running and queued in the standard output, type 'squeue' in a terminal window:
 
 ```bash
 squeue
@@ -36,7 +36,7 @@ squeue -j  156510
 Here, the node that this job is running is easley056.
  
 ### Viewing Output and Error Files:
-Once your job has completed, you should see two files, one output file and one error file, in the directory from which you submitted the Job: slurm-JobID.out and slurm-JobID.err (where JobID refers to the ID of the Job returned by `sbatch`.  
+Once your job has completed, you should see two files, one output file and one error file, in the directory from which you submitted the Job: slurm-JobID.out and slurm-JobID.err (where JobID refers to the ID of the Job returned by `sbatch`).  
 For the example job above, these two files would be named `slurm-155161.out` and `slurm-155161.err` respectively.  
 Any output from the job sent to “standard output” will be written to the output file, and any output sent to “standard error” will be written to the error file. The amount of information in the output and error files varies depending on the program being run and how the sbatch batch script was set up. 
 
