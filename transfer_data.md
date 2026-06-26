@@ -17,7 +17,7 @@ FileZilla is available for both Windows and Unix systems, whereas WinSCP is Wind
 
 ### Command-line interface (CLI) options
 
-For larger files, it is recommended that you use one of several programs implemented as a command-line interface. These programs have several benefits over their GUI-based counterparts, including higher transfer speeds and the ability to resume a transfer if it is interrupted, without having to restart from the beginning. Below are two popular options with example commands and links for more advanced usage.
+For larger files, it is recommended that you use one of several programs implemented as a command-line interface. These programs have several benefits over their GUI-based counterparts, including higher transfer speeds and the ability to resume a transfer if it is interrupted, without having to restart from the beginning. This kind of file transfer must be done from a local terminal. This means if you are remotely logged into a cluster, you will need to open a new local terminal to complete the file transfer. Below are two popular options with example commands and links for more advanced usage.
 
 #### Secure Copy (SCP)
 
