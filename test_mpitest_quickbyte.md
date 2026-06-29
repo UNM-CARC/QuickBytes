@@ -2,12 +2,7 @@
 
 ## Software Description
 
-MPI Test demonstrates running a compact MPI workload under Slurm. This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the `debug` partition and serve as a starting point for adapting the application to a real research workload.
-
-Passing test-program examples used for this stub:
-
-- `mpitest/slurm/mpi_test.slurm`: `pass`, job `806464`, elapsed `00:00:02`, CPUs `4`
-- `mpitest/slurm/wheelie_mpi_test.slurm`: `pass`, job `806465`, elapsed `00:00:03`, CPUs `4`
+MPI, the Message Passing Interface, is a standard way to run one program across multiple processes, often spread across multiple compute nodes. MPI jobs are common in scientific computing when a calculation can be divided among ranks that communicate with each other. This QuickByte builds a tiny MPI program inside the job and runs it across two Easley debug nodes.
 
 ## Example Slurm Script
 
@@ -28,46 +23,75 @@ Save the following as `mpi_test.slurm` in the example directory and submit it wi
 #SBATCH --time=00:05:00
 #SBATCH --partition=debug
 
-# Test harness: fail fast on errors, unset variables, or failed pipeline commands.
+# Fail fast on errors, unset variables, or failed pipeline commands.
 set -euo pipefail
-# Test harness: locate the mpitest directory when submitted from slurm/ or repo root.
-cd "${SLURM_SUBMIT_DIR:-$PWD}"
-if [[ -d ../source && -f ./mpi_test.slurm ]]; then
-    cd ..
-elif [[ -d mpitest/source ]]; then
-    cd mpitest
-fi
 
-# Fundamental: load an MPI implementation.
+# Create a clean per-job output directory inside the submission directory.
+submit_dir="${SLURM_SUBMIT_DIR:-$PWD}"
+run_dir="$submit_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
+rm -rf "$run_dir"
+mkdir -p "$run_dir"
+cd "$run_dir"
+
+# Load an MPI implementation.
 module load openmpi
 
-# Test harness: build a job-ID-specific executable so simultaneous runs do not collide.
-SIEVE_EXE="./sieve-${SLURM_JOB_ID}"
-# Test harness: delete the temporary executable when the job exits.
-trap 'rm -f "$SIEVE_EXE"' EXIT
-# Fundamental: compile the MPI source code.
-make -C source OUTPUT="../${SIEVE_EXE#./}"
+# Write a compact MPI program that counts primes up to a user-supplied limit.
+cat > mpi_sieve.c <<'EOF'
+#include <mpi.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-# Fundamental: launch the MPI program with one rank per Slurm task.
-# Test harness: /usr/bin/time -v records resource use in the job log.
-/usr/bin/time -v srun -n "${SLURM_NTASKS}" "$SIEVE_EXE" 10000000
+static int is_prime(int n) {
+    if (n < 2) return 0;
+    for (int d = 2; d <= (int)sqrt((double)n); d++) {
+        if (n % d == 0) return 0;
+    }
+    return 1;
+}
+
+int main(int argc, char **argv) {
+    MPI_Init(&argc, &argv);
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    int limit = argc > 1 ? atoi(argv[1]) : 100000;
+    int local_count = 0;
+    for (int n = 2 + rank; n <= limit; n += size) {
+        local_count += is_prime(n);
+    }
+
+    int total_count = 0;
+    MPI_Reduce(&local_count, &total_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    if (rank == 0) {
+        printf("Found %d primes up to %d using %d MPI ranks\n", total_count, limit, size);
+    }
+    MPI_Finalize();
+    return 0;
+}
+EOF
+
+# Compile the MPI source code.
+mpicc -O2 mpi_sieve.c -lm -o mpi_sieve
+
+# Launch the MPI program with one rank per Slurm task.
+srun -n "${SLURM_NTASKS}" ./mpi_sieve 100000
 ```
 
 The important Slurm resource lines are the `#SBATCH` directives near the top of the script. They request the debug partition, a small amount of time, and the CPU, memory, node, or GPU resources needed by this smoke test. The `module load` commands prepare the software environment, and `srun` is used when the application should be launched through Slurm across allocated tasks.
 
 ## Example output
 
-The following abbreviated result is from the Easley debug regression run used to validate this example.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. The job output should include a line showing how many primes were found and how many MPI ranks were used.
 
 ```text
-Script: mpitest/slurm/mpi_test.slurm
-Job ID: 806464
 Slurm state: COMPLETED
 Exit code: 0:0
-Elapsed time: 00:00:02
 Allocated nodes: 2
 Allocated CPUs: 4
-Result: pass
+Example application output: Found 9592 primes up to 100000 using 4 MPI ranks
 ```
 
-For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and any application-specific checks in the script should pass.
+For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and the application output should report the expected four MPI ranks.
