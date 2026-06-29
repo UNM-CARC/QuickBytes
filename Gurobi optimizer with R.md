@@ -1,31 +1,35 @@
 # Gurobi optimizer with R
 
 [Gurobi optimizer](https://www.gurobi.com/products/gurobi-optimizer/) is a problem solving software that can be used within R. It can solve integer, linear, and quadratic
-programming optimizations. These techniques can help to find the answers to complex models. 
+programming optimizations. These techniques can be helpful for finding the answers to complex models. 
 
 
 ## Example of running Gurobi optimizer with R at CARC
 
-There are modules for both Gurobi and R on the wheeler cluster. All you need to do is load them, and then start an R
-session. This command is for version 8.1.0, however there are other versions of gurobi available (enter `module avail gurobi` to see a full list).
+There are modules for both Gurobi and R on the Hopper cluster. All you need to do is load them, and then start an R
+session. This command is for running version 9.1.0, the default version of Gurobi on Hopper. However, there are other versions of Gurobi available (enter `module avail gurobi` to see a full list).
 ```
-username@wheeler-sn:~$ module load gurobi/8.1.0
-username@wheeler-sn:~$ module load r-3.6.0-gcc-7.3.0-python2-7akol5t
-username@wheeler-sn:~$ R
+username@hopper ~$ module load gurobi/9.1.0
+username@hopper ~$ module load r
+username@hopper ~$ srun --pty R
 ```
 Once you have started an R session, you can install packages just as you would in R. If you ever run into issues loading 
-packages in R at CARC, you can reach out for assistance by emailling help@carc.unm.edu. One piece of advice if you are using 
-JupyterHub to run an R notebook at CARC is you may need to install packages from ther terminal window on JupyterHub because 
-the notebook will not let you interactiively answer questions installs may need. 
+packages in R at CARC, you can reach out for assistance by emailing help@carc.unm.edu. One piece of advice if you are using 
+JupyterHub to run an R notebook at CARC is that you may need to install packages from the terminal window on JupyterHub because 
+the notebook will not let you interactively answer questions installs may need. 
 
-Start by installing the gurobi package:
+Start by installing the Gurobi package:
 ```
-> install.packages('/opt/local/gurobi/8.1.0/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz')
-Installing package into '/users/username/R/x86_64-pc-linux-gnu-library/3.6'
+> install.packages('/opt/local/gurobi/9.1.0/linux64/R/gurobi_9.1-0_R_4.0.2.tar.gz')
+```
+If prompted to use a personal library, type `yes`. This will prompt you once more asking if you would like to create a personal library into your home directory. Type `yes` once more. Below is the expected output:
+```
+inferring 'repos = NULL' from 'pkgs'
 * installing *binary* package 'gurobi' ...
 * DONE (gurobi)
+>
 ```
-You should now be able to load the gurobi library in an R session:
+You should now be able to load the Gurobi library in an R session:
 ```
 > library(gurobi)
 Loading required package: slam
@@ -34,7 +38,13 @@ Note that if you get an error regarding slam, you can install it using the comma
 ```
 install.packages("slam", repos = "https://cloud.r-project.org")
 ```
-Now let's runs a quick model as an example of what Gurobi can do and to see if everything is working properly: 
+If you get an error regarding Matrix, you can install it using the command:
+```
+install.packages("Matrix", repos = "https://cloud.r-project.org")
+```
+
+
+Now let's run a quick model as an example of what Gurobi can do and to see if everything is working properly: 
 ```
 > model <- list()
 > model$A          <- matrix(c(1,2,3,1,1,0), nrow=2, ncol=3, byrow=T)
