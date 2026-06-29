@@ -2,11 +2,7 @@
 
 ## Software Description
 
-Seqtk provides lightweight FASTA/FASTQ tools. This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the `debug` partition and serve as a starting point for adapting the application to a real research workload.
-
-Passing test-program examples used for this stub:
-
-- `seqtk/single-node/slurm-test.sh`: `pass`, job `806485`, elapsed `00:00:01`, CPUs `1`
+SeqTK is a lightweight command-line toolkit for working with FASTA and FASTQ sequence files. It can convert between formats, trim reads, sample reads, and perform other common preprocessing steps used in genomics workflows. This QuickByte uses a tiny FASTQ file and converts it to FASTA so you can see the basic Slurm pattern without needing a large sequencing dataset.
 
 ## Example Slurm Script
 
@@ -28,25 +24,20 @@ Save the following as `slurm-test.sh` in the example directory and submit it wit
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
 
-# Test harness: fail fast on errors, unset variables, or failed pipeline commands.
+# Fail fast on errors, unset variables, or failed pipeline commands.
 set -euo pipefail
 
-# Test harness: locate this example directory when submitted from the repo root.
-script_dir="${SLURM_SUBMIT_DIR:-$PWD}"
-if [[ -d "$script_dir/seqtk/single-node" ]]; then
-    script_dir="$script_dir/seqtk/single-node"
-fi
-
-# Test harness: create a clean per-job output directory so runs do not collide.
-run_dir="$script_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
+# Create a clean per-job output directory inside the submission directory.
+submit_dir="${SLURM_SUBMIT_DIR:-$PWD}"
+run_dir="$submit_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
 rm -rf "$run_dir"
 mkdir -p "$run_dir"
 cd "$run_dir"
 
-# Fundamental: load SeqTK.
+# Load SeqTK.
 module --ignore-cache load seqtk/1.4-qhos
 
-# Test harness: write a tiny FASTQ input.
+# Write a tiny FASTQ input.
 cat > reads.fq <<'EOF'
 @read1
 ACGTACGT
@@ -58,11 +49,12 @@ TTTTCCCC
 HHHHHHHH
 EOF
 
-# Fundamental: convert FASTQ to FASTA.
+# Convert FASTQ to FASTA.
 seqtk seq -A reads.fq > reads.fa
-# Test check: confirm both reads are present in FASTA output.
+
+# Confirm both reads are present in FASTA output.
 test "$(grep -c '^>' reads.fa)" -eq 2
-# Test check: confirm read1 appears as a FASTA header.
+# Confirm read1 appears as a FASTA header.
 grep -q ">read1" reads.fa
 ```
 
@@ -70,17 +62,14 @@ The important Slurm resource lines are the `#SBATCH` directives near the top of 
 
 ## Example output
 
-The following abbreviated result is from the Easley debug regression run used to validate this example.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. The job directory under `outputs/` should contain the original `reads.fq` file and the converted `reads.fa` file.
 
 ```text
-Script: seqtk/single-node/slurm-test.sh
-Job ID: 806485
 Slurm state: COMPLETED
 Exit code: 0:0
-Elapsed time: 00:00:01
 Allocated nodes: 1
 Allocated CPUs: 1
-Result: pass
+Expected files: reads.fq, reads.fa
 ```
 
-For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and any application-specific checks in the script should pass.
+For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and the checks in the script should pass.
