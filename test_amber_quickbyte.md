@@ -2,16 +2,7 @@
 
 ## Software Description
 
-Amber provides molecular simulation tools for biomolecules. This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the `debug` partition and serve as a starting point for adapting the application to a real research workload.
-
-Passing test-program examples used for this stub:
-
-- `amber/gibbs.slurm`: `pass`, job `806440`, elapsed `00:03:02`, CPUs `4`
-- `amber/pmemd/cuda/slurm-test.sh`: `pass`, job `806441`, elapsed `00:00:10`, CPUs `1`
-- `amber/pmemd/muti-node/slurm-test.sh`: `pass`, job `806442`, elapsed `00:03:09`, CPUs `4`
-- `amber/pmemd/single-node/slurm-test.sh`: `pass`, job `806443`, elapsed `00:02:59`, CPUs `4`
-- `amber/ambertools/muti-node/slurm-test.sh`: `pass`, job `806438`, elapsed `00:00:04`, CPUs `4`
-- `amber/ambertools/single-node/slurm-test.sh`: `pass`, job `806439`, elapsed `00:00:02`, CPUs `1`
+Amber is a suite of molecular simulation programs commonly used for biomolecules such as proteins, nucleic acids, and small molecules. Amber workflows usually start from topology and coordinate files prepared for a specific molecular system, then run minimization, equilibration, or production molecular dynamics. This QuickByte shows the Slurm pattern for a short MPI `pmemd` run; replace the example topology and restart filenames with files from your own prepared Amber system.
 
 ## Example Slurm Script
 
@@ -22,13 +13,13 @@ Save the following as `gibbs.slurm` in the example directory and submit it with 
 # Run this file with: sbatch gibbs.slurm
 # This script demonstrates a two-node MPI PMEMD run.
 
-# Give the job a recognizable scheduler name; all suite jobs begin with test-.
+# Give the job a recognizable scheduler name.
 #SBATCH --job-name=test-amber-pmemd
 # Write standard output to a file named with the job name and Slurm job ID.
 #SBATCH --output=%x-%j.out
 # Write standard error to a matching file; this helps diagnose failed jobs.
 #SBATCH --error=%x-%j.err
-# Use the debug partition because this is an instructional/regression test.
+# Use the debug partition for this short instructional example.
 #SBATCH --partition=debug
 # Allow enough time for the short PMEMD molecular dynamics run.
 #SBATCH --time=00:10:00
@@ -39,32 +30,37 @@ Save the following as `gibbs.slurm` in the example directory and submit it with 
 # Reserve memory for the small molecular dynamics system.
 #SBATCH --mem=4G
 
-# Test harness: fail fast on errors, unset variables, or failed pipeline commands.
+# Fail fast on errors, unset variables, or failed pipeline commands.
 set -euo pipefail
-# Test harness: locate the Amber directory when submitted from the repo root or
-# from inside amber/.
-script_dir="${SLURM_SUBMIT_DIR:-$PWD}"
-if [[ -f "$script_dir/amber/gibbs.slurm" ]]; then
-    script_dir="$script_dir/amber"
+
+# Start from the directory where you submitted the job. This directory should
+# contain system.prmtop and system.rst7, or you should edit the filenames below.
+submit_dir="${SLURM_SUBMIT_DIR:-$PWD}"
+topology="$submit_dir/system.prmtop"
+restart="$submit_dir/system.rst7"
+
+if [[ ! -f "$topology" || ! -f "$restart" ]]; then
+    echo "Missing Amber input files." >&2
+    echo "Expected: $topology" >&2
+    echo "Expected: $restart" >&2
+    echo "Edit the script to point at your prepared Amber topology and restart files." >&2
+    exit 2
 fi
 
-# Test harness: create a clean per-job output directory so runs do not collide.
-run_dir="$script_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
-# Test harness: remove any stale directory with the same job-derived name.
+# Create a clean per-job output directory so runs do not collide.
+run_dir="$submit_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
 rm -rf "$run_dir"
-# Test harness: create the output directory.
 mkdir -p "$run_dir"
-# Fundamental: run PMEMD from the per-job directory so outputs stay contained.
 cd "$run_dir"
 
-# Fundamental: reset modules and load AmberTools plus the CPU MPI PMEMD build.
+# Reset modules and load AmberTools plus the CPU MPI PMEMD build.
 module purge
 module load amber/ambertools/25
 module load amber/pmemd/cpu/24
 
-# Test harness: write a short PMEMD input file for the regression run.
+# Write a short PMEMD input file.
 cat > test-pmemd.in <<'EOF'
-TX Motif short PMEMD regression run
+Short PMEMD example run
  &cntrl
   imin=0, irest=1, ntx=5,
   ntb=2, iwrap=1, pres0=1.0, ntp=1, taup=2.0,
@@ -76,16 +72,16 @@ TX Motif short PMEMD regression run
  /
 EOF
 
-# Fundamental: launch PMEMD.MPI with one rank per Slurm task.
+# Launch PMEMD.MPI with one rank per Slurm task.
 srun -n "${SLURM_NTASKS}" pmemd.MPI -O \
     -i test-pmemd.in \
     -o prod.out \
-    -p "$script_dir/data/TXM-wbions.prmtop" \
-    -c "$script_dir/data/TXM-wbions-prod5-r1.rst" \
+    -p "$topology" \
+    -c "$restart" \
     -r prod.rst \
     -x prod.nc
 
-# Test check: confirm the run reached the requested final MD step.
+# Confirm the run reached the requested final MD step.
 grep -q "NSTEP =     1000" prod.out
 ```
 
@@ -93,17 +89,14 @@ The important Slurm resource lines are the `#SBATCH` directives near the top of 
 
 ## Example output
 
-The following abbreviated result is from the Easley debug regression run used to validate this example.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. The output directory should contain `prod.out`, `prod.rst`, and `prod.nc`. The script also checks that `prod.out` reached `NSTEP =     1000`.
 
 ```text
-Script: amber/gibbs.slurm
-Job ID: 806440
 Slurm state: COMPLETED
 Exit code: 0:0
-Elapsed time: 00:03:02
 Allocated nodes: 2
 Allocated CPUs: 4
-Result: pass
+Expected files: prod.out, prod.rst, prod.nc
 ```
 
-For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and any application-specific checks in the script should pass.
+For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and the checks in the script should pass.
