@@ -6,7 +6,13 @@ SeqTK is a lightweight command-line toolkit for working with FASTA and FASTQ seq
 
 ## Example Slurm Script
 
-Save the following as `slurm-test.sh` in the example directory and submit it with `sbatch slurm-test.sh`.
+First, log in to easley via SSH.
+
+`ssh user@easley.alliance.unm.edu`
+
+Next, navigate to the directory where you would like to work by running `cd <directory name>`. If you are following along with the tutorial then use the `example` directory. If you do not have an example directory then you can make one with `mkdir example`, then navigate inside the directory.
+
+Then, create the script in that directory. To do this we will use a text editor. You are able to use whatever editor you prefer; however, this tutorial will use nano. Run `nano slurm-test.sh` to create the file. Then, copy the following text and paste it into the file by right-clicking in the terminal (or by using your terminal's paste shortcut).
 
 ```bash
 #!/bin/bash -l
@@ -57,12 +63,25 @@ test "$(grep -c '^>' reads.fa)" -eq 2
 # Confirm read1 appears as a FASTA header.
 grep -q ">read1" reads.fa
 ```
-
 The important Slurm resource lines are the `#SBATCH` directives near the top of the script. They request the debug partition, a small amount of time, and the CPU, memory, node, or GPU resources needed by this smoke test. The `module load` commands prepare the software environment, and `srun` is used when the application should be launched through Slurm across allocated tasks.
+
+Save the file using `Ctrl + X`, then type `y` when prompted. Then, in the terminal use `sbatch slurm-test.sh` to submit the script.
 
 ## Example output
 
-After the job finishes, Slurm should report a completed job with exit code `0:0`. The job directory under `outputs/` should contain the original `reads.fq` file and the converted `reads.fa` file.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. To check this use `squeue` for running jobs and `sacct -j <jobid>` for completed jobs.
+
+The `outputs` directory within your `example` directory will contain another directory. This directory has the original `reads.fq` file and the converted `reads.fa` file in it.
+
+The `reads.fa` file will contain (Use `cat reads.fa` to look at the file):
+
+```text
+>read1
+ACGTACGT
+>read2
+TTTTCCCC
+```
+For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and the checks in the script should pass.
 
 ```text
 Slurm state: COMPLETED
@@ -72,4 +91,4 @@ Allocated CPUs: 1
 Expected files: reads.fq, reads.fa
 ```
 
-For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and the checks in the script should pass.
+*This quickbyte was verified on 6/29/2026*
