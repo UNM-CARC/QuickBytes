@@ -2,14 +2,7 @@
 
 ## Software Description
 
-VASP performs electronic-structure calculations. This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the `debug` partition and serve as a starting point for adapting the application to a real research workload.
-
-Passing test-program examples used for this stub:
-
-- `vasp/vasp_easley.slurm`: `pass`, job `806496`, elapsed `00:00:38`, CPUs `128`
-- `vasp/NaCl_charges/slurm-test.sh`: `pass`, job `806494`, elapsed `00:00:05`, CPUs `16`
-- `vasp/NaCl_charges/LUKE/slurm-test.sh`: `pass`, job `806493`, elapsed `00:00:19`, CPUs `16`
-- `vasp/NaCl_charges/vasp6/slurm-test.sh`: `pass`, job `806495`, elapsed `00:00:04`, CPUs `16`
+VASP performs electronic-structure calculations used in materials science, chemistry, and condensed-matter physics. A VASP run typically starts from four input files in the working directory: `INCAR`, `POSCAR`, `POTCAR`, and `KPOINTS`. This QuickByte shows the Slurm pattern for launching a small parallel VASP job on Easley; use it from a directory containing your prepared VASP inputs.
 
 ## Example Slurm Script
 
@@ -17,26 +10,38 @@ Save the following as `vasp_easley.slurm` in the example directory and submit it
 
 ```bash
 #!/bin/bash
-# Sample Vasp Job Submission Script
-# Matthew Fricke, May 20th, 2025
 # Run this file with: sbatch vasp_easley.slurm
-# This script demonstrates a two-node VASP MPI run on the debug partition.
+# This script demonstrates a two-node VASP MPI run on Easley.
 
 # Slurm resources for a larger VASP MPI example.  Thirty-two MPI ranks per
 # node fits Hopper debug's 32 CPU cores per node while still running correctly
 # on Easley debug nodes.
 #SBATCH --job-name=test-vasp
-#SBATCH --output=vasp_sample_easley.out
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=32
-#SBATCH --mail-user=yourusername@unm.edu
-#SBATCH --mail-type=ALL
 #SBATCH --partition=debug
 #SBATCH --time=1:00:00
 
-# Fundamental: load VASP.
+set -euo pipefail
+
+# Start from the directory where you submitted the job. It should contain the
+# standard VASP input files.
+submit_dir="${SLURM_SUBMIT_DIR:-$PWD}"
+cd "$submit_dir"
+
+for input_file in INCAR POSCAR POTCAR KPOINTS; do
+    if [[ ! -f "$input_file" ]]; then
+        echo "Missing required VASP input file: $input_file" >&2
+        exit 2
+    fi
+done
+
+# Load VASP.
 module load vasp/6.4.3
-# Fundamental: launch VASP with one MPI rank per Slurm task using PMI2.
+
+# Launch VASP with one MPI rank per Slurm task using PMI2.
 srun --mpi=pmi2 vasp_std
 ```
 
@@ -44,17 +49,14 @@ The important Slurm resource lines are the `#SBATCH` directives near the top of 
 
 ## Example output
 
-The following abbreviated result is from the Easley debug regression run used to validate this example.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. VASP should write its usual output files in the submission directory, including files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`, depending on your input settings.
 
 ```text
-Script: vasp/vasp_easley.slurm
-Job ID: 806496
 Slurm state: COMPLETED
 Exit code: 0:0
-Elapsed time: 00:00:38
 Allocated nodes: 2
 Allocated CPUs: 128
-Result: pass
+Expected files: OUTCAR, OSZICAR, vasprun.xml
 ```
 
-For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and any application-specific checks in the script should pass.
+For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and VASP should finish without reporting fatal errors in the Slurm output or VASP output files.
