@@ -1,9 +1,10 @@
-## Setting Up PyTorch using Xena
-### SSH in to Xena
-To connect to the Xena machine, you will need to use the secure shell command below with your username in place of $USERNAME. This will prompt you for your password. When typing your password, you will not get any visual feedback. If you have issues with connecting to the machine, please reach out to the CARC helpdesk. 
+## Setting Up PyTorch using Easley
+### SSH in to Easley
+To connect to the Easley machine, you will need to use the secure shell command below with your username in place of $USERNAME. This will prompt you for your password. When typing your password, you will not get any visual feedback. If you have issues with connecting to the machine, please reach out to the CARC helpdesk. 
 ```
-ssh $USERNAME@xena.alliance.unm.edu
+ssh $USERNAME@easley.alliance.unm.edu
 ```
+Alternatively, if you are already logged into Hopper, you can connect to Easley by running `ssh easley`.
 
 ### Create the Condarc File
 To create the Condarc file that you will need, use your favorite text editor to create an empty file '.condarc'. For this tutorial I will use nano, which is an easy beginning text editor.
@@ -90,16 +91,16 @@ pip3 install --user torch-1.9.0+cu11.1-cp39-cp39-linux_x86_64.whl
 After the installation is complete, we can confirm that the torch install was sucessful in JupyterHub. Follow the link below to the CARC website. 
 ```
 http://carc.unm.edu
-Navigate to Systems > JupyterHub Cluster Links > Xena
+Navigate to Systems > JupyterHub Cluster Links > Easley
 ```
 <img width="1265" alt="Screenshot 2023-09-05 at 9 36 45 PM" src="https://github.com/UNM-CARC/QuickBytes/assets/130007104/eaeb6530-4627-4927-99c2-63b6cb34686f">
 
 Next, log in to JupyterHub with your CARC username and password. If you are logged in without being prompted to select a server, click on the control panel button in the upper right corner. Then select "Stop My Server", then select "Start Server"
 
-You will be prompted to choose a server. For this tutorial, I will choose a Xena server with 2 GPU's. 
+You will be prompted to choose a server. For this tutorial, I will choose a Easley server with 2 GPU's. 
 ```
 Example:
-Xena 1 hour, 2 GPUs, 16 cores, 60 GB RAM
+Easley 1 hour, 2 GPUs, 16 cores, 60 GB RAM
 ```
 Create a new notebook by selecting new > Python [conda env:.conda-pytorch-1.9-cuda-11-K40]
 
@@ -113,4 +114,6 @@ import torch
 torch.cuda.device_count()
 ```
 With 2 GPUs, you should get an output of 2. 
+
+*This quickbyte was validated on 6/29/2026*
 
