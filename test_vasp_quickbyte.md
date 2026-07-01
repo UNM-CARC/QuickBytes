@@ -2,11 +2,19 @@
 
 ## Software Description
 
-VASP performs electronic-structure calculations used in materials science, chemistry, and condensed-matter physics. A VASP run typically starts from four input files in the working directory: `INCAR`, `POSCAR`, `POTCAR`, and `KPOINTS`. This QuickByte shows the Slurm pattern for launching a small parallel VASP job on Easley; use it from a directory containing your prepared VASP inputs.
+VASP performs electronic-structure calculations used in materials science, chemistry, and condensed-matter physics. A VASP run typically starts from four input files: `INCAR`, `POSCAR`, `POTCAR`, and `KPOINTS`. This QuickByte shows the Slurm pattern for launching a small parallel VASP job on Easley using a tiny NaCl example.
+
+This tutorial includes three small text input files in `vasp_assets`:
+
+- [INCAR](vasp_assets/INCAR): VASP calculation settings
+- [POSCAR](vasp_assets/POSCAR): NaCl crystal structure
+- [KPOINTS](vasp_assets/KPOINTS): k-point mesh
+
+VASP `POTCAR` files are licensed pseudopotential files and are not included here. Before submitting the job, licensed VASP users should create `vasp_assets/POTCAR` for this NaCl example using the matching PAW/PBE potentials for `Na_pv` and `Cl`. See [vasp_assets/README_POTCAR.md](vasp_assets/README_POTCAR.md).
 
 ## Example Slurm Script
 
-Save the following as `vasp_easley.slurm` in the example directory and submit it with `sbatch vasp_easley.slurm`.
+Save the following as `vasp_easley.slurm` in the same directory as `vasp_assets`, then submit it with `sbatch vasp_easley.slurm`.
 
 ```bash
 #!/bin/bash
@@ -27,16 +35,31 @@ Save the following as `vasp_easley.slurm` in the example directory and submit it
 set -euo pipefail
 
 # Start from the directory where you submitted the job. It should contain the
-# standard VASP input files.
+# vasp_assets directory.
 submit_dir="${SLURM_SUBMIT_DIR:-$PWD}"
-cd "$submit_dir"
+asset_dir="$submit_dir/vasp_assets"
 
 for input_file in INCAR POSCAR POTCAR KPOINTS; do
-    if [[ ! -f "$input_file" ]]; then
-        echo "Missing required VASP input file: $input_file" >&2
+    if [[ ! -f "$asset_dir/$input_file" ]]; then
+        echo "Missing required VASP input file: $asset_dir/$input_file" >&2
+        if [[ "$input_file" == "POTCAR" ]]; then
+            echo "POTCAR files are licensed. Create vasp_assets/POTCAR from your licensed VASP pseudopotentials." >&2
+        fi
         exit 2
     fi
 done
+
+# Create a clean per-job output directory inside the submission directory.
+run_dir="$submit_dir/outputs/${SLURM_JOB_NAME}-${SLURM_JOB_ID}"
+rm -rf "$run_dir"
+mkdir -p "$run_dir"
+cd "$run_dir"
+
+# Copy the VASP input files into the run directory so outputs stay together.
+cp "$asset_dir"/INCAR .
+cp "$asset_dir"/POSCAR .
+cp "$asset_dir"/POTCAR .
+cp "$asset_dir"/KPOINTS .
 
 # Load VASP.
 module load vasp/6.4.3
@@ -49,7 +72,7 @@ The important Slurm resource lines are the `#SBATCH` directives near the top of 
 
 ## Example output
 
-After the job finishes, Slurm should report a completed job with exit code `0:0`. VASP should write its usual output files in the submission directory, including files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`, depending on your input settings.
+After the job finishes, Slurm should report a completed job with exit code `0:0`. The output directory under `outputs/` should contain the copied input files and VASP output files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`, depending on your input settings.
 
 ```text
 Slurm state: COMPLETED
