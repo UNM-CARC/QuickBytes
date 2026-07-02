@@ -1,0 +1,6 @@
+Minimisation
+ &cntrl
+  imin=1, maxcyc=100, ncyc=50,
+  cut=999.0, ntb=0, igb=1,
+  ntpr=10
+ /
