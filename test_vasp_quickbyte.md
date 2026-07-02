@@ -4,6 +4,8 @@
 
 VASP performs electronic-structure calculations used in materials science, chemistry, and condensed-matter physics. A VASP run typically starts from four input files: `INCAR`, `POSCAR`, `POTCAR`, and `KPOINTS`. This QuickByte shows the Slurm pattern for launching a small parallel VASP job on Easley using a tiny NaCl example.
 
+NOTE: You'll need to be in the `vasp6` group and have a valid VASP license to run this example and other future VASP jobs. See the `Troubleshooting` section below if you're unsure whether you have access to the software and extra steps regarding how to obtain it.
+
 This tutorial includes three small text input files in `vasp_assets`:
 
 - [INCAR](vasp_assets/INCAR): VASP calculation settings
@@ -12,9 +14,23 @@ This tutorial includes three small text input files in `vasp_assets`:
 
 VASP `POTCAR` files are licensed pseudopotential files and are not included here. Before submitting the job, licensed VASP users should create `vasp_assets/POTCAR` for this NaCl example using the matching PAW/PBE potentials for `Na_pv` and `Cl`. See [vasp_assets/README_POTCAR.md](vasp_assets/README_POTCAR.md).
 
-## Example Slurm Script
+## Running the Example Slurm Script
 
-Save the following as `vasp_easley.slurm` in the same directory as `vasp_assets`, then submit it with `sbatch vasp_easley.slurm`.
+First, log in to Easley via SSH.
+
+`ssh user@easley.alliance.unm.edu`
+
+Once logged into the machine, create a separate directory for this QuickByte called `example_VASP` with:
+
+`mkdir example_VASP`
+
+Once the directory is created, go into `example_VASP` and create a new directory called `vasp_assets`. Copy the provided `INCAR`, `POSCAR`, and `KPOINTS` files inside the `vasp_assets` directory. In addition, also add the `POTCAR` file into the `vasp_assets` directory. Use `ls` to verify that all four files are present in `vasp_assets` before continuing on with this QuickByte.
+
+After placing the four files in the correct directory, go back to the `example_VASP` directory and use your favorite text editor to create `vasp_easley.slurm`. In this QuickByte, nano is used due to its user friendliness. Run the command below:
+
+`nano vasp_easley.slurm`
+
+Copy the Slurm script below into `vasp_easley.slurm` while in the text editor:
 
 ```bash
 #!/bin/bash
@@ -91,18 +107,33 @@ module load vasp/6.4.3
 srun --mpi=pmi2 vasp_std > vasp.out
 ```
 
-The important Slurm resource lines are the `#SBATCH` directives near the top of the script. They request the debug partition, a small amount of time, and the CPU, memory, node, or GPU resources needed by this smoke test. The `module load` commands prepare the software environment, and `srun` is used when the application should be launched through Slurm across allocated tasks.
+NOTE: In the script where it say `module load vasp/6.4.3`, you can choose to load `vasp/6.5.1`, another version of VASP that is available on the Easley cluster.
+
+The important Slurm resource lines in the script are the `#SBATCH` directives near the top of the script. In this example, `--nodes=2` requests two compute nodes. `--ntasks-per-node=4` runs 4 MPI processes on each node, resulting in 8 MPI ranks being allocated. `--partition=debug` means the job is submitted specifically in the debug partition. `--time=00:05:00` limits the activity of the job to 5 minutes. The `module load` command loads the VASP software environment required to run the simulation. `srun` is used when the application should be launched through Slurm across allocated tasks.
+
+After copying the script above, exit the file with `Ctrl + X`, then type `y` to save the modified buffer. If it asks for a filename to write to, just press `Enter` to write to the newly created file. Once the file is saved, submit the job to the Slurm scheduler with:
+
+`sbatch vasp_easley.slurm`
+
+After submitting the job, Slurm will print a message that contains a job ID. 
+
+`Submitted batch job <jobID>`
+
+Take note of this job ID as it will be used when checking the results of the job.
 
 ## Example output
 
-After the job finishes, Slurm should report a completed job with exit code `0:0`. The output directory under `outputs/` should contain the copied input files and VASP output files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`, depending on your input settings.
+After the job finishes, a new directory called `outputs` should appear. In the `outputs` directory, the results of each job will be contained in a directory called `test-vasp-<jobID>`. For this QuickByte, the `test-vasp-<jobID>` directory should contain the 4 input files mentioned earlier and VASP output files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`. The output files may change depending on your input settings.
+
+In addition to these new directories, Slurm should report a completed job with exit code `0:0`. To check this, run `sacct -j <jobID>`. You should get a similar output below:
 
 ```text
-Slurm state: COMPLETED
-Exit code: 0:0
-Allocated nodes: 2
-Allocated CPUs: 8
-Expected files: OUTCAR, OSZICAR, vasprun.xml
+JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+<jobID>       test-vasp      debug   <acctID>          8  COMPLETED      0:0
+<jobID>.batch     batch              <acctID>          4  COMPLETED      0:0
+<jobID>.exte+    extern              <acctID>          8  COMPLETED      0:0
+<jobID>.0      vasp_std              <acctID>          8  COMPLETED      0:0
 ```
 
 For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and VASP should finish without reporting fatal errors in the Slurm output or VASP output files.
@@ -112,3 +143,9 @@ For a successful run, the Slurm state should be `COMPLETED`, the exit code shoul
 If VASP reports `POSCAR found : 0 types and 0 ions`, check that `vasp_assets/POSCAR` is the NaCl file from this tutorial and is not empty. The Slurm script checks this before starting VASP so the job fails early with a clearer message.
 
 If VASP reports `LUSE_VDW needs to be set to .TRUE.`, check that the `POTCAR` was built from the PAW/PBE `Na_pv` and `Cl` potentials described above. That error usually means the copied `POTCAR` does not match this NaCl example.
+ 
+A common issue that new UNM CARC users may experience when running this script is that they may not have the permissions required to run the VASP software. If your job fails, go into the `example_VASP` directory and check the Slurm error file by running:
+
+`cat test-vasp-<jobID>.err`
+
+If the `cat` command prints that you need to be in the "vasp6" group, please email `help@carc.unm.edu` mentioning that you need access to VASP and include your research lab's license number.
