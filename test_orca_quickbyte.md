@@ -2,15 +2,19 @@
 
 ## Software Description
 
-ORCA is a quantum chemistry package. This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the `debug` partition and serve as a starting point for adapting the application to a real research workload.
+This QuickByte is a stub based on the CARC `test-programs` regression suite. The example is intentionally small so it can run on the debug partition and serve as a starting point for adapting the application to a real research workload.
 
-Passing test-program examples used for this stub:
-
-- `Orca_MPI/Easley/slurm-test.sh`: `pass`, job `806432`, elapsed `00:01:49`, CPUs `4`
+ORCA is an ab initio quantum chemistry package. Ab initio quantum chemistry is a computational approach that calculates molecular properties and electronic structures using fundamental physics laws or first principles. ORCA’s applications include large molecules, transition metal complexities and their spectroscopic properties. ORCA was developed by Frank Neese’s research group. 
 
 ## Example Slurm Script
 
-Save the following as `slurm-test.sh` in the example directory and submit it with `sbatch slurm-test.sh`.
+First, log in to easley via SSH.
+
+`ssh user@easley.alliance.unm.edu`
+
+Next, navigate to the directory where you would like to work by running `cd <directory name>`. If you are following along with the QuickByte and you would like to use a separate directory, then you can make one with `mkdir orca_example`, then navigate inside the directory.
+
+Create the script in that directory. To do this we will use a text editor. You are able to use whatever editor you prefer; however, this QuickByte will use nano. Run `nano slurm-test.sh` to create the file. Then, copy the following text and paste it into the file by right-clicking in the terminal (or by using your terminal's paste shortcut).
 
 ```bash
 #!/usr/bin/env bash
@@ -110,21 +114,35 @@ grep -q "ORCA TERMINATED NORMALLY" caffeine-parallel.out
 grep -q "FINAL SINGLE POINT ENERGY" caffeine-parallel.out
 ```
 
-The important Slurm resource lines are the `#SBATCH` directives near the top of the script. They request the debug partition, a small amount of time, and the CPU, memory, node, or GPU resources needed by this smoke test. The `module load` commands prepare the software environment, and `srun` is used when the application should be launched through Slurm across allocated tasks.
+The important Slurm resource lines are the `#SBATCH` directives near the top of the script. They request the debug partition, a small amount of time, and the CPU, memory, node, or GPU resources needed by this smoke test. The script unloads all modules and uses the `module load` command to prepare the ORCA software environment (version 6.1.1) needed for running the calculation. In addition, it also sets up a caffeine input file that is used for running ORCA.
+
+After copying the script above, exit the file with `Ctrl + X`, then type `y` to save the modified buffer. If it asks for a filename to write to, just press `Enter` to write to the newly created file. Once the file is saved, submit the job to the Slurm scheduler with:
+
+`sbatch slurm-test.sh`
 
 ## Example output
 
-The following abbreviated result is from the Easley debug regression run used to validate this example.
+Once you've submitted the job to Slurm, you will see your Job ID. You can check the status of your job:
+
+`squeue --me`
+
+Alternatively, you can watch the progress of your job:
+
+`watch squeue --me`
+
+If you see no information under the headings, that means your job has finished and you can now examine the output. After the job finishes, the newly created directory under `outputs` should contain your files.
+
+Slurm should report a completed job with exit code `0:0`. Check by typing either `sacct -j <JobID>` (Slurm Accounting command) or `seff <JobID>` (Slurm Job Efficiency Report). Below is an example of `sacct -j 861338`:
 
 ```text
-Script: Orca_MPI/Easley/slurm-test.sh
-Job ID: 806432
-Slurm state: COMPLETED
-Exit code: 0:0
-Elapsed time: 00:01:49
-Allocated nodes: 1
-Allocated CPUs: 4
-Result: pass
+sacct -j 861338
+JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+861338        test-orca      debug    2016553          4  COMPLETED      0:0
+861338.batch      batch               2016553          4  COMPLETED      0:0
+861338.exte+     extern               2016553          4  COMPLETED      0:0
 ```
 
 For a successful run, the Slurm state should be `COMPLETED`, the exit code should be `0:0`, and any application-specific checks in the script should pass.
+
+*This QuickByte was validated 7/2/2026*
