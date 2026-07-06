@@ -5,23 +5,25 @@
 MATLAB allows using a single GPU independently of the rest of the cluster.
 The following sections show how to access and utilize a GPU on Easley.
 
+> **Note:** The default partition (`general`) does not have any GPU nodes. Requesting a GPU (`-G`) without explicitly specifying a GPU partition will fail immediately with an error like `Unable to allocate resources: Requested node configuration is not available`. Always specify `--partition=l40s` or `--partition=h100` when requesting a GPU.
+
 ### Use GPU in Interactive Session
 
 First, we will open MATLAB in an interactive session on an Easley compute node.
 
 #### Identify and Select GPU
 
-Start by requesting an interactive session:
+Start by requesting an interactive session on a GPU-enabled partition:
 
 ```bash
-easley:~$ srun -G 1 --pty bash
+easley:~$ srun --partition=l40s -G 1 --pty bash
 ```
 
 Once you have a node allocated to you, load the MATLAB module and start a MATLAB session:
 
 ```bash
-easley01:~$ module load matlab
-easley01:~$ matlab
+easley055:~$ module load matlab
+easley055:~$ matlab
 
 To get started, type doc.
 For product information, visit www.mathworks.com.
@@ -184,7 +186,7 @@ toc
 #### Slurm Script
 
 Now, let's create a Slurm script called `gpu_matlab.sh`.
-Replace the `<DIR>` with the path to the directory containing the MATLAB script created above.
+This script assumes `gpu_matlab.m` is saved in the same directory you submit the job from — `$SLURM_SUBMIT_DIR` automatically resolves to that directory, so no path editing is needed.
 This script will request the desired resources, load the MATLAB module, then run the script.
 The output of the script will be sent to the file: `gpu_matlab.out`
 
@@ -196,9 +198,10 @@ The output of the script will be sent to the file: `gpu_matlab.out`
 #SBATCH --error gpu_matlab_job.err
 #SBATCH --time 00:05:00
 #SBATCH --ntasks 1
+#SBATCH --partition l40s
 #SBATCH -G 1
 
-cd <DIR>
+cd $SLURM_SUBMIT_DIR
 
 module load matlab
 matlab -nodisplay -r gpu_matlab > gpu_matlab.out
@@ -274,7 +277,7 @@ These numbers should match, as MATLAB will use a CPU to access each GPU.
 In the example below, we ask for two CPUs and two GPUs.
 
 Create the following Slurm script called `gpu_logistic_map.sh`.
-Replace the `<DIR>` with the path to the directory containing the MATLAB script created above.
+This script assumes `gpu_logistic_map.m` is saved in the same directory you submit the job from — `$SLURM_SUBMIT_DIR` automatically resolves to that directory, so no path editing is needed.
 This script will ask the scheduler for the proper resources.
 Once the resources are allocated, the script will run the MATLAB script from the above step.
 The MATLAB script will create a .jpg image once it has finished.
@@ -289,9 +292,10 @@ Any output of the MATLAB script is redirected to `gpu_logistic_map.out`.
 #SBATCH --time 00:10:00
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 2
+#SBATCH --partition l40s
 #SBATCH -G 2
 
-cd <DIR>
+cd $SLURM_SUBMIT_DIR
 
 module load matlab
 matlab -nodisplay -r gpu_logistic_map > gpu_logistic_map.out
@@ -310,4 +314,4 @@ easley:~$ cat gpu_logistic_map.out
 
 You can also view the `logistic_map.jpg` image using your preferred method.
 
-*This QuickByte was validated on 6/23/2026.*
+*This QuickByte was validated on 7/6/2026.*
