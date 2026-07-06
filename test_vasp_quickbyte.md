@@ -4,7 +4,7 @@
 
 VASP performs electronic-structure calculations used in materials science, chemistry, and condensed-matter physics. A VASP run typically starts from four input files: `INCAR`, `POSCAR`, `POTCAR`, and `KPOINTS`. This QuickByte shows the Slurm pattern for launching a small parallel VASP job on Easley using a tiny NaCl example.
 
-NOTE: You'll need to be in the `vasp6` group and have a valid VASP license to run this example and other future VASP jobs. See the `Troubleshooting` section below if you're unsure whether you have access to the software and extra steps regarding how to obtain it.
+NOTE: You'll need to be in the `vasp6` group at UNM CARC and have a valid VASP license to run this example and other future VASP jobs. See the `Troubleshooting` section below if you're unsure whether you have access to the software and extra steps regarding how to obtain it.
 
 This tutorial includes three small text input files in `vasp_assets`:
 
@@ -101,17 +101,17 @@ cp "$asset_dir"/KPOINTS .
 
 # Load VASP.
 module purge
-module load vasp/6.4.3
+module load vasp/6.5.1
 
 # Launch VASP with one MPI rank per Slurm task using PMI2.
 srun --mpi=pmi2 vasp_std > vasp.out
 ```
 
-NOTE: In the script where it say `module load vasp/6.4.3`, you can choose to load `vasp/6.5.1`, another version of VASP that is available on the Easley cluster.
+NOTE: In this script, we load the default version of VASP on Easley with `module load vasp/6.5.1`. For future references, if your workflow requires a different version of VASP, you can replace the version number in the `module load` command.
 
 The important Slurm resource lines in the script are the `#SBATCH` directives near the top of the script. In this example, `--nodes=2` requests two compute nodes. `--ntasks-per-node=4` runs 4 MPI processes on each node, resulting in 8 MPI ranks being allocated. `--partition=debug` means the job is submitted specifically in the debug partition. `--time=00:05:00` limits the activity of the job to 5 minutes. The `module load` command loads the VASP software environment required to run the simulation. `srun` is used when the application should be launched through Slurm across allocated tasks.
 
-After copying the script above, exit the file with `Ctrl + X`, then type `y` to save the modified buffer. If it asks for a filename to write to, just press `Enter` to write to the newly created file. Once the file is saved, submit the job to the Slurm scheduler with:
+After copying the script above, exit the file with `Ctrl + X`, then type `y` to save the modified buffer. If it asks for a filename to write to, press `Enter` to write to the newly created file. Once the file is saved, submit the job to the Slurm scheduler with:
 
 `sbatch vasp_easley.slurm`
 
@@ -123,7 +123,7 @@ Take note of this job ID as it will be used when checking the results of the job
 
 ## Example output
 
-After the job finishes, a new directory called `outputs` should appear. In the `outputs` directory, the results of each job will be contained in a directory called `test-vasp-<jobID>`. For this QuickByte, the `test-vasp-<jobID>` directory should contain the 4 input files mentioned earlier and VASP output files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`. The output files may change depending on your input settings.
+After the job finishes, a new directory called `outputs` should appear. In the `outputs` directory, the results of each job will be contained in a new directory called `test-vasp-<jobID>`. For this QuickByte, the `test-vasp-<jobID>` directory should contain the 4 input files mentioned earlier and VASP output files such as `OUTCAR`, `OSZICAR`, and `vasprun.xml`. The output files may change depending on your input settings.
 
 In addition to these new directories, Slurm should report a completed job with exit code `0:0`. To check this, run `sacct -j <jobID>`. You should get a similar output below:
 
@@ -148,4 +148,4 @@ A common issue that new UNM CARC users may experience when running this script i
 
 `cat test-vasp-<jobID>.err`
 
-If the `cat` command prints that you need to be in the "vasp6" group, please email `help@carc.unm.edu` mentioning that you need access to VASP and include your research lab's license number.
+If the `cat` command prints that you need to be in the "vasp6" group, please email `help@carc.unm.edu` mentioning that you need access to the VASP software. In addition, please include your research group's license number in the email.
