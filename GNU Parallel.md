@@ -115,6 +115,27 @@ Example output:
 
 ---
 
+## Running Across Multiple Nodes with `--sshloginfile`
+
+Slurm allocates the nodes for your job, but GNU Parallel has no automatic awareness of any node besides the one your script is actually running on. Without telling it otherwise, `parallel -j N` runs all `N` jobs on that single node — oversubscribing it — rather than spreading them across every node you requested with `--nodes`.
+
+To actually use every allocated node, pass `--sshloginfile "$CARC_NODEFILE"`. CARC's Slurm setup exposes the list of nodes in your current allocation through the `$CARC_NODEFILE` environment variable (the Slurm-era equivalent of the old PBS `$PBS_NODEFILE`).
+
+You can confirm this yourself on an interactive multi-node allocation:
+
+```bash
+srun --nodes 2 --pty bash
+```
+
+```bash
+echo $CARC_NODEFILE
+cat $CARC_NODEFILE
+```
+
+When you add `--sshloginfile`, set `-j` to the tasks **per node** (`$SLURM_NTASKS_PER_NODE`), not the job's total task count (`$SLURM_NTASKS`) — `--sshloginfile` already handles spreading work across nodes, so using the total would oversubscribe each individual node instead.
+
+---
+
 ## Running MATLAB at Scale with Slurm
 
 Running large numbers of MATLAB jobs directly on login nodes is not recommended, so please use Slurm to allocate compute resources.
@@ -137,7 +158,8 @@ cd "$SLURM_SUBMIT_DIR"
 echo "Starting MATLAB jobs at $(date)"
 
 parallel \
-    -j "$SLURM_NTASKS" \
+    -j "$SLURM_NTASKS_PER_NODE" \
+    --sshloginfile "$CARC_NODEFILE" \
     --arg-file msizes \
     'matlab -batch "msize={}; program"'
 
@@ -196,7 +218,8 @@ source activate numpy_py3
 cd "$SLURM_SUBMIT_DIR"
 
 parallel \
-    -j "$SLURM_NTASKS" \
+    -j "$SLURM_NTASKS_PER_NODE" \
+    --sshloginfile "$CARC_NODEFILE" \
     --arg-file mat_in \
     python matrix_inv.py
 ```
