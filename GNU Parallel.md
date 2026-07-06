@@ -22,6 +22,8 @@ Typical use cases include:
 
 The following example converts all `.csv` files into `.txt` files.
 
+**WIP:** the `imagemagick` module referenced below is not currently available on Easley (`module spider imagemagick` finds nothing) — this example needs an updated module name/version before it can be verified.
+
 ```bash
 module load imagemagick
 
@@ -134,6 +136,32 @@ cat $CARC_NODEFILE
 
 When you add `--sshloginfile`, set `-j` to the tasks **per node** (`$SLURM_NTASKS_PER_NODE`), not the job's total task count (`$SLURM_NTASKS`) — `--sshloginfile` already handles spreading work across nodes, so using the total would oversubscribe each individual node instead.
 
+### One-Time Setup: Passwordless SSH Between Compute Nodes
+
+`--sshloginfile` works by having GNU Parallel `ssh` from the node running your script to every other node in your allocation. Since your home directory is shared (NFS) across all compute nodes, you only need to do this once, ever — not per job.
+
+**1. Generate a keypair and trust it for yourself** — this checks first and does nothing if you already have one:
+
+```bash
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+fi
+grep -qxF "$(cat ~/.ssh/id_ed25519.pub)" ~/.ssh/authorized_keys 2>/dev/null \
+    || cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys ~/.ssh/id_ed25519
+```
+
+If you already use `~/.ssh/id_ed25519` for something else (e.g. GitHub), use a different filename (e.g. `~/.ssh/id_ed25519_carc`) throughout this section instead — just make sure the same key ends up in your own `authorized_keys`.
+
+**2. Pre-trust every node's host key**, so a job landing on a node you've never connected to before doesn't hang waiting on a host-key prompt that a batch script has no terminal to answer:
+
+```bash
+for i in $(seq -w 1 63); do echo easley0$i; done | ssh-keyscan -f - >> ~/.ssh/known_hosts 2>/dev/null
+```
+
+Without both of these steps, a `--sshloginfile` job will silently hang until it hits its time limit — there's no error message, since the script is stuck waiting on a password/host-key prompt that never arrives.
+
 ---
 
 ## Running MATLAB at Scale with Slurm
@@ -160,11 +188,15 @@ echo "Starting MATLAB jobs at $(date)"
 parallel \
     -j "$SLURM_NTASKS_PER_NODE" \
     --sshloginfile "$CARC_NODEFILE" \
+    --workdir "$SLURM_SUBMIT_DIR" \
+    --env PATH \
     --arg-file msizes \
     'matlab -batch "msize={}; program"'
 
 echo "Finished at $(date)"
 ```
+
+`--workdir "$SLURM_SUBMIT_DIR"` is required because SSH sessions default to your home directory, not wherever this script's own `cd` took you — without it, MATLAB can't find `program.m`. `--env PATH` forwards the module-loaded PATH (with `matlab` on it) to the remote SSH sessions, which otherwise start with a bare, non-login environment that doesn't have `module`-loaded paths at all.
 
 Submit the job:
 
@@ -200,6 +232,15 @@ Running substantially more jobs than available CPU resources may increase runtim
 
 GNU Parallel can also distribute Python workloads.
 
+### One-Time Setup: Conda Environment
+
+Create the environment this example uses (only needs to be done once):
+
+```bash
+module load miniconda3
+conda create -n numpy_py3 python=3.11 numpy -y
+```
+
 ### Example Slurm Script
 
 ```bash
@@ -211,7 +252,7 @@ GNU Parallel can also distribute Python workloads.
 #SBATCH --time=01:00:00
 
 module load parallel
-module load anaconda
+module load miniconda3
 
 source activate numpy_py3
 
@@ -220,9 +261,13 @@ cd "$SLURM_SUBMIT_DIR"
 parallel \
     -j "$SLURM_NTASKS_PER_NODE" \
     --sshloginfile "$CARC_NODEFILE" \
+    --workdir "$SLURM_SUBMIT_DIR" \
+    --env PATH \
     --arg-file mat_in \
     python matrix_inv.py
 ```
+
+Note: this uses plain `parallel` with `--env PATH`, not `env_parallel`. `env_parallel` forwards your *entire* shell environment to each remote session, and conda's activation hooks add enough bloat to that environment to blow past the shell's argument-length limit (`Command line too long`). `--env PATH` forwards just the one variable that's actually needed to find `python` in the activated environment.
 
 ---
 
