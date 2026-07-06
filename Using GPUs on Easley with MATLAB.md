@@ -19,19 +19,28 @@ Start by requesting an interactive session on a GPU-enabled partition:
 easley:~$ srun --partition=l40s -G 1 --pty bash
 ```
 
-Once you have a node allocated to you, load the MATLAB module and start a MATLAB session:
+Once allocated, you'll see:
+```bash
+You have been allocated one or more GPUs.
+Job <job_id> running on <node>
+```
+
+Load the MATLAB module and start a MATLAB session:
 
 ```bash
 easley055:~$ module load matlab
 easley055:~$ matlab
+```
 
+You should see the MATLAB startup banner:
+```bash
 To get started, type doc.
 For product information, visit www.mathworks.com.
 >>
 ```
 
 Now you can check to see the number of GPUs available:
-```bash
+```matlab
 >> gpuDeviceCount("available")
 ```
 You should see the following:
@@ -42,7 +51,7 @@ ans =
 This means that you have access to a single GPU.
 
 To get information about the available GPUs, use this function:
-```bash
+```matlab
 >> gpuDeviceTable
 ```
 That will print something that looks like this on Easley:
@@ -59,14 +68,15 @@ ans =
 
 Next, you can tell MATLAB which GPU to use (pass in the desired index from the above table).
 If you do not do this, MATLAB will automatically grab the lowest-index GPU when you try to use one.
-```bash
+```matlab
 >> gpuDevice(1)
 ```
 
 Running the `gpuDeviceTable` command again shows this change:
-```bash
+```matlab
 >> gpuDeviceTable
-
+```
+```bash
 ans =
 
   1x5 table
@@ -86,28 +96,31 @@ For a full description of the `gpuArray` object, please visit the official MathW
 ##### Initialize Array
 First, create a normal array using any method you like.
 In this example, we will use the `magic(8)` function to create an 8x8 magic square matrix.
-```bash
+```matlab
 >> A = magic(8)
 ```
 Next, pass that into a `gpuArray` object.
 This will copy the contents of a normal array into an array on the GPU.
-```bash
+```matlab
 >> B = gpuArray(A)
 ```
 
 ##### Test if array is on GPU
 The `isgpuarray` function tests if an array is on a GPU:
-```bash
+```matlab
 >> isgpuarray(A)
-
+```
+```bash
 ans =
 
   logical
 
    0
-
+```
+```matlab
 >> isgpuarray(B)
-
+```
+```bash
 ans =
 
   logical
@@ -120,13 +133,14 @@ This confirms that array A is not on the GPU, but array B is.
 To retrieve an array from the GPU and put it back in the MATLAB workspace, use the `gather` function.
 It will copy the contents of an array on the GPU into a normal array.
 This is necessary if you want to perform non-GPU actions on your data after using the GPU.
-```bash
+```matlab
 >> C = gather(B)
 ```
 Now, we can test to see if C is stored on the GPU:
-```bash
+```matlab
 >> isgpuarray(C)
-
+```
+```bash
 ans =
 
   logical
@@ -137,20 +151,20 @@ ans =
 #### Use functions on GPU Arrays
 To perform functions on `gpuArray` objects, use the `arrayfun` function.
 In this example, we will apply the MATLAB `sqrt` function to the array (B) that we created in the previous step:
-```bash
+```matlab
 result = arrayfun(@sqrt,B)
 ```
 This will apply the `sqrt` function to every element in the GPU array.
 `result` is also a GPU array:
-```bash
+```matlab
 >> isgpuarray(result)
-
+```
+```bash
 ans =
 
   logical
 
    1
-
 ```
 
 To see a list of MATLAB functions that are supported using GPUs, visit [https://www.mathworks.com/help/parallel-computing/gpuarray.html](https://www.mathworks.com/help/parallel-computing/gpuarray.html)
