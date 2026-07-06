@@ -103,6 +103,11 @@ Create a submission script named `my_matlab_job.sbatch`.
 #SBATCH --mail-user=my_email@unm.edu
 #SBATCH --output=slurm-%j.out
 
+# Change to the directory that you submitted your Slurm script from.
+# Without this, relative-path output files (like randnums.csv here)
+# may not end up where you expect, or may not get written at all.
+cd "$SLURM_SUBMIT_DIR"
+
 module load matlab
 
 matlab -batch "my_program"
