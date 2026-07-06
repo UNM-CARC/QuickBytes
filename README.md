@@ -62,7 +62,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [Docker and Singularity](https://github.com/UNM-CARC/QuickBytes/blob/master/singularity-markdown-version.md)
       * [Haskell at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/haskell.md)
       * [X11 Forwarding](https://github.com/UNM-CARC/QuickBytes/blob/master/X11_forwarding.md)
-      * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark.md)
+      * [Spark](https://github.com/UNM-CARC/QuickBytes/blob/master/spark_tutorial.md) and the supplemental files(https://github.com/UNM-CARC/QuickBytes/blob/master/spark/)
       * [CuPy - Cuda in Python](https://github.com/UNM-CARC/QuickBytes/blob/master/CuPy_on_CARC.ipynb)
       * [Installing Perl Libraries to Your Home Directory](https://github.com/UNM-CARC/QuickBytes/blob/master/install_perl_libraries.md) 
       
