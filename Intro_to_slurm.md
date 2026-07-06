@@ -15,9 +15,8 @@ When you run `sinfo` on Easley, you will see output similar to the following:
 ```bash
 [username@easley ~]$ sinfo
 ```
-```bash
-PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 
+```
 PARTITION   AVAIL  TIMELIMIT  NODES  STATE NODELIST
 general*       up 2-00:00:00      1   comp easley002
 general*       up 2-00:00:00      4   mix- easley[008,015,018,044]
@@ -49,6 +48,7 @@ scavenger      up 2-00:00:00      1   plnd easley054
 scavenger      up 2-00:00:00     10    mix easley[003-004,012-014,016,020,023,050,055]
 scavenger      up 2-00:00:00     41  alloc easley[001,005-007,009-011,017,019,021-022,024-043,046-049,052-053,056-059]
 scavenger      up 2-00:00:00      1   down easley045
+```
 
 Key partitions you may have access to:
 
@@ -58,7 +58,7 @@ Key partitions you may have access to:
 - **scavenger** - Whenever a purchased/reserved node is not in use, this partition grabs them and allows them to be used by the public, but be warned you will be kicked off if the owner begins a job on it.
 
 To see detailed node information including CPU count, memory, and disk:
-```
+
 ```bash
 sinfo -N -l
 ```
