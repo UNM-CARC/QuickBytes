@@ -22,8 +22,6 @@ Typical use cases include:
 
 The following example converts all `.csv` files into `.txt` files.
 
-**WIP:** the `imagemagick` module referenced below is not currently available on Easley (`module spider imagemagick` finds nothing) — this example needs an updated module name/version before it can be verified.
-
 ```bash
 module load imagemagick
 
