@@ -41,23 +41,31 @@ python3
 ```
 
 ```python
->>> import numpy as np
->>> import cupy as cp
->>>
->>> a_cpu = np.array([1, 2, 3])
->>> a_gpu = cp.array([1, 2, 3])
->>> print(a_gpu)
+import numpy as np
+import cupy as cp
+
+a_cpu = np.array([1, 2, 3])
+a_gpu = cp.array([1, 2, 3])
+print(a_gpu)
+print(type(a_gpu))
+print(a_gpu.sum())
+```
+
+Expected output:
+```text
 [1 2 3]
->>> print(type(a_gpu))
 <class 'cupy.ndarray'>
->>> print(a_gpu.sum())
 6
 ```
 
 `a_gpu` is a real GPU array — `a_gpu.sum()` runs as a CUDA kernel. To bring a result back into a normal NumPy array on the CPU, use `cupy.asnumpy`:
 
 ```python
->>> print(cp.asnumpy(a_gpu))
+print(cp.asnumpy(a_gpu))
+```
+
+Expected output:
+```text
 [1 2 3]
 ```
 
