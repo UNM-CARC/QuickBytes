@@ -2,7 +2,7 @@
 
 Apache Spark is a distributed computing framework for processing large data sets, generally easier to program than something like MPI. You write a single Python (or Java/Scala) program that coordinates parallel work across many worker processes.
 
-This tutorial assumes you're comfortable with Slurm, modules, and HPC basics, but new to Spark. Each step explains *why* it's needed — Spark's main complication on a shared HPC cluster isn't writing Spark code, it's standing up your own personal Spark cluster inside Slurm's allocation system. All files are at <https://github.com/Graviton28/QuickBytes/tree/master/spark>.
+This tutorial assumes you're comfortable with Slurm, modules, and HPC basics, but new to Spark. Each step explains *why* it's needed — Spark's main complication on a shared HPC cluster isn't writing Spark code, it's standing up your own personal Spark cluster inside Slurm's allocation system. The one file you need from this repo, `slurm-spark-submit`, is at <https://github.com/Graviton28/QuickBytes/tree/master/spark> — everything else below you create yourself with a `cat` command as you go.
 
 ---
 
@@ -113,6 +113,9 @@ pyspark --master spark://easley002:7077
 
 ```python
 >>> sc.parallelize(range(100)).sum()
+```
+Expected output:
+```
 4950
 ```
 This forces an actual distributed computation and round-trip, confirming master, worker, networking, and Python compatibility all work — not just that processes exist.
@@ -121,7 +124,61 @@ This forces an actual distributed computation and round-trip, confirming master,
 
 ## Step 6: Batch Jobs
 
+This needs three files: the word-count program, a small input file, and the Slurm submission script. Create all three:
+
 ```bash
+cat > wordcount.py <<'EOF'
+#!/usr/bin/env python3
+"""
+wordcount.py — Simple Spark word count example.
+Compatible with Spark 3.5+ and Python 3.9+.
+
+Usage:
+    spark-submit --master <master_url> wordcount.py <input_file>
+"""
+
+import sys
+from operator import add
+from pyspark.sql import SparkSession
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <input_file>", file=sys.stderr)
+        sys.exit(1)
+
+    input_path = sys.argv[1]
+
+    spark = (
+        SparkSession.builder
+        .appName("WordCount")
+        .getOrCreate()
+    )
+    spark.sparkContext.setLogLevel("WARN")
+
+    lines = spark.read.text(input_path).rdd.map(lambda r: r[0])
+    words = lines.flatMap(lambda line: line.split())
+    counts = words.map(lambda word: (word, 1)).reduceByKey(add)
+
+    output = counts.collect()
+    for word, count in sorted(output, key=lambda x: -x[1])[:20]:
+        print(f"{word}: {count}")
+
+    spark.stop()
+
+
+if __name__ == "__main__":
+    main()
+EOF
+
+cat > big.txt <<'EOF'
+the quick brown fox jumps over the lazy dog the fox the
+the quick brown fox jumps over the lazy dog the fox the
+the quick brown fox jumps over the lazy dog the fox the
+the quick brown fox jumps over the lazy dog the fox the
+EOF
+
+cat > wordcount.sh <<'EOF'
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -146,6 +203,7 @@ bash "$SLURM_SUBMIT_DIR/slurm-spark-submit" \
     wordcount.py big.txt > "$LOGFILE" 2>&1
 
 cp "$LOGFILE" "$SLURM_SUBMIT_DIR/"
+EOF
 ```
 
 Standard pattern: copy inputs to local `/tmp` scratch for faster I/O, `$SLURM_SUBMIT_DIR` tracks where you originally ran `sbatch` from since the script `cd`s away from it, and results get copied back at the end. The log is named with `$SLURM_JOB_ID` so repeated runs don't overwrite each other's output. Submit and monitor as usual:
@@ -174,6 +232,9 @@ ss -tlnp | grep 7077
 To confirm work actually spread across nodes, not just that processes exist:
 ```python
 >>> sc.parallelize(range(1000), 32).mapPartitions(lambda it: [sum(1 for _ in it)]).collect()
+```
+Expected output:
+```
 [31, 31, 31, 32, ...]
 ```
 32 nonzero partition counts means the data was actually split and processed across your workers.
