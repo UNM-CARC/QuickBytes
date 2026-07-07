@@ -29,9 +29,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [Conda python environments for JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/Conda_JupyterHub.md)
          * [Using Julia in JupyterHub](https://github.com/UNM-CARC/QuickBytes/blob/master/julia_with_jupyterhub.md)
       * Conda
-         * [General intro to Conda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_general_intro.md)
-         * [Intro to Conda with example](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
-         * [Anaconda pip channels](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_pip_channels.md)
+         * [Intro to Miniconda](https://github.com/UNM-CARC/QuickBytes/blob/master/anaconda_intro.md)
       * R
          * [R Programming in HPC](https://github.com/UNM-CARC/QuickBytes/blob/master/R_usage.md)
          * [R at CARC](https://github.com/UNM-CARC/QuickBytes/tree/master/R_at_CARC)

@@ -2,30 +2,32 @@
 
 ### What is Miniconda?
 
-Fundamentally, Miniconda is a minimal distribution of Python and R with a collection of associated packages optimized for data science. The installation and management of these packages is handled with the Miniconda package manager Conda. Conda is more than just a package manager, however — it also creates and manages the environments that packages are installed in. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory, which is then appended to your `PATH` when that environment is activated.
+Fundamentally, Miniconda is a minimal distribution of Python and R with a collection of associated packages optimized for data science. The installation and management of these packages is handled with the Miniconda package manager Conda. While initially focused mainly on Python packages, the repositories hosted by Anaconda and others now house a large collection of non-Python packages.
+
+Although the full version of this distribution is called Anaconda, CARC uses Miniconda instead. Miniconda includes only Conda and its dependencies, cutting out the large collection of pre-installed packages that come bundled with the full Anaconda distribution. This keeps the installation lean and lets you build up only the environment you actually need.
+
+Conda is more than just a package manager, however — it also creates and manages the environments that packages are installed in. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory, which is then appended to your `PATH` when that environment is activated.
 
 ### Creating a New Conda Environment
 
-Let's create an environment on Easley to run a Python machine learning script that uses the TensorFlow library, Python version 3.5, and the pandas library. Once you log in to Easley using `ssh`, load the Miniconda software module with the command:
+Let's create an environment on Easley to run a Python machine learning script that uses the TensorFlow library, Python version 3.11, and the pandas library. Once you log in to Easley using `ssh`, load the Miniconda software module with the command:
 
 `module load miniconda3`
 
 We use `conda` to create new environments and install or upgrade packages within environments. To create our machine learning environment, we type:
 
-`conda create --name TensorFlow python=3.5 pandas tensorflow`
+`conda create --name TensorFlow python=3.11 pandas tensorflow -y`
 
-The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages Python version 3.5 specifically, pandas, and tensorflow. When you enter this command, `conda` prints out the plan for this environment to `stdout`:
+The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages Python version 3.11 specifically, pandas, and tensorflow. When you enter this command, `conda` prints out the plan for this environment to `stdout`:
 
 ```bash
-Solving environment: done
-
 ## Package Plan ##
 
   environment location: /users/yourusername/.conda/envs/TensorFlow
 
   added / updated specs:
     - pandas
-    - python=3.5
+    - python=3.11
     - tensorflow
 
 
@@ -33,121 +35,68 @@ The following packages will be downloaded:
 
     package                    |            build
     ---------------------------|-----------------
-    certifi-2018.8.24          |           py35_1         139 KB
-    termcolor-1.1.0            |           py35_1           7 KB
-    pip-10.0.1                 |           py35_0         1.8 MB
-    pytz-2018.5                |           py35_0         231 KB
-    protobuf-3.6.0             |   py35hf484d3e_0         615 KB
-    werkzeug-0.14.1            |           py35_0         426 KB
-    astor-0.7.1                |           py35_0          43 KB
-    libprotobuf-3.6.0          |       hdbcaa40_0         4.1 MB
-    markdown-2.6.11            |           py35_0         104 KB
-    mkl_fft-1.0.4              |   py35h4414c95_1         148 KB
-    mkl_random-1.0.1           |   py35h629b387_0         364 KB
-    tensorboard-1.10.0         |   py35hf484d3e_0         3.3 MB
-    tensorflow-base-1.10.0     |mkl_py35h3c3e929_0        82.1 MB
-    python-dateutil-2.7.3      |           py35_0         261 KB
-    numpy-base-1.15.1          |   py35h81de0dd_0         4.2 MB
-    wheel-0.31.1               |           py35_0          63 KB
-    _tflow_1100_select-0.0.3   |              mkl           2 KB
-    python-3.5.5               |       hc3d631a_4        28.3 MB
-    setuptools-40.2.0          |           py35_0         571 KB
-    grpcio-1.12.1              |   py35hdbcaa40_0         1.7 MB
-    gast-0.2.0                 |           py35_0          15 KB
-    absl-py-0.4.0              |   py35h28b3542_0         144 KB
-    six-1.11.0                 |   py35h423b573_1          21 KB
-    tensorflow-1.10.0          |mkl_py35heddcb22_0           4 KB
-    pandas-0.23.4              |   py35h04863e7_0        10.0 MB
-    numpy-1.15.1               |   py35h3b04361_0          37 KB
+    tensorflow-base-2.19.1     |cpu_py311hf06be6a_55       313.3 MB  conda-forge
+    libtensorflow_cc-2.19.1    |  cpu_h944eb50_55       152.8 MB  conda-forge
+    libtensorflow_framework-2.19.1|  cpu_he6e9716_55        10.0 MB  conda-forge
+    tensorboard-2.19.0         |     pyhd8ed1ab_0         4.9 MB  conda-forge
+    hdf5-2.1.0                 |nompi_h7d5651c_108         4.2 MB  conda-forge
+    libprotobuf-6.33.5         |       h538a264_2         3.5 MB  conda-forge
+    keras-3.15.0               |     pyh753f3f9_0         960 KB  conda-forge
+    grpcio-1.78.1              |  py311h3aa0767_0         861 KB  conda-forge
+    protobuf-6.33.5            |  py311h3f0a9aa_2         477 KB  conda-forge
+    pandas-3.0.3               |  py311h8032f78_0                 conda-forge
+    numpy-2.4.6                |  py311h2e04523_0                 conda-forge
+    python-3.11.15             | h7508c33_1_cpython                 conda-forge
     ------------------------------------------------------------
-                                           Total:       138.6 MB
+                                           Total:       499.7 MB
 
 The following NEW packages will be INSTALLED:
 
-    _tflow_1100_select: 0.0.3-mkl
-    absl-py:            0.4.0-py35h28b3542_0
-    astor:              0.7.1-py35_0
-    blas:               1.0-mkl
-    ca-certificates:    2018.03.07-0
-    certifi:            2018.8.24-py35_1
-    gast:               0.2.0-py35_0
-    grpcio:             1.12.1-py35hdbcaa40_0
-    intel-openmp:       2018.0.3-0
-    libedit:            3.1.20170329-h6b74fdf_2
-    libffi:             3.2.1-hd88cf55_4
-    libgcc-ng:          8.2.0-hdf63c60_1
-    libgfortran-ng:     7.3.0-hdf63c60_0
-    libprotobuf:        3.6.0-hdbcaa40_0
-    libstdcxx-ng:       8.2.0-hdf63c60_1
-    markdown:           2.6.11-py35_0
-    mkl:                2018.0.3-1
-    mkl_fft:            1.0.4-py35h4414c95_1
-    mkl_random:         1.0.1-py35h629b387_0
-    ncurses:            6.1-hf484d3e_0
-    numpy:              1.15.1-py35h3b04361_0
-    numpy-base:         1.15.1-py35h81de0dd_0
-    openssl:            1.0.2p-h14c3975_0
-    pandas:             0.23.4-py35h04863e7_0
-    pip:                10.0.1-py35_0
-    protobuf:           3.6.0-py35hf484d3e_0
-    python:             3.5.5-hc3d631a_4
-    python-dateutil:    2.7.3-py35_0
-    pytz:               2018.5-py35_0
-    readline:           7.0-ha6073c6_4
-    setuptools:         40.2.0-py35_0
-    six:                1.11.0-py35h423b573_1
-    sqlite:             3.24.0-h84994c4_0
-    tensorboard:        1.10.0-py35hf484d3e_0
-    tensorflow:         1.10.0-mkl_py35heddcb22_0
-    tensorflow-base:    1.10.0-mkl_py35h3c3e929_0
-    termcolor:          1.1.0-py35_1
-    tk:                 8.6.7-hc745277_3
-    werkzeug:           0.14.1-py35_0
-    wheel:              0.31.1-py35_0
-    xz:                 5.2.4-h14c3975_4
-    zlib:               1.2.11-ha838bed_2
+    keras:              3.15.0-pyh753f3f9_0
+    numpy:              2.4.6-py311h2e04523_0
+    pandas:             3.0.3-py311h8032f78_0
+    pip:                26.1.2-pyh8b19718_0
+    python:             3.11.15-h7508c33_1_cpython
+    tensorboard:        2.19.0-pyhd8ed1ab_0
+    tensorflow:         2.19.1-cpu_py311h7787b69_55
+    tensorflow-base:    2.19.1-cpu_py311hf06be6a_55
+    ... (plus a large set of shared-library dependencies)
 
 Proceed ([y]/n)?
 ```
 
-This gives you the list of all packages you requested to be installed, along with their dependencies, versions, and builds. Of note is the environment location path at the top of the package plan — you will notice that `conda` by default installs into your local directory and does not need administrative access to install packages. This means that you can administer your own Miniconda environments at CARC.
+This gives you the list of all packages you requested to be installed, along with their dependencies, versions, and builds — the `-y` flag in the command above answers this prompt automatically, which is useful for non-interactive/scripted use. Of note is the environment location path at the top of the package plan — you will notice that `conda` by default installs into your local directory and does not need administrative access to install packages. This means that you can administer your own Miniconda environments at CARC.
 
 When you verify the package plan, `conda` will proceed with downloading package binaries and installing them into the environment directory. You will see the progress of the installation and a message with how to activate your environment once complete:
 
 ```bash
-Downloading and Extracting Packages
-certifi-2018.8.24    |  139 KB | ####################################### | 100%
-python-3.6.6         | 15.4 MB | ####################################### | 100%
-tensorflow-base-1.10 | 55.3 MB | ####################################### | 100%
-setuptools-40.2.0    |  554 KB | ####################################### | 100%
-libprotobuf-3.6.0    |  3.8 MB | ####################################### | 100%
-sqlite-3.24.0        |  2.2 MB | ####################################### | 100%
-mkl-2018.0.3         | 149.2 MB| ###################################### | 100%
-mkl_random-1.0.1     |  349 KB | ####################################### | 100%
-mkl_fft-1.0.4        |  137 KB | ####################################### | 100%
-openssl-1.0.2p       |  3.4 MB | ####################################### | 100%
-six-1.11.0           |   21 KB | ####################################### | 100%
-tensorflow-1.10.0    |    4 KB | ####################################### | 100%
-numpy-base-1.15.1    |  4.0 MB | ####################################### | 100%
-protobuf-3.6.0       |  604 KB | ####################################### | 100%
-numpy-1.15.1         |   37 KB | ####################################### | 100%
-intel-openmp-2018.0. | 1004 KB | ####################################### | 100%
-absl-py-0.4.0        |  143 KB | ####################################### | 100%
-tensorboard-1.10.0   |  3.3 MB | ####################################### | 100%
-_tflow_1100_select-0 |    3 KB | ####################################### | 100%
+tensorflow-base-2.19 | 313.3 MB  | ##################################### | 100%
+libtensorflow_cc-2.1 | 152.8 MB  | ##################################### | 100%
+libtensorflow_framew | 10.0 MB   | ##################################### | 100%
+tensorboard-2.19.0   | 4.9 MB    | ##################################### | 100%
+hdf5-2.1.0           | 4.2 MB    | ##################################### | 100%
+libprotobuf-6.33.5   | 3.5 MB    | ##################################### | 100%
+keras-3.15.0         | 960 KB    | ##################################### | 100%
+grpcio-1.78.1        | 861 KB    | ##################################### | 100%
+ ... (more hidden) ...
 Preparing transaction: done
 Verifying transaction: done
 Executing transaction: done
 #
-# To activate this environment, use:
-# > conda activate TensorFlow
+# To activate this environment, use
 #
-# To deactivate an active environment, use:
-# > conda deactivate
+#     $ conda activate TensorFlow
 #
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
 ```
 
-Now we have our machine learning environment created to run our machine learning Python script. To activate the environment we just created, use the command `conda activate my_environment_name`, which is `conda activate TensorFlow` for this example. Remember to include the lines below in your Slurm script when working with Miniconda environments:
+Now we have our machine learning environment created to run our machine learning Python script. To activate the environment we just created, use the command `conda activate my_environment_name`, which is `conda activate TensorFlow` for this example.
+
+> **If you see `CondaError: Run 'conda init' before 'conda activate'`** — even if you've already run `conda init` in a previous session — it means the shell function `conda init` set up in your `~/.bashrc` didn't get loaded in this particular shell (compute-node shells from `srun --pty bash` don't always source `~/.bashrc` on entry). Run `source ~/.bashrc` (or start a fresh login shell) and try `conda activate` again. If you've genuinely never run `conda init` before, run `conda init bash` once first, then do the same.
+
+Remember to include the lines below in your Slurm script when working with Miniconda environments:
 
 ```bash
 # load miniconda software module
@@ -157,6 +106,129 @@ module load miniconda3
 conda activate environment_name
 ```
 
-For more information on managing environments, visit the Conda documentation site at this [link](https://conda.io/docs/user-guide/index.html), or by adding the flag `--help` to any `conda` command — for example, `conda create --help` will print a help page for creating environments.
+### Installing Packages with pip
 
-*This quickbyte was validated on 6/23/2026.*
+Not all versions of all software have Conda packages available, especially for some Python libraries. pip, the Python package manager, is automatically installed by default in all environments created by Conda, and can install packages alongside those installed by Conda without conflict.
+
+For example, say you need the library psutil, but you specifically need version 5.3.0. When you search for psutil using `conda` you get the following:
+
+```bash
+$ conda search psutil=5.3
+Loading channels: done
+# Name                       Version           Build  Channel
+psutil                         5.3.1          py27_0  conda-forge
+psutil                         5.3.1          py35_0  conda-forge
+psutil                         5.3.1          py36_0  conda-forge
+```
+
+Unfortunately, there are no packages built for psutil version 5.3.0. However, we can use pip to install the version we want.
+
+```bash
+$ conda activate TensorFlow
+
+(TensorFlow)$ pip install psutil==5.3.0
+Collecting psutil==5.3.0
+  Downloading psutil-5.3.0.tar.gz (397 kB)
+  Installing build dependencies ... done
+  Getting requirements to build wheel ... done
+  Preparing metadata (pyproject.toml) ... done
+Building wheels for collected packages: psutil
+  Building wheel for psutil (pyproject.toml) ... done
+  Created wheel for psutil: filename=psutil-5.3.0-cp311-cp311-linux_x86_64.whl size=196478 sha256=5f4ccd48280d6a22bb6051bb817aca3ea13054350be10f03b5108c41fd03d028
+  Stored in directory: /users/yourusername/.cache/pip/wheels/48/22/8d/8eb3db8c6428c186935b671fea12a9197147cd9badcf89f727
+Successfully built psutil
+Installing collected packages: psutil
+Successfully installed psutil-5.3.0
+
+(TensorFlow)$ conda list | grep psutil
+psutil                    5.3.0                    pypi_0    pypi
+```
+
+When installing packages using `pip` it is important to first activate the Conda environment that you want to install the package in, since pip is strictly a package manager and cannot modify Conda environments from outside that environment. You can see that our psutil package is version 5.3.0, just like we wanted. Under the `Build` and `Channel` columns, you'll see `pypi_0` and `pypi` instead of a real conda build string — that's how `conda list` flags a package that was actually installed by `pip`, since conda has no build metadata for it.
+
+### Performance with Conda versus pip
+
+One thing to note when installing packages is that it is always preferable to install necessary packages with `conda` first, and only then use `pip` to install packages that were not available through Miniconda repositories.
+
+It is usually best practice to install needed packages and dependencies with `conda` and use `pip` to install any remaining packages that were not available, rather than the other way around.
+
+### Adding Package Repositories (Channels)
+
+Easley's Conda is already configured with `bioconda` as a default channel alongside `conda-forge`, so most bioinformatics packages install with no extra steps. For example, if you need the Burrows-Wheeler Aligner (bwa) for an Illumina sequencing pipeline, `conda install bwa` succeeds immediately:
+
+```bash
+$ conda install bwa
+
+## Package Plan ##
+
+  added / updated specs:
+    - bwa
+
+The following NEW packages will be INSTALLED:
+
+  bwa                bioconda/linux-64::bwa-0.7.19-h577a1d6_1
+  perl               conda-forge/linux-64::perl-5.32.1-7_hd590300_perl5
+```
+
+Sometimes, though, the package you need lives in a channel that *isn't* already configured. For example, GPU-accelerated PyTorch needs the `pytorch` channel — searching for it without specifying a channel fails:
+
+```bash
+$ conda search pytorch-cuda
+Loading channels: done
+No match found for: pytorch-cuda. Search: *pytorch-cuda*
+
+PackagesNotFoundError: The following packages are not available from current channels:
+
+  - pytorch-cuda
+
+Current channels:
+
+  - https://conda.anaconda.org/conda-forge/linux-64
+  - https://conda.anaconda.org/conda-forge/noarch
+  - https://conda.anaconda.org/nodefaults/linux-64
+  - https://conda.anaconda.org/nodefaults/noarch
+  - https://conda.anaconda.org/bioconda/linux-64
+  - https://conda.anaconda.org/bioconda/noarch
+
+To search for alternate channels that may provide the conda package you're
+looking for, navigate to
+
+    https://anaconda.org
+
+and use the search bar at the top of the page.
+```
+
+We can search other channels that may have the package we're after using the `-c` flag:
+
+```bash
+$ conda search -c pytorch -c nvidia pytorch-cuda
+```
+
+Which yields results:
+
+```bash
+Loading channels: done
+# Name                       Version           Build  Channel
+pytorch-cuda                    11.6      h867d48c_0  pytorch
+pytorch-cuda                    11.7      h67b0de4_0  pytorch
+pytorch-cuda                    11.8      h7e8668a_3  pytorch
+pytorch-cuda                    12.1      ha16c6d3_5  pytorch
+pytorch-cuda                    12.4      hc786d27_6  pytorch
+```
+
+We can then install it with `conda install -c pytorch -c nvidia pytorch-cuda` and continue with our work. You can permanently add channels by appending your `.condarc` file either directly in a text editor, or with `conda` using the `config` command:
+
+```bash
+$ conda config --append channels pytorch
+```
+
+This will permanently add the channel to your configuration file, meaning Conda will automatically search it as well as the default channels when looking for packages.
+
+### Further Reading
+
+- Official Conda documentation: [conda.io/docs](https://conda.io/docs/)
+- Conda getting-started guide: [docs.conda.io](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html)
+- Managing environments: [conda.io/docs/user-guide](https://conda.io/docs/user-guide/index.html) (or run `conda create --help`, or add `--help` to any `conda` command)
+- Managing channels and installing with pip: [conda.io/docs/user-guide/tasks/manage-channels](https://conda.io/docs/user-guide/tasks/manage-channels.html)
+
+*This quickbyte was validated on 7/7/2026.*
