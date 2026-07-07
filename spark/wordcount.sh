@@ -24,7 +24,9 @@ cp "$SLURM_SUBMIT_DIR/big.txt"      "$SCRATCHDIR/"
 
 cd "$SCRATCHDIR"
 
-bash "$SLURM_SUBMIT_DIR/slurm-spark-submit" \
-    wordcount.py big.txt > wordcount.log 2>&1
+LOGFILE="wordcount_${SLURM_JOB_ID}.log"
 
-cp wordcount.log "$SLURM_SUBMIT_DIR/"
+bash "$SLURM_SUBMIT_DIR/slurm-spark-submit" \
+    wordcount.py big.txt > "$LOGFILE" 2>&1
+
+cp "$LOGFILE" "$SLURM_SUBMIT_DIR/"

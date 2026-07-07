@@ -140,13 +140,15 @@ cp "$SLURM_SUBMIT_DIR/wordcount.py" "$SCRATCHDIR/"
 cp "$SLURM_SUBMIT_DIR/big.txt"      "$SCRATCHDIR/"
 cd "$SCRATCHDIR"
 
-bash "$SLURM_SUBMIT_DIR/slurm-spark-submit" \
-    wordcount.py big.txt > wordcount.log 2>&1
+LOGFILE="wordcount_${SLURM_JOB_ID}.log"
 
-cp wordcount.log "$SLURM_SUBMIT_DIR/"
+bash "$SLURM_SUBMIT_DIR/slurm-spark-submit" \
+    wordcount.py big.txt > "$LOGFILE" 2>&1
+
+cp "$LOGFILE" "$SLURM_SUBMIT_DIR/"
 ```
 
-Standard pattern: copy inputs to local `/tmp` scratch for faster I/O, `$SLURM_SUBMIT_DIR` tracks where you originally ran `sbatch` from since the script `cd`s away from it, and results get copied back at the end. Submit and monitor as usual:
+Standard pattern: copy inputs to local `/tmp` scratch for faster I/O, `$SLURM_SUBMIT_DIR` tracks where you originally ran `sbatch` from since the script `cd`s away from it, and results get copied back at the end. The log is named with `$SLURM_JOB_ID` so repeated runs don't overwrite each other's output. Submit and monitor as usual:
 ```bash
 sbatch wordcount.sh
 squeue --me
@@ -180,28 +182,47 @@ To confirm work actually spread across nodes, not just that processes exist:
 
 ## Step 8: DataFrames and Plotting
 
-Aggregate inside Spark, then bring only the small result back to Pandas:
+Create `monthly_counts.py`, which generates a small synthetic dataset directly in Spark (no external file needed), aggregates it there, then brings only the small result back to Pandas to plot:
 
-```python
+```bash
+cat > monthly_counts.py <<'EOF'
 import matplotlib
 matplotlib.use("PDF")  # no display on compute nodes
 import matplotlib.pyplot as plt
 import pandas as pd
-from pyspark.sql.functions import month
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.appName("MonthlyCounts").getOrCreate()
+
+# Synthetic dataset: 5,000 rows, each with a random date in 2024
+df = spark.range(5000).select(
+    F.date_add(F.lit("2024-01-01"), (F.rand(seed=42) * 365).cast("int")).alias("Date")
+)
 
 monthly = (
-    df.withColumn("Month", month("Date"))
+    df.withColumn("Month", F.month("Date"))
     .groupBy("Month").count()
     .orderBy("Month")
     .collect()          # only action in the chain — result is tiny by now
 )
 
-pdf = pd.DataFrame(monthly, columns=["month", "crime_count"])
-pdf.plot(figsize=(20, 10), kind="line", x="month", y="crime_count")
-plt.savefig("crimes-by-month.pdf")
+pdf = pd.DataFrame(monthly, columns=["month", "record_count"])
+pdf.plot(figsize=(20, 10), kind="line", x="month", y="record_count")
+plt.savefig("monthly-counts.pdf")
+EOF
 ```
 
 The grouping/counting happens distributed across all workers before anything leaves the cluster; only the final handful of rows gets pulled into Pandas/Matplotlib, which are single-machine tools never meant to handle the full raw dataset directly.
+
+Run it against the cluster you already have up from Step 5 or 7:
+
+```bash
+spark-submit --master spark://<node>:7077 monthly_counts.py
+ls -la monthly-counts.pdf
+```
+
+Since the dataset is generated with a fixed seed, the counts are deterministic — grouping by `Month` should come out near `5000/12 ≈ 417` per month every run.
 
 ---
 
