@@ -20,9 +20,12 @@ Typical use cases include:
 
 ### Converting Files in Parallel
 
+> **Known issue:** the `imagemagick` module is currently unavailable on Easley. A fix is expected within a day — until then, skip this example.
+
 The following example converts all `.csv` files into `.txt` files.
 
 ```bash
+module load parallel
 module load imagemagick
 
 find . -name "*.csv" | parallel convert {} {.}.txt
@@ -39,6 +42,12 @@ This command:
 ---
 
 ### Compressing and Decompressing Files
+
+`parallel` isn't on your `PATH` by default — load it once per session:
+
+```bash
+module load parallel
+```
 
 Compress files:
 
@@ -65,33 +74,21 @@ Two commonly used features are:
 * `--arg-file` — read inputs from a file
 * `{}` — substitute each input line into the command
 
-Assume an input file named `msizes`:
+Create an input file named `msizes`:
 
-```text
+```bash
+cat > msizes <<'EOF'
 1
 2
 3
 4
+EOF
 ```
 
-Launch MATLAB once per line:
+And the MATLAB program it drives, `program.m`:
 
 ```bash
-parallel --arg-file msizes \
-'matlab -batch "msize={}; program"'
-```
-
-This launches four MATLAB jobs simultaneously.
-
-`matlab -batch` is preferred over older combinations such as `-nojvm -nodisplay -r`.
-
----
-
-### Example MATLAB Program
-
-`program.m`
-
-```matlab
+cat > program.m <<'EOF'
 % Generate a random matrix
 rmatrix = rand(msize);
 
@@ -102,7 +99,28 @@ fname = sprintf('%d.csv', msize);
 writematrix(rmatrix, fname);
 
 exit
+EOF
 ```
+
+Running large numbers of MATLAB jobs directly on the login node is not allowed — request an interactive allocation first:
+
+```bash
+srun --nodes=1 --ntasks-per-node=4 --pty bash
+```
+
+Then, on the allocated compute node, load both modules and launch MATLAB once per line in `msizes`:
+
+```bash
+module load matlab
+module load parallel
+
+parallel --arg-file msizes \
+    'matlab -batch "msize={}; program"'
+```
+
+This launches four MATLAB jobs simultaneously.
+
+`matlab -batch` is preferred over older combinations such as `-nojvm -nodisplay -r`.
 
 Example output:
 
@@ -166,9 +184,10 @@ Without both of these steps, a `--sshloginfile` job will silently hang until it 
 
 Running large numbers of MATLAB jobs directly on login nodes is not recommended, so please use Slurm to allocate compute resources.
 
-Example Slurm submission script:
+Create the submission script (uses the same `msizes` and `program.m` from the single-node example above — recreate them here if you're starting fresh):
 
 ```bash
+cat > matlab_parallel.slurm <<'EOF'
 #!/bin/bash
 
 #SBATCH --job-name=matlab_parallel
@@ -192,6 +211,7 @@ parallel \
     'matlab -batch "msize={}; program"'
 
 echo "Finished at $(date)"
+EOF
 ```
 
 `--workdir "$SLURM_SUBMIT_DIR"` is required because SSH sessions default to your home directory, not wherever this script's own `cd` took you — without it, MATLAB can't find `program.m`. `--env PATH` forwards the module-loaded PATH (with `matlab` on it) to the remote SSH sessions, which otherwise start with a bare, non-login environment that doesn't have `module`-loaded paths at all.
@@ -239,41 +259,12 @@ module load miniconda3
 conda create -n numpy_py3 python=3.11 numpy -y
 ```
 
-### Example Slurm Script
-
-```bash
-#!/bin/bash
-
-#SBATCH --job-name=gnu_parallel_python
-#SBATCH --nodes=2
-#SBATCH --ntasks-per-node=4
-#SBATCH --time=01:00:00
-
-module load parallel
-module load miniconda3
-
-source activate numpy_py3
-
-cd "$SLURM_SUBMIT_DIR"
-
-parallel \
-    -j "$SLURM_NTASKS_PER_NODE" \
-    --sshloginfile "$CARC_NODEFILE" \
-    --workdir "$SLURM_SUBMIT_DIR" \
-    --env PATH \
-    --arg-file mat_in \
-    python matrix_inv.py
-```
-
-Note: this uses plain `parallel` with `--env PATH`, not `env_parallel`. `env_parallel` forwards your *entire* shell environment to each remote session, and conda's activation hooks add enough bloat to that environment to blow past the shell's argument-length limit (`Command line too long`). `--env PATH` forwards just the one variable that's actually needed to find `python` in the activated environment.
-
----
-
 ### Example Python Program
 
-`matrix_inv.py`
+Create `matrix_inv.py`:
 
-```python
+```bash
+cat > matrix_inv.py <<'EOF'
 import argparse
 import numpy as np
 from numpy.random import rand
@@ -297,15 +288,17 @@ np.savetxt(
     result,
     delimiter=","
 )
+EOF
 ```
 
 ---
 
 ### Example Input File
 
-`mat_in`
+Create `mat_in` — each line becomes one parallel task:
 
-```text
+```bash
+cat > mat_in <<'EOF'
 1000
 2000
 3000
@@ -314,9 +307,40 @@ np.savetxt(
 6000
 7000
 8000
+EOF
 ```
 
-Each line becomes one parallel task.
+---
+
+### Example Slurm Script
+
+```bash
+cat > python_parallel.slurm <<'EOF'
+#!/bin/bash
+
+#SBATCH --job-name=gnu_parallel_python
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4
+#SBATCH --time=01:00:00
+
+module load parallel
+module load miniconda3
+
+source activate numpy_py3
+
+cd "$SLURM_SUBMIT_DIR"
+
+parallel \
+    -j "$SLURM_NTASKS_PER_NODE" \
+    --sshloginfile "$CARC_NODEFILE" \
+    --workdir "$SLURM_SUBMIT_DIR" \
+    --env PATH \
+    --arg-file mat_in \
+    python matrix_inv.py
+EOF
+```
+
+Note: this uses plain `parallel` with `--env PATH`, not `env_parallel`. `env_parallel` forwards your *entire* shell environment to each remote session, and conda's activation hooks add enough bloat to that environment to blow past the shell's argument-length limit (`Command line too long`). `--env PATH` forwards just the one variable that's actually needed to find `python` in the activated environment.
 
 Submit with:
 
