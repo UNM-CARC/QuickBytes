@@ -114,10 +114,14 @@ Both commands are useful for catching allocation vs. usage mismatches — for ex
 
 ### Viewing output and error files:
 
-Once your job has completed, you should see two files in the directory from which you submitted the job: an output file and an error file, named `slurm-JobID.out` and `slurm-JobID.err` (where `JobID` refers to the ID of the job returned by `sbatch`).
+Once your job has completed, you should see an output file in the directory from which you submitted the job, named `slurm-JobID.out` (where `JobID` refers to the ID of the job returned by `sbatch`). For the example job above, this file would be named `slurm-155161.out`.
 
-For the example job above, these two files would be named `slurm-155161.out` and `slurm-155161.err`, respectively.
+By default, Slurm sends **both** standard output and standard error to this same file — a batch script only gets a separate `slurm-JobID.err` file if it explicitly requests one with `#SBATCH --error=<filename>` (or sets `--output`/`--error` to different filenames). Without that directive, everything — normal output and error messages alike — lands in the single `.out` file. You can confirm which files a specific job actually wrote with:
 
-Any output from the job sent to "standard output" will be written to the output file, and any output sent to "standard error" will be written to the error file. The amount of information in the output and error files varies depending on the program being run and how the `sbatch` batch script was set up.
+```bash
+scontrol show job <jobID> | grep -E "StdOut|StdErr"
+```
+
+If both lines show the same path, it's a combined file; if they differ, the script requested a split.
 
 *This quickbyte was validated on 6/22/2026*
