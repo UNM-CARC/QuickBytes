@@ -10,11 +10,13 @@ For more information, visit [this page](https://lmod.readthedocs.io/en/latest/01
 
 Modules are used to set environment variables and dependencies for the purpose of managing access to applications and libraries on CARC systems. The command `module avail` lists all the modules available on the system you are logged into. Note that this list can be extremely long — if you'd like to stop it from printing, use Ctrl+C (this works the same way on Mac, Windows, and Linux terminals, since you're connected to a remote Linux system either way).
 
-To load a module, use the `module load` command. For example, to load the module for the Intel compiler, use the command:
+To load a module, use the `module load` command. For example, to load the module for the Intel compilers, use the command:
 
 ```bash
-module load intel
+module load intel-oneapi-compilers
 ```
+
+Note that there's no plain `intel` module on Easley — `module load intel` fails with "The following module(s) are unknown." Easley's Intel software all lives under the `intel-oneapi-*` family instead (`intel-oneapi-compilers`, `intel-oneapi-mkl`, `intel-oneapi-mpi`, etc.).
 
 Another useful command related to module management is `module spider`. For example, if you issue the command:
 
@@ -25,27 +27,24 @@ module spider intel
 you will see output similar to:
 
 ```
---------------------------------------------------------------------------------------------------------------------
-  intel:
---------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  intel-oneapi-advisor:
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
      Versions:
-        intel/18.0.4
-        intel/19.0.5
-        intel/20.0.4
-     Other possible modules matches:
-        intel-mkl  intel-mpi  intel-oneapi-compilers  intel-oneapi-mkl  intel-oneapi-mpi  intel-oneapi-runtime  ...
---------------------------------------------------------------------------------------------------------------------
-  To find other possible module matches, execute:
-      $ module -r spider '.*intel.*'
---------------------------------------------------------------------------------------------------------------------
-  For detailed information about a specific "intel" package (including how to load the module), use the module's full name.
-  Note that names with a trailing (E) are extensions provided by other modules.
-  For example:
-     $ module spider intel/20.0.4
---------------------------------------------------------------------------------------------------------------------
+        intel-oneapi-advisor/2025.2.0-asm7
+        intel-oneapi-advisor/2025.2.0-omxu
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  For detailed information about a specific "intel-oneapi-advisor" package (including how to load the modules) use the module's full name.
+  ...
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  intel-oneapi-compilers: intel-oneapi-compilers/2025.1.1-b3qi
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    This module can be loaded directly: module load intel-oneapi-compilers/2025.1.1-b3qi
+...
 ```
 
-This command returns much more detailed information about a module of interest. You can see that there are actually multiple versions of the Intel compilers available for use, as is the case for most software installed on CARC systems.
+`spider` matches on partial names, so searching `intel` surfaces the entire `intel-oneapi-*` family at once — you can see there are multiple related Intel packages available, each with its own version(s), as is the case for most software installed on CARC systems.
 
 To see all currently loaded modules, use the command `module list`. As an example, let's load the software modules for OpenMPI and GCC, then use `module list`:
 
