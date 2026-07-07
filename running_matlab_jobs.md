@@ -74,17 +74,21 @@ This ensures MATLAB runs on a compute node, not the login node.
 
 ## Running MATLAB from the Command Line (Non-Interactive)
 
-You can also run the script directly:
+Rather than requesting an interactive shell first, you can launch MATLAB on a compute node directly from the login node with a single command. Load the module in your login shell first — `srun` propagates your current environment to the compute node, so the module needs to already be loaded before you call `srun`, not after:
+
+```bash id="v3k8lp"
+module load matlab
+```
 
 ```bash id="v3k9lm"
-matlab -batch "my_program"
+srun --partition general matlab -batch "my_program"
 ```
 
 Notes:
 
 * The `.m` extension is omitted
 * `-batch` runs the script and exits automatically
-* This is the recommended method for CARC jobs
+* This is the recommended method for quick one-off runs; for anything long enough to need `--time`, `--mem`, or email notifications, use the `sbatch` submission below instead
 
 ---
 
@@ -182,6 +186,6 @@ Submit job to Slurm.
 tail -f slurm-<jobid>.out
 ```
 
-*This QuickByte was validated on 6/23/2026*
-
 Monitor job output.
+
+*This QuickByte was validated on 6/23/2026*
