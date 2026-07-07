@@ -10,11 +10,7 @@ These gains in computation time give researchers good reason to move computation
 
 ### CARC Benchmarks
 
-To illustrate the CPU-vs-GPU performance gap, here are benchmarks run on the (legacy) Xena system at CARC using intensive linear algebra operations — matrix multiplication and matrix inversion — comparing CPU-only execution to GPU-accelerated execution.
-
-The CPU version was deployed on a multicore processor with 16 cores and 64GB of RAM, using NumPy arrays in Python. The GPU version was deployed on an NVIDIA Tesla K40 with 11GB of GPU memory, using TensorFlow. The CPU implementations were tested with two different NumPy builds: `mkl_mul` refers to multiplication using NumPy compiled with Intel's Math Kernel Library (MKL), while `nomkl_mul` refers to NumPy without MKL. MKL-based NumPy was installed in a Conda environment, whereas NumPy installed via pip does not integrate MKL.
-
-The old Xena cluster had nodes with both single- and dual-GPU configurations. A dual-GPU node offered 2×11GB of GPU memory, allowing larger batch sizes and roughly double the cores for faster training of larger, more complex models. `gpu_mul` corresponds to multiplication on a single-GPU node, and `dualgpu_mul` corresponds to multiplication on a dual-GPU node. A similar benchmark was run for matrix inversion.
+To illustrate the CPU-vs-GPU performance gap, here are benchmarks run on Easley's `l40s` partition (a single NVIDIA L40S GPU), comparing CPU-only execution against GPU-accelerated execution for matrix multiplication and matrix inversion using TensorFlow at increasing matrix sizes (N = 1000, 2000, 4000, 8000).
 
 ![](Images/matrix_inverse.png)
 
@@ -24,7 +20,7 @@ Fig 1. Time for matrix inversion vs. size of matrix N
 
 Fig 2. Time for matrix multiplication vs. size of matrix N
 
-The implementation code for these benchmarks can be found [here](https://github.com/ceodspspectrum/CARC_WORK/tree/master/master).
+Both operations scale far better on the GPU as matrix size grows. At N=8000, matrix multiplication takes 0.59s on CPU versus 0.08s on the GPU (about 7x faster), and matrix inversion takes 26.8s on CPU versus 0.13s on the GPU (about 200x faster) — inversion in particular benefits from the GPU's parallelism since its computational cost grows faster with matrix size than multiplication's does.
 
 ### TensorFlow Basics
 
