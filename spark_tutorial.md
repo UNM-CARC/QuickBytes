@@ -170,14 +170,18 @@ def main():
 if __name__ == "__main__":
     main()
 EOF
+```
 
+```bash
 cat > big.txt <<'EOF'
 the quick brown fox jumps over the lazy dog the fox the
 the quick brown fox jumps over the lazy dog the fox the
 the quick brown fox jumps over the lazy dog the fox the
 the quick brown fox jumps over the lazy dog the fox the
 EOF
+```
 
+```bash
 cat > wordcount.sh <<'EOF'
 #!/bin/bash
 #SBATCH --nodes=1
