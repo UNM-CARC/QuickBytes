@@ -14,6 +14,34 @@ Let's create an environment on Easley to run a Python machine learning script th
 
 `module load miniconda3`
 
+Before creating anything, it's worth seeing what environments already exist. Run:
+
+`conda info --envs`
+
+On a well-used cluster like Easley, this list is usually long — alongside your own environments (if you have any yet), you'll see a large number of shared environments maintained for specific research groups or commonly used software:
+
+```bash
+# conda environments:
+#
+base                     /opt/local/miniconda3
+aligners                 /projects/shared/conda/envs/aligners
+qiime2-amplicon-2026.1   /projects/shared/conda/envs/qiime2-amplicon-2026.1
+r-4.5                    /projects/shared/conda/envs/r-4.5
+...
+TensorFlow               /users/yourusername/.conda/envs/TensorFlow
+tf_env                   /users/yourusername/.conda/envs/tf_env
+```
+
+*(trimmed for brevity — a real listing shows many more shared and personal environments than this)*
+
+The path tells you which of three kinds of environment you're looking at:
+
+- **`base`**, at `/opt/local/miniconda3` — the default system environment, maintained by CARC. Every user can use whatever's installed there, but nobody besides CARC staff can modify it.
+- **Shared project/software environments**, under `/projects/shared/conda/envs/` (like `aligners`, `qiime2-amplicon-2026.1`, `r-4.5` above) — maintained for specific research groups or widely used software stacks. Any user can typically use these, but modifying them requires access CARC or the owning group grants you, same as `base`.
+- **Your own environments**, under `/users/yourusername/.conda/envs/` (like `TensorFlow` above) — these belong to you: only you can see or modify them. No other user on the cluster, including other members of your research group, has access to them by default.
+
+You may also notice nothing here is marked with the asterisk `conda info --envs` normally uses to flag the active environment — that's expected before `conda init`/`conda activate` have run in a shell (more on that below). Once you activate an environment, it'll show the asterisk instead.
+
 We use `conda` to create new environments and install or upgrade packages within environments. To create our machine learning environment, we type:
 
 `conda create --name TensorFlow python=3.11 pandas tensorflow -y`
@@ -93,6 +121,12 @@ Executing transaction: done
 ```
 
 Now we have our machine learning environment created to run our machine learning Python script. To activate the environment we just created, use the command `conda activate my_environment_name`, which is `conda activate TensorFlow` for this example.
+
+Before `conda activate` works in a given shell, Conda needs to have hooked itself into that shell's startup files — this is what `conda init` does. Run it once per account, not once per session:
+
+`conda init bash`
+
+This appends a block to your `~/.bashrc` that defines the `conda` shell function `activate`/`deactivate` depend on. You'll need to start a new shell (or `source ~/.bashrc`) for it to take effect, but after that it stays in place for every future login.
 
 > **If you see `CondaError: Run 'conda init' before 'conda activate'`** — even if you've already run `conda init` in a previous session — it means the shell function `conda init` set up in your `~/.bashrc` didn't get loaded in this particular shell (compute-node shells from `srun --pty bash` don't always source `~/.bashrc` on entry). Run `source ~/.bashrc` (or start a fresh login shell) and try `conda activate` again. If you've genuinely never run `conda init` before, run `conda init bash` once first, then do the same.
 
