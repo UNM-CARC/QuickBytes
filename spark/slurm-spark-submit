@@ -1,0 +1,139 @@
+#!/bin/bash
+# slurm-spark-submit — Spark standalone cluster launcher for Easley/Slurm
+
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Load the correct Spark module and set environment
+# ---------------------------------------------------------------------------
+module load spark/3.5.1-kn2k
+
+export SPARK_HOME="${SPARK_ROOT}"
+export JAVA_HOME="${JAVA_HOME:-$(dirname $(dirname $(readlink -f $(which java))))}"
+export PYSPARK_PYTHON=~/.conda/envs/spark-env/bin/python
+export PYSPARK_DRIVER_PYTHON=~/.conda/envs/spark-env/bin/python
+
+echo "Using SPARK_HOME=$SPARK_HOME"
+echo "Using JAVA_HOME=$JAVA_HOME"
+echo "Using PYSPARK_PYTHON=$PYSPARK_PYTHON"
+
+# ---------------------------------------------------------------------------
+# Validate environment
+# ---------------------------------------------------------------------------
+if [[ -z "${SPARK_ROOT:-}" ]]; then
+    echo "ERROR: SPARK_ROOT is not set. Run: module load spark/3.5.1-kn2k" >&2
+    exit 1
+fi
+
+if [[ -z "${SLURM_JOB_ID:-}" ]]; then
+    echo "ERROR: Must be run inside a Slurm allocation (salloc or sbatch)." >&2
+    exit 1
+fi
+
+if [[ -z "${SPARK_DIST_CLASSPATH:-}" ]]; then
+    echo "ERROR: SPARK_DIST_CLASSPATH is not set. The spark/3.5.1-kn2k module should set this." >&2
+    exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Discover allocated nodes
+# ---------------------------------------------------------------------------
+NODELIST=$(scontrol show hostnames "$SLURM_JOB_NODELIST")
+MASTER_HOST=$(echo "$NODELIST" | head -n 1)
+MASTER_PORT=${SPARK_MASTER_PORT:-7077}
+MASTER_URL="spark://${MASTER_HOST}:${MASTER_PORT}"
+
+export SPARK_MASTER_HOST="$MASTER_HOST"
+export SPARK_MASTER_PORT="$MASTER_PORT"
+export SPARK_MASTER_URL="$MASTER_URL"
+
+echo "SPARK_MASTER_HOST=${MASTER_HOST}"
+echo "SPARK_MASTER_PORT=${MASTER_PORT}"
+echo "MASTER_URL=${MASTER_URL}"
+echo "Nodes allocated: $(echo "$NODELIST" | tr '\n' ' ')"
+
+# ---------------------------------------------------------------------------
+# Set all Spark dirs to writable locations under /tmp
+# ---------------------------------------------------------------------------
+SPARK_SCRATCH="/tmp/spark-${SLURM_JOB_ID}"
+export SPARK_LOG_DIR="$SPARK_SCRATCH/logs"
+export SPARK_WORKER_DIR="$SPARK_SCRATCH/work"
+export SPARK_LOCAL_DIRS="$SPARK_SCRATCH/local"
+export SPARK_PID_DIR="$SPARK_SCRATCH/pids"
+
+mkdir -p "$SPARK_LOG_DIR" "$SPARK_WORKER_DIR" "$SPARK_LOCAL_DIRS" "$SPARK_PID_DIR"
+
+# ---------------------------------------------------------------------------
+# Start the master directly on the current node
+# ---------------------------------------------------------------------------
+echo "Starting Spark master on ${MASTER_HOST}..."
+"${SPARK_HOME}/sbin/start-master.sh" \
+    --host "$MASTER_HOST" \
+    --port "$MASTER_PORT"
+
+sleep 5
+
+if ! ps aux | grep -q '[M]aster'; then
+    echo "ERROR: Spark master failed to start. Check logs in ${SPARK_LOG_DIR}" >&2
+    cat "${SPARK_LOG_DIR}/"*Master*.out 2>/dev/null || true
+    exit 1
+fi
+echo "Master is running."
+
+# ---------------------------------------------------------------------------
+# Start one worker per allocated node via ssh
+# ---------------------------------------------------------------------------
+CORES_PER_NODE=${SLURM_CPUS_ON_NODE:-$(nproc)}
+MEM_MB=$(( ($(grep MemTotal /proc/meminfo | awk '{print $2}') / 1024) - 2048 ))
+
+echo "Starting Spark workers (${CORES_PER_NODE} cores, ${MEM_MB} MB each)..."
+while IFS= read -r node; do
+    ssh "$node" "
+        export SPARK_HOME='${SPARK_HOME}'
+        export JAVA_HOME='${JAVA_HOME}'
+        export SPARK_DIST_CLASSPATH='${SPARK_DIST_CLASSPATH}'
+        export PYSPARK_PYTHON='${PYSPARK_PYTHON}'
+        export SPARK_LOG_DIR='${SPARK_LOG_DIR}'
+        export SPARK_WORKER_DIR='${SPARK_WORKER_DIR}'
+        export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS}'
+        export SPARK_PID_DIR='${SPARK_PID_DIR}'
+        '${SPARK_HOME}/sbin/start-worker.sh' \
+            --cores '${CORES_PER_NODE}' \
+            --memory '${MEM_MB}m' \
+            '${MASTER_URL}'
+    " &
+done <<< "$NODELIST"
+
+sleep 8
+
+echo ""
+echo "Spark cluster is up. Connect with:"
+echo "  pyspark --master ${MASTER_URL}"
+echo "  spark-submit --master ${MASTER_URL} <app.py>"
+echo ""
+
+# ---------------------------------------------------------------------------
+# Optionally submit an application
+# ---------------------------------------------------------------------------
+if [[ $# -gt 0 ]]; then
+    echo "Submitting: $*"
+    "${SPARK_HOME}/bin/spark-submit" --master "$MASTER_URL" "$@"
+    EXIT_CODE=$?
+
+    echo "Job finished (exit ${EXIT_CODE}). Stopping Spark cluster..."
+    "${SPARK_HOME}/sbin/stop-master.sh"
+    while IFS= read -r node; do
+        ssh "$node" "
+            export SPARK_HOME='${SPARK_HOME}'
+            export SPARK_LOG_DIR='${SPARK_LOG_DIR}'
+            export SPARK_PID_DIR='${SPARK_PID_DIR}'
+            '${SPARK_HOME}/sbin/stop-worker.sh'
+        " &
+    done <<< "$NODELIST"
+    wait
+
+    exit $EXIT_CODE
+fi
+
+echo "No application specified — cluster is running."
+echo "Stop it manually with: \${SPARK_HOME}/sbin/stop-master.sh"
