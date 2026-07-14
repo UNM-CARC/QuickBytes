@@ -1,53 +1,191 @@
 # Running MATLAB Jobs at CARC
 
-### MATLAB
-MATLAB is a powerful software environment and language especially for matrix manipulation and calculations, whence the name __MAT__rix__LAB__oratory. if you are unfamiliar with MATLAB please visit there website for more information at this [link](https://www.mathworks.com/products/matlab.html). For a list of which versions of MATLAB are available on a certain system use the command `module avail matlab` on the head node. MATLAB is installed on all CARC systems, however, it can only be accessed on the compute nodes and is not available on the head node. In order to run MATLAB jobs at CARC it is necessary to call the MATLAB software in batch mode to run on a script/program supplied by the user. 
+## MATLAB
 
-### Batch mode
+MATLAB is a software environment and programming language designed primarily for numerical computing and matrix operations—hence the name MATrix LABoratory.
 
-Many users are likely familiar with using the MATLAB GUI to run their code either in the interactive console or by launching a script. However, it is often useful to run a Matlab program from the command line in batch mode, as though it were a shell script. MATLAB can be run non-interactively using a built in function called batch mode. All MATLAB jobs should be run using batch mode when using CARC systems. 
+If you are unfamiliar with MATLAB, visit the MathWorks website for additional documentation and tutorials:
 
-### Submitting a job with batch mode
+https://www.mathworks.com/products/matlab.html
 
-Say you have a small program named `my_program.m` that generates a 3x3 matrix of random numbers and writes the results to a .csv file. Your code for such a program might look like this:
+To view available MATLAB versions on a CARC system, run:
 
-```matlab
-%generate a matrix of random numbers of dimension 3x3
-rmatrix=rand(3);
-fname='randnums.csv';
-csvwrite(fname,rmatrix);
-quit
+```bash id="m1q8aa"
+module avail matlab
 ```
-This program can be submitted using batch mode with the command `matlab -r my_program`. In this command the `-r` flag is telling MATLAB to run your script `my_program.m` in batch mode. Notice that when calling a script with batch mode you leave off the extension `.m`. This command works if you are running on a local machine, however, when running jobs at CARC you need to submit your job to the job scheduler using a Slurm script. For those unfamiliar with Slurm scripts explanations and example scripts can be found [here][(https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md)]. To submit our MATLAB program to the Easley or Hopper job scheduler we would put our batch command in a Slurm script similar to the one below:
 
-```bash
+MATLAB is installed on CARC systems, but must be run on compute nodes rather than login (head) nodes.
+
+To run MATLAB jobs at CARC, submit a Slurm job that launches MATLAB in batch mode.
+
+---
+
+## Batch Mode
+
+Many users are familiar with running MATLAB through the graphical interface or interactive console.
+
+At CARC, MATLAB programs must be run non-interactively in batch mode.
+
+Batch mode allows MATLAB to execute a script and exit automatically without launching the graphical interface.
+
+---
+
+## Creating a Simple MATLAB Program
+
+Suppose you have a MATLAB script named `my_program.m` that generates a 3×3 matrix of random numbers and writes the results to a CSV file.
+
+Example:
+
+```matlab id="k8x2cn"
+% Generate a random 3x3 matrix
+rmatrix = rand(3);
+
+% Output filename
+fname = 'randnums.csv';
+
+% Write results
+writematrix(rmatrix, fname);
+
+exit
+```
+
+Save this file in your home directory.
+
+---
+
+## Running MATLAB on a Compute Node (Interactive)
+
+If you want to test interactively, first request a compute node:
+
+```bash id="q7v1sp"
+srun --pty bash
+```
+
+Once on the compute node:
+
+```bash id="p0d8xy"
+module load matlab
+matlab -batch "my_program"
+```
+
+This ensures MATLAB runs on a compute node, not the login node.
+
+---
+
+## Running MATLAB from the Command Line (Non-Interactive)
+
+Rather than requesting an interactive shell first, you can launch MATLAB on a compute node directly from the login node with a single command. Load the module in your login shell first — `srun` propagates your current environment to the compute node, so the module needs to already be loaded before you call `srun`, not after:
+
+```bash id="v3k8lp"
+module load matlab
+```
+
+```bash id="v3k9lm"
+srun --partition general matlab -batch "my_program"
+```
+
+Notes:
+
+* The `.m` extension is omitted
+* `-batch` runs the script and exits automatically
+* This is the recommended method for quick one-off runs; for anything long enough to need `--time`, `--mem`, or email notifications, use the `sbatch` submission below instead
+
+---
+
+## Submitting a MATLAB Job with Slurm
+
+Create a submission script named `my_matlab_job.sbatch`.
+
+```bash id="x2n5ad"
 #!/bin/bash
 
-# Commands specific to the job scheduler requesting resources, naming your job, and setting up email alerts regarding job status      #SBATCH --job-name=my_matlab_job
-#SBATCH --time=1:00:00
+#SBATCH --job-name=my_matlab_job
+#SBATCH --time=01:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=my_email.@unm.edu
+#SBATCH --ntasks=1
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=my_email@unm.edu
 #SBATCH --output=slurm-%j.out
 
 # Change to the directory that you submitted your Slurm script from.
+# Without this, relative-path output files (like randnums.csv here)
+# may not end up where you expect, or may not get written at all.
 cd "$SLURM_SUBMIT_DIR"
 
-# Loading the MATLAB software module. The specific module name is system dependent.
-module load matlab/R2023a
+module load matlab
 
-# Calling MATLAB in batch mode to run your program.
-matlab -nojvm -nodisplay -r my_program > /dev/null
+matlab -batch "my_program"
 ```
 
-There are a couple of additions to our batch mode command when calling MATLAB on our program.  The `-nojvm` flag turns off Java Virtual Machine since this is only necessary when running the MATLAB GUI. The `-nodisplay` turns off all graphical output from MATLAB since we do not support visual display at CARC.  Remember that the `-r` flag is telling MATLAB to run in batch mode, it must immediately precede the name of your program, "my_program" in this case. At the end of our command we then redirect what would normally be written to `stdout`, or your MATLAB console when running interactively, to a special file called `null`. We do this because MATLAB normally writes all output to `stdout` which is stored in memory (RAM). If your program generates enough output to `stdout` this can overload local memory and crash the compute node that your program is running on. If you wish to keep what is printed to `stdout` you can redirect to a file instead using the following syntax and replacing the name with whatever you would like to call your file:
+Submit the job from your home directory:
 
-```bash
-matlab -nojvm -nodisplay -r my_program > my_program.output
-```
-Now that you have your program and your Slurm script you can submit your job to the job scheduler using the `sbatch` command:
-
-```bash
+```bash id="c4w8pq"
 sbatch my_matlab_job.sbatch
 ```
+
+---
+
+## Important Notes
+
+* MATLAB jobs must run on compute nodes, not login nodes.
+* Do not run `.m` files directly with `srun`; they must be executed through MATLAB.
+* Use `srun --pty bash` for interactive compute access when debugging.
+* Easley uses Slurm. PBS may still exist on Hopper, but Slurm is recommended for all workflows.
+
+---
+
+## Viewing Output
+
+All output is written to:
+
+```text id="z1r8tt"
+slurm-<jobid>.out
+```
+
+Monitor output live with:
+
+```bash id="t6v9gh"
+tail -f slurm-<jobid>.out
+```
+
+---
+
+## Commands Used (for Debugging)
+
+```bash id="a8m3kf"
+module avail matlab
+```
+
+List available MATLAB versions.
+
+```bash id="k2v9sd"
+srun --pty bash
+```
+
+Request an interactive compute node session.
+
+```bash id="u7p1wx"
+module load matlab
+```
+
+Load MATLAB module.
+
+```bash id="m9c2qa"
+matlab -batch "my_program"
+```
+
+Run MATLAB script in batch mode.
+
+```bash id="b5n7ld"
+sbatch my_matlab_job.sbatch
+```
+
+Submit job to Slurm.
+
+```bash id="r3q8yt"
+tail -f slurm-<jobid>.out
+```
+
+Monitor job output.
+
+*This QuickByte was validated on 6/23/2026*
