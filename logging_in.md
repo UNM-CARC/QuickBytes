@@ -16,7 +16,7 @@ Now that you have your terminal open you can log in. To do this type the followi
 ssh <CARC-USERNAME>@<MACHINE-NAME>.alliance.unm.edu
 ```
 
-Where `CARC-USERNAME` is the username you were assigned once your account was approved. `MACHINE-NAME` will be one of our carc systems; `hopper`, `wheeler`, or `xena`, for example. If this is your first time logging in, you will get a prompt asking you to accept your computer as a new authorized host. You can accept this first prompt, and you will then be prompted for your password. 
+Where `CARC-USERNAME` is the username you were assigned once your account was approved. `MACHINE-NAME` will be one of our carc systems; `hopper` or `easley`, for example. If this is your first time logging in, you will get a prompt asking you to accept your computer as a new authorized host. You can accept this first prompt, and you will then be prompted for your password. 
 
 If you are unsure of your current password, please reference [the password reset quickbyte.](password_reset.md)
 
