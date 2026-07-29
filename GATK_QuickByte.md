@@ -32,7 +32,7 @@ Please note that you must cite any program you use in a paper. At the end of thi
 
 - [Sample Scatter-gather PBS script](#script)
 
-- [Trobuleshooting](#tshoot)
+- [Troubleshooting](#tshoot)
 
 - [Citations](#cite)	
 
@@ -66,7 +66,7 @@ If you are parallelizing (see “Scatter-gather Parallel” and sample PBS scrip
 	module load parallel/20240822-ao2z
 	source $(which env_parallel.bash)
 
-The directories we will need (other than the home directory) are a raw_reads directory for the demultiplexed reads and the following for various intermediate files to go into. Alternatively, if you don’t want to move around all your reads, just replace the path in the BWA call with that path. Note that a few of these are only used with scatter-gather parallelization (reccomended for larger datasets).
+The directories we will need (other than the home directory) are a raw_reads directory for the demultiplexed reads and the following for various intermediate files to go into. Alternatively, if you don’t want to move around all your reads, just replace the path in the BWA call with that path. Note that a few of these are only used with scatter-gather parallelization (recommended for larger datasets).
 
 	mkdir clean_reads
 	mkdir alignments
@@ -163,7 +163,7 @@ This section prepares BAM files for variant calling. First, we need to index our
        		R=${reference}.fa \
        		O=${reference}.dict
 
-Then, we need to align demultiplexed reads to a reference. For this step, we will use the Burrough-Wheeler Aligner’s (BWA) mem algorithm. Another common option is [Bowtie](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). One important flag here is the -R flag, which is the read group and sample ID for a given sample. We assume that these samples are in the same read group. We can get a node's worth of parallelization with the -t command (it can't work across nodes). Therefore, in the sample script at the end we will show you how to further parallelize BWA. The base command looks like this:
+Then, we need to align demultiplexed reads to a reference. For this step, we will use the Burrows-Wheeler Aligner’s (BWA) mem algorithm. Another common option is [Bowtie](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). One important flag here is the -R flag, which is the read group and sample ID for a given sample. We assume that these samples are in the same read group. We can get a node's worth of parallelization with the -t command (it can't work across nodes). Therefore, in the sample script at the end we will show you how to further parallelize BWA. The base command looks like this:
 
 	bwa mem \
 		-t [# threads] -M \
@@ -182,7 +182,7 @@ The next step is to mark PCR duplicates to remove bias, sort the file, and conve
 		-O $src/bams/${sample}_dedup.bam \
 		 --conf "spark.executor.cores=8"
 
-We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_debup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
+We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_dedup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
 
 #### Base Quality Score Recalibration (model organisms)
 
@@ -236,7 +236,7 @@ The simplest way is individually going through BAM files and calling SNPs on the
 
 One issue with HaplotypeCaller is that it takes a long time, but is not programmed to be parallelized by default. We can use GNU parallel to solve that problem in two ways. If you have many small inputs and don't want to do scatter-gather parallel, you can run one instance of HaplotypeCaller per core. Note that we restrict the memory such that each job can only max out the core it's on (you'll want to change from 6g based on the machine you're running this on):
 
-	cat $src/sample_list | env_parallel --sshloginfline $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
 		'gatk --java-options "-Xmx6g" HaplotypeCaller \
 		-R ${reference}.fa \
 		-I $src/bams/{}_recal.bam \
@@ -299,7 +299,7 @@ This first step is optional, but here we separate out indels and SNPs. Note that
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-select-yype SNP \
+		-select-type SNP \
 		-O $src/combined_vcfs/raw_snps.vcf.gz
 
 	gatk SelectVariants \
@@ -326,7 +326,7 @@ This will give us our final VCF! Note that the filtered SNPs are still included,
 
 ## Scatter-gather Parallel
 
-Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the invervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
+Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the intervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
 	
 	# make our interval list
 	cut -f 1 ${reference}.fa.fai > $src/intervals.list
