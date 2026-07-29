@@ -13,7 +13,7 @@ In this guide you will learn how to setup your software to run in a docker conta
 
 Docker allows you to setup a virtual environment for your program that you can configure however you like. You can choose the underlying operating system (so long as it is linux based), install any packages you need, and make any other changes the root user could make. The custom OS environment is stored in a docker image file that can be loaded by any docker installation. Docker has online repositories with many pre-built images available to download.
 
-When loaded, a docker image provides a container that allows the software to have complete control of its environment without effecting the host operating system.
+When loaded, a docker image provides a container that allows the software to have complete control of its environment without affecting the host operating system.
 
 If you have used a virtual machine (such as virtualbox, or vmware) the description of docker images will sound familiar. The main difference is that docker just containerizes the environment but still uses the host operating system's kernel. This means there is very little performance impact.
 
@@ -201,7 +201,7 @@ $ docker run -v < path to test_party.R folder > :/mnt r_party Rscript /mnt/test_
 
 # Singularity
 
-## Converting Docker Images to Singularty Images
+## Converting Docker Images to Singularity Images
 
 Once we are happy with the docker image we created we will convert it to a singularity image so we can use it on the CARC clusters.
 
@@ -241,7 +241,7 @@ The above command maps the directory that the Slurm script was submitted from, `
 
 # Version Issues
 
-If you recieve the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. 
+If you receive the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. 
 
 ERROR  : Failed to mount image in (read only): Invalid argument
 
