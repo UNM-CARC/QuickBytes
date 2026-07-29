@@ -2,7 +2,7 @@
 
 Stacks is a common and [well documented](https://catchenlab.life.illinois.edu/stacks/) pipeline for processing RADseq data. RADseq data is a method of reduced representation genomic sequencing, where genomic DNA is cut up with restriction enzymes, which are then targeted by sequencing adapters. This allows a researcher to get thousands of loci randomly scattered across the genome, which can be sequenced at moderate depths for low prices. This is sufficient for many population genomic analyses, such as tests of population structure, phylogenetics, gene flow, and even coarse attempts to locate regions of the genome that are under selection. Stacks can be run with or without a reference genome, but using a reference genome is reccomended for improved accuracy.
 
-Stacks can easily be run on Wheeler with installed modules, and here we outline how with some simple "quality of life" adjustments and tips. We'll be focused on the reference based method, as the non-reference-based is sufficiently run through a driver script provided by the developers of Stacks (denovo_map.pl). We'll quickly mention it at the end. This can often be run on a single node on Wheeler, as the only intense step tends to be alignment, which is quick due to the small size of RADseq data. For example, a dataset of ~90 bird individuals with an average of 1 million reads/sample took four hours on one node. Organisms with larger genomes will take more time and memory.
+Stacks can easily be run on Easley with installed modules, and here we outline how with some simple "quality of life" adjustments and tips. We'll be focused on the reference based method, as the non-reference-based is sufficiently run through a driver script provided by the developers of Stacks (denovo_map.pl). We'll quickly mention it at the end. This can often be run on a single node on Easley, as the only intense step tends to be alignment, which is quick due to the small size of RADseq data. For example, a dataset of ~90 bird individuals with an average of 1 million reads/sample took four hours on one node. Organisms with larger genomes will take more time and memory.
 
 ## Preliminaries ##
 
@@ -56,15 +56,15 @@ We'll assume you demultiplex your reads before running the pipeline described be
 	mkdir stacks_out
 	mkdir populations_out
 
-The modules you need are stacks, bwa, and samtools. All are availible on Conda, but you will almost certainly be running this on Wheeler (low resource use), which has recent versions of all three installed:
+The modules you need are stacks, bwa, and samtools. All are availible on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not (it's only a module on Hopper) - use conda for samtools on Easley, or run this on Hopper if you'd rather use modules for all three:
 
-	module load stacks-2.41-gcc-7.4.0-7r6auk7
-	module load bwa-0.7.17-intel-18.0.2-7jvpfu2
-	module load samtools-1.10-gcc-9.3.0-python3-ikifznw
+	module load stacks/2.53-ftxb
+	module load bwa/0.7.17-zvtr
+	module load samtools/1.16.1-3ojn
 
 We'll also set some variables for refering to paths to stuff. We assume that the reference names (ReferenceBaseName):
 
-	src=$PBS_O_WORKDIR
+	src=$SLURM_SUBMIT_DIR
 	bwa_ref=$src/ReferenceBaseName
 	threads=[number of threads]
 
@@ -111,8 +111,8 @@ This is a lot simpler, but is generally considered less robust than a reference-
 First, you only need the Stacks module and one new directory (assumes reads are in "raw_reads").
 
 	mkdir stacks_denovo
-	module load stacks-2.41-gcc-7.4.0-7r6auk7
-	src=$PBS_O_WORKDIR
+	module load stacks/2.53-ftxb
+	src=$SLURM_SUBMIT_DIR
 	threads=[number of threads]
 
 Then you just run a single line!
