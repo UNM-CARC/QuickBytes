@@ -11,7 +11,7 @@ First, set up your ssh key. To do this type in the terminal prompt:
 
 You will then be asked which file you would like to save your new key under. Press enter here so it will be saved at the default location.
 
-Next, it will ask you to enter a passphrase. We rcommend you add a passphrase. You'll enter your password here, and then confirm it by entering that same password a second time. 
+Next, it will ask you to enter a passphrase. We recommend you add a passphrase. You'll enter your password here, and then confirm it by entering that same password a second time. 
 
 After this point, your ssh key has been created. You should see the randomart image for your key:
 
@@ -79,6 +79,6 @@ You should then edit your `~/.ssh/config` file as mentioned above, and change th
     IdentityFile ~/.ssh/cluster
     StrictHostKeyChecking=no
 
-This will ensure git will use the default key on the system when cloning with ssh (which will be the new one you just created), and will properly verify your credentials after adding the new public key to your github account. If you do not do this step, you will recevie a permision error when trying to clone or push to a git repo using ssh.
+This will ensure git will use the default key on the system when cloning with ssh (which will be the new one you just created), and will properly verify your credentials after adding the new public key to your github account. If you do not do this step, you will receive a permission error when trying to clone or push to a git repo using ssh.
 
 *This quickbyte was validated on 3/27/2025*
