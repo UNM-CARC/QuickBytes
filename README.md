@@ -52,7 +52,7 @@ Quickbytes are tutorials designed to help CARC users.
          * [BEAST at CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/Beast_at_CARC.md)
          * [Population genetic simulations with msprime (backwards time)](https://github.com/UNM-CARC/QuickBytes/blob/master/msprime_quickbyte.md)
       * Computational Chemistry
-         * [Orca on Wheeler and Taos](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_wheeler_taos.md)
+         * [Orca on Easley and Hopper](https://github.com/UNM-CARC/QuickBytes/blob/master/orca_easley_hopper.md)
          * [Alphafold](https://github.com/UNM-CARC/QuickBytes/blob/master/alphafold.md)
          * [VASP Slurm smoke test](https://github.com/UNM-CARC/QuickBytes/blob/master/test_vasp_quickbyte.md)
       * Computational Immunology
