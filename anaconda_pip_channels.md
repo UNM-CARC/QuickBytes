@@ -5,7 +5,10 @@ Not all versions of all software have Conda packages available however, especial
 For example, say you need the library psutil, but you specifically need version 5.3.0. When you search for psutil using `conda` you get the following:
 
 ```bash
-$ conda search psutil=5.3
+conda search psutil=5.3
+```
+
+```
 Loading channels: done
 # Name                       Version           Build  Channel
 psutil                         5.3.1          py27_0  conda-forge
@@ -16,9 +19,11 @@ psutil                         5.3.1          py36_0  conda-forge
 Unfortunately there are no packages built for psutil version 5.3.0. We can use pip to install the version we want however.
 
 ```bash
-$ source activate py-2.7
+source activate py-2.7
+pip install psutil==5.3.0
+```
 
-(py-2.7)$ pip install psutil==5.3.0
+```
 Collecting psutil==5.3.0
   Downloading https://files.pythonhosted.org/packages/1c/da/555e3ad3cad30f30bcf0d539cdeae5c8e7ef9e2a6078af645c70aa81e418/psutil-5.3.0.tar.gz (397kB)
     100% |████████████████████████████████| 399kB 1.3MB/s
@@ -26,10 +31,14 @@ Building wheels for collected packages: psutil
   Running setup.py bdist_wheel for psutil ... done
   Stored in directory: /users/yourusername/.cache/pip/wheels/ff/c5/4f/1ee2208203f1cfeda16e91fccd8bfce5f4840b683671729d57
 Successfully built psutil
+```
 
-(py-2.7)$ conda list
+```bash
+conda list
+```
 
-# packages in environment at /users/yourusername/.Conda/envs/py-2.7:
+```
+# packages in environment at /users/yourusername/.conda/envs/py-2.7:
 #
 # Name                    Version                   Build
 ca-certificates           2018.03.07                    0
@@ -69,7 +78,10 @@ channels:
 Note that BioConda — a large repository of bioinformatics packages — is already a default channel here, unlike a stock Anaconda/Miniconda install. So a package like the Burrows-Wheeler Aligner (bwa), which lives in BioConda, is already found without specifying `-c bioconda`:
 
 ```bash
-$ conda search bwa
+conda search bwa
+```
+
+```
 Loading channels: done
 # Name                  Version           Build  Channel
 bwa                       0.7.17      hed695b0_6  bioconda
