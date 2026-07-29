@@ -2,14 +2,14 @@
 
 The [pairwise sequentially Markovian coalescent model](https://www.nature.com/articles/nature10231) is a popular method of leveraging single high-quality diploid genomes to infer the demographic history of a lineage over thousands to hundreds of thousands of years. It can be a great exploratory tool for genomic data, and can help you understand and generate biogeographic and evolutionary hypotheses. It leverages heterozygosity information to estimate local times of most recent common ancestor across the genome, which is then used to reconstruct demographic "stairway plots".
 
-It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a seperate job with more nodes.
+It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a separate job with more nodes.
 
 The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Easley will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
 
 
 ## Installation and setup
 
-Due to the inavailibility of PSMC on conda, high number of included utilities, and ease of installing locally, we suggest you install PSMC as shown below. You can install it anywhere, but we'll assume it's in the working directory you're using to run everything:
+Due to the unavailability of PSMC on conda, high number of included utilities, and ease of installing locally, we suggest you install PSMC as shown below. You can install it anywhere, but we'll assume it's in the working directory you're using to run everything:
 
 	git clone https://github.com/lh3/psmc.git
 	cd psmc
@@ -33,7 +33,7 @@ Then, we'll make a subdirectory for future bootstraps with "mkdir boot". If you 
 
 ## Generating input
 
-Generating input is essentially a simplified version of [GATK's widely used pipeline](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) using [bcftools](http://samtools.github.io/bcftools/bcftools.html) to leverage its simplicity and ability to generate a consensus FASTA file with heterozygosity. First, reads are alligned to the reference with BWA. Then, bcftools' mpileup and call are used to obtain variant calls, which are filtered using bcftools' view command. Finally, a consensus sequence is generated and converted to a "PSMC FASTA" for use in PSMC itself. Code for running these steps is below, assuming your reference is "reference.fa" and read files are called "sample_R1.fastq.gz" and "sample_R2.fastq.gz".
+Generating input is essentially a simplified version of [GATK's widely used pipeline](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) using [bcftools](http://samtools.github.io/bcftools/bcftools.html) to leverage its simplicity and ability to generate a consensus FASTA file with heterozygosity. First, reads are aligned to the reference with BWA. Then, bcftools' mpileup and call are used to obtain variant calls, which are filtered using bcftools' view command. Finally, a consensus sequence is generated and converted to a "PSMC FASTA" for use in PSMC itself. Code for running these steps is below, assuming your reference is "reference.fa" and read files are called "sample_R1.fastq.gz" and "sample_R2.fastq.gz".
 
 	# Align with BWA
 	bwa index -p reference reference.fa
