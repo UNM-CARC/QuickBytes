@@ -1,18 +1,20 @@
-# Anaconda
+# Miniconda
 
-### What is Anaconda?
+### What is Miniconda?
 
-Fundamentally, Anaconda is a distribution of Python and R with a collection of associated packages optimized for data science. The installation and management of these packages is handled with the Anaconda package manager Conda. Conda is more than just a package manager however, it also creates and manages the environments that packages are installed in to. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory which is then appended to your `PATH` when that environment is activated.
+Fundamentally, Miniconda is a minimal installer for Conda, the package and environment manager originally built for the Anaconda Python/R distribution — a collection of packages optimized for data science. Conda is more than just a package manager however, it also creates and manages the environments that packages are installed in to. The usage of environments means you can have multiple versions of certain software installed in different environments and avoid conflicts or incompatibilities between software or dependencies. This is accomplished by installing packages into a separate directory which is then appended to your `PATH` when that environment is activated.
 
 ### Creating a new conda environment
 
-Let's create an environment on Wheeler to run a python machine learning script that uses the TensorFlow library, python version 3.5, and the pandas library. Once you log in to Wheeler using `ssh` load the anaconda software module with the command:
+Let's create an environment on Easley to run a python machine learning script that uses the TensorFlow library and the pandas library. Once you log in to Easley using `ssh` load the miniconda software module with the command:
 
-`module load anaconda3`
+`module load miniconda3/latest`
 
 We use `conda` to create new environments and install/upgrade packages within environments. To create our machine learning environment we type:
 
-`conda create --name TensorFlow python=3.5 pandas tensorflow`
+`conda create --name TensorFlow python=3.11 pandas tensorflow`
+
+Avoid pinning very old Python versions like 3.5 here. Besides being long past end-of-life, asking conda to solve an environment against years of since-released package history can make dependency resolution extremely slow or effectively hang.
 
 The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages python version 3.5 specifically, pandas, and tensorflow. When you enter this command `conda` prints out the plan for this environment to `stdout`:
 
