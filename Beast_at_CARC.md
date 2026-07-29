@@ -6,7 +6,7 @@ phylogenetic tree analysis with user specified molecular clock models using the 
 applications. BEAST is a well documented and flexible tool for modeling phylogenetics. Using BEAST at CARC offers more power for 
 rigorous computations.
 
-## Generating BEAST imput files: BEAUti
+## Generating BEAST input files: BEAUti
 
 BEAST uses .xml files which contain sequences and model parameters. Because BEAST is capable of incorporating a diverse range of 
 meta data and specific time modeling parameters, the graphical user interface [BEAUTi](https://beast.community/first_tutorial) 
