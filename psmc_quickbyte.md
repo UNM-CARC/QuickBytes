@@ -4,7 +4,7 @@ The [pairwise sequentially Markovian coalescent model](https://www.nature.com/ar
 
 It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a seperate job with more nodes.
 
-The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Wheeler will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
+The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Easley will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
 
 
 ## Installation and setup
@@ -25,8 +25,7 @@ Then we'll install some dependencies with conda as below.
 At the top of any scripts used for this, change to your working directory and activate the environment like:
 
 	cd $SLURM_SUBMIT_DIR
-	# if using PBS, 'cd $PBS_O_WORKDIR'
-	module load miniconda3/4.8.2-pilj
+	module load miniconda3/latest
 	eval "$(conda shell.bash hook)"
 	conda activate psmc-env
 
@@ -87,7 +86,7 @@ Next, we want to bootstrap our results and plot them.
 
 Bootstrapping is a step that can fortunately be run in parallel. There's no set number of bootstraps needed, but we'll do 50 here. We'll run this with GNU parallel. First, you'll need to load a parallel module. Then, you'll run what is essentially the same command as before, but with the -b flag:
 
-	module load parallel/20190222-wsvg
+	module load parallel/20240822-ao2z
 	
 	parallel '$SLURM_SUBMIT_DIR/psmc/psmc -N25 -t10 -r5 -b -p "8*1+30*2+4+6" \
 		-o $SLURM_SUBMIT_DIR/boot/sample_r{}.psmc $SLURM_SUBMIT_DIR/sample.psmcfa' \
