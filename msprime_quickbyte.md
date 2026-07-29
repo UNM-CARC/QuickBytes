@@ -8,11 +8,11 @@ This QuickByte describes msprime 1.0, which is a major update from the widely us
 
 ## How msprime Works ##
 
-[The paper describing msprime](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842) has been cited hundreds of time, but represents an extension of [the simulation program ms](https://academic.oup.com/bioinformatics/article/18/2/337/225783), which has been cited a couple thousand times. The goal of this extension is to scale simulations up to the large sample sizes of individuals and loci used in modern day genomic studies. Msprime's fast speed and ease of analysis is achieved by by adding novel ways of keeping track of geneologies being analyzed through sparse trees and coalescence records, collectively refer to ass tree sequences.
+[The paper describing msprime](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842) has been cited hundreds of time, but represents an extension of [the simulation program ms](https://academic.oup.com/bioinformatics/article/18/2/337/225783), which has been cited a couple thousand times. The goal of this extension is to scale simulations up to the large sample sizes of individuals and loci used in modern day genomic studies. Msprime's fast speed and ease of analysis is achieved by adding novel ways of keeping track of genealogies being analyzed through sparse trees and coalescence records, collectively referred to as tree sequences.
 
 ## How to run msprime ##
 
-Msprime is a python package, with reccomended download via conda. We reccomend you use miniconda for this, as we've had some bugs with installing this through anaconda in the past. We'll make an environment with it and a couple other important modules:
+Msprime is a python package, with recommended download via conda. We recommend you use miniconda for this, as we've had some bugs with installing this through anaconda in the past. We'll make an environment with it and a couple other important modules:
 
 	conda create -n msp1-env -c conda-forge msprime scikit-allel numpy
 
@@ -82,13 +82,13 @@ And we'll add mutations like this, using a yearly rate of 2.3e-9 and a generatio
 
 It is best practice to run many replicates of any simulation you run to assess the robustness of any estimates you make. You can use [GNU Parallel (specifically env_parallel)](https://github.com/UNM-CARC/QuickBytes/blob/master/GNU%20Parallel.md) to run these simulations, and can add these replicates directly to an output file. The following examples your python simulation script takes population size (popsize) and population divergence time (divtime) and have an output file like "$popsize_$divtime.out" that the script writes to. First we'll run 30 replicates. Note that the "echo {}" just to deal with the parallel iterator, so GNU parallel doesn't append it to the end of our python call by default.
 
-	env_parallel --sshloginfile $PBS_NODEFILE \
+	env_parallel --sshloginfile "$CARC_NODEFILE" \
 		'echo {}; /path/to/python msprime_script.py --popsize 2000 --divtime 10000 \
 		--output ./outputs/1000_10000.out' ::: {1..30}
 
 You could also use GNU parallel to iterate over multiple parameter combinations, here we test multiple population sizes (2000, 3000, and 5000) and divergence times (1000, 5000, and 10000 generations). We'll assume the script has replicates coded into it.
 
-	env_parallel --sshloginfile $PBS_NODEFILE \
+	env_parallel --sshloginfile "$CARC_NODEFILE" \
 		'/path/to/python msprime_script.py --popsize {1} --divtime {2} \
 		--output ./outputs/{1}_{2}' ::: 2000 3000 5000 ::: 1000 5000 10000
 
@@ -148,24 +148,24 @@ First, we have to write our python script. We'll use the argparse module to hand
 	if __name__ == '__main__':
 		main()
 	
-Now that we have our scripted simulation, we'll write a PBS script to run it in parallel! We assumes you have a directory in your working directory called "output" and named your script "island_msp_twopop.py". We'll name files based on the denisty on Guadalcanal. We don't have it written in the script, but if you already have something in "output", this just appends to those files (i.e. "rm output\/*" beforehand). Note that this script excludes the header.
+Now that we have our scripted simulation, we'll write a Slurm script to run it in parallel! We assumes you have a directory in your working directory called "output" and named your script "island_msp_twopop.py". We'll name files based on the density on Guadalcanal. We don't have it written in the script, but if you already have something in "output", this just appends to those files (i.e. "rm output\/*" beforehand). Note that this script excludes the header.
 	
 	# prepare GNU parallel
-	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	module load parallel
 	source $(which env_parallel.bash)
 
 	# load our environment
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	source activate msp1-env
 		
 	# make a shortcut for our working directory, where we assume all scripts are located.	
-	dir=$PBS_O_WORKDIR
+	dir=$SLURM_SUBMIT_DIR
 		
-	env_parallel --sshloginfile $PBS_NODEFILE \
+	env_parallel --sshloginfile "$CARC_NODEFILE" \
 		'echo {2}; python $dir/island_msp_twopop.py -d1 25 -d2 {1} -o $dir/output/density_{1}.out' \
 		::: 3 4 5 10 15 20 25 30 ::: {1..30}
 		
-For interpretting these results, the empirical F<sub>ST</sub> value between Guadalcanal and Isabel is 0.077, and the best density match was 4 birds/km<sup>2</sup> (F<sub>ST</sub>=0.79). That means that to get the observed F<sub>ST</sub>, Guadalcanal would have to have 16% of the population density inferred on the other islands. Genetic diversity doesn't support this, suggesting that the gap between them formed an excess of population structure compared to the other islands!
+For interpreting these results, the empirical F<sub>ST</sub> value between Guadalcanal and Isabel is 0.077, and the best density match was 4 birds/km<sup>2</sup> (F<sub>ST</sub>=0.79). That means that to get the observed F<sub>ST</sub>, Guadalcanal would have to have 16% of the population density inferred on the other islands. Genetic diversity doesn't support this, suggesting that the gap between them formed an excess of population structure compared to the other islands!
 
 ## Citation ##
 
