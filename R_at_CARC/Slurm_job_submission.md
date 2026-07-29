@@ -75,13 +75,12 @@ The rest of the Slurm script are usually bash commands (or whatever shell you pr
 ## following line moves to the directory where the sbatch command was executed.
 cd $SLURM_SUBMIT_DIR
 
-## This loads the R software module. r/4.5.2-pspo is missing a runtime dependency on libdeflate, so we
-## load that module too and export its lib dir - module load alone doesn't add it to LD_LIBRARY_PATH.
+## This loads the R software module.
 module load libdeflate/1.14-2pby r/4.5.2-pspo
 export LD_LIBRARY_PATH=$LIBDEFLATE_LIB:$LD_LIBRARY_PATH
 
 ## If you are using a conda environment instead of an R module installed by CARC you would have the following
-## instead (note: use "source activate", not "conda activate" - see the known issue in getting_R_software.md)
+## instead
 module load miniconda3/latest
 source activate my_r_env
 
