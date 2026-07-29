@@ -36,7 +36,7 @@ Select unique subfolders.
 
 Select the number of workers and number of threads per worker. This may depend on the program you are running but in general you should have one worker per core on the cluster. For set up and validation leave the number of workers at 1. Leave the threads per worker at 1 unless your software requires more threads.
 
-Specify the path to the matlab installation on the compute nodes: `/opt/local/MATLAB/R2024b` (or whichever version you need — `module avail matlab` on the cluster shows what's currently installed). It is important that you are running the same version of MATLAB locally as you specify here for the cluster.
+Specify the path to the matlab installation on the compute nodes: `/opt/local/MATLAB/R2024b`, or whichever version you need — run `module avail matlab` on the cluster to see what's currently installed. It is important that you are running the same version of MATLAB locally as you specify here for the cluster.
 
 ![Wizard6](https://github.com/UNM-CARC/QuickBytes/blob/master/ParallelMatlabWizard6.png)
 
