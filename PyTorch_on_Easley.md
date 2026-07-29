@@ -16,8 +16,6 @@ module load miniconda3/latest
 source activate /projects/shared/conda/envs/pytorch-2.5.1
 ```
 
-Note: use `source activate`, not `conda activate`, for this. `conda activate` reliably fails on Easley/Hopper with `CondaError: Run 'conda init' before 'conda activate'`, even right after running `conda init`. `source activate` works without that step.
-
 Your command line prompt should now show the environment name:
 
 ```
