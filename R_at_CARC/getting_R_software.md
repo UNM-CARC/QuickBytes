@@ -27,7 +27,9 @@ These are all of the currently available R modules installed on Easley. In order
 yourusername@easley-sn$ module load libdeflate/1.14-2pby r/4.5.2-pspo
 yourusername@easley-sn$ export LD_LIBRARY_PATH=$LIBDEFLATE_LIB:$LD_LIBRARY_PATH
 yourusername@easley-sn$ R
+```
 
+```
 R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -59,6 +61,9 @@ The second option is to create a custom local Miniconda environment with the ver
 ```
 yourusername@easley-sn$ module load miniconda3/latest
 yourusername@easley-sn$ conda create --yes --name my_r_env r-base=4.5
+```
+
+```
 ...
 Preparing transaction: done
 Verifying transaction: done
@@ -81,7 +86,9 @@ Then to use your newly created R environment you need to 1) make sure you have t
 yourusername@easley-sn$ module load miniconda3/latest
 yourusername@easley-sn$ source activate my_r_env
 yourusername@easley-sn$ R
+```
 
+```
 R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-conda-linux-gnu (64-bit)
