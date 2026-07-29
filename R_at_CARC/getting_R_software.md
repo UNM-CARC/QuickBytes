@@ -53,8 +53,6 @@ Type 'q()' to quit R.
 
 Will load the current default R build (4.5.2). Normally you will be running R jobs in batch mode as opposed to interactively, which means you will have the `module load` command in your Slurm script, but we will get to that later. 
 
-**Known issue:** `r/4.5.2-pspo` is missing a runtime dependency on `libdeflate`. Loading just `module load r/4.5.2-pspo` and running R directly on the head node happens to work (the head node has a system-wide libdeflate available), but the exact same module load **fails inside a Slurm job on a compute node** with `error while loading shared libraries: libdeflate.so.0: cannot open shared object file`, since compute nodes only see what your loaded modules provide. Loading `module load libdeflate/1.14-2pby` alongside it isn't enough by itself either — that module sets `CARC_LIBRARY_PATH`, `PKG_CONFIG_PATH`, etc. for *build*-time use, but never touches `LD_LIBRARY_PATH`, so the library still isn't found at runtime. The actual fix is to also `export LD_LIBRARY_PATH=$LIBDEFLATE_LIB:$LD_LIBRARY_PATH` after loading it, as shown above and in the Slurm script example. The previous version, `r/4.4.3-wsvf`, doesn't have this problem if you'd rather avoid the workaround entirely.
-
 ### Option 2
 The second option is to create a custom local Miniconda environment with the version of R that would like to run. In order to do this you need to first load the Miniconda software module and then create a new environment according to your specifications. For example, the following commands will create a Miniconda environment with R 4.5:
 
@@ -77,8 +75,6 @@ Executing transaction: done
 #
 #     $ conda deactivate
 ```
-
-**Known issue:** despite what the message above says, `conda activate my_r_env` reliably fails on Easley/Hopper with `CondaError: Run 'conda init' before 'conda activate'` — even immediately after running `conda init bash` and confirming the init block is present in `~/.bashrc`. This isn't a one-time setup step you forgot; the init hook doesn't reliably take effect in these non-interactive login-shell contexts (e.g. `ssh host command`, and Slurm batch scripts), so re-running `conda init` doesn't fix it. Use the older `source activate` / `source deactivate` syntax instead (shown below, and in the Slurm script example) — it works without any init step and is what we recommend on CARC systems.
 
 Then to use your newly created R environment you need to 1) make sure you have the Miniconda3 software module loaded, and 2), activate your conda environment.
 

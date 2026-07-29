@@ -15,8 +15,6 @@ username@easley-sn:~$ export LD_LIBRARY_PATH=$LIBDEFLATE_LIB:$LD_LIBRARY_PATH
 username@easley-sn:~$ R
 ```
 
-Note: `r/4.5.2-pspo` has a missing `libdeflate` runtime dependency, hence the extra `libdeflate` module load and `LD_LIBRARY_PATH` export above. See the known issue in `R_at_CARC/getting_R_software.md` for details. This is needed on a compute node in a Slurm job; it's not required when running R directly on the head node.
-
 Once you have started an R session, you can install packages just as you would in R. If you ever run into issues loading 
 packages in R at CARC, you can reach out for assistance by emailling help@carc.unm.edu. One piece of advice if you are using 
 JupyterHub to run an R notebook at CARC is you may need to install packages from the terminal window on JupyterHub because 
@@ -66,9 +64,3 @@ Expected output:
 [1] 3
 [1] 1 0 1
 ```
-
-**Known issue:** as of this writing, running the model above fails with:
-```
-Error: Error 10009: Failed to connect to token server 'license001.alliance.unm.edu' (port 41954) - license file '/opt/local/gurobi/9.1.0/license/gurobi.lic'.  Consult the Quick Start Guide for instructions on starting a token server.
-```
-This is a CARC-side infrastructure problem, not a doc or user error. `license001.alliance.unm.edu` resolves fine over DNS, but the license token server's port (41954) actively refuses the connection — nothing is listening on it. Every other step above (loading modules, installing the `gurobi` and `slam` R packages, `library(gurobi)`) works correctly; only the actual `gurobi()` solver call fails, and it fails the same way whether run on the head node or inside a Slurm job. If you hit this, it's not something you can fix on your end — contact help@carc.unm.edu.
