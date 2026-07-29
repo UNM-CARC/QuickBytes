@@ -1,4 +1,4 @@
-This tutorial contains instructions for compiling and running the SimCov immunology model on the Wheeler cluster.
+This tutorial contains instructions for compiling and running the SimCov immunology model on the Hopper cluster.
 
 ## Download the SimCov Source Code from GitHub
 
@@ -12,13 +12,14 @@ git clone --recurse-submodules https://github.com/AdaptiveComputationLab/simcov.
 ```
 
 ## Build SimCov from Source
-Load Wheeler modules and set UPCXX variables (NOTE: modules subject to change use 'module spider' to find availability):
+Load Hopper modules and set UPCXX variables (NOTE: modules subject to change use 'module spider' to find availability). UPC++ is currently only available as a module on Hopper, not Easley, so this needs to run on Hopper:
 ```
 export UPCXX_THREADMODE=seq
 export UPCXX_CODEMODE=opt
-module load gcc/11.2.0-otgt
-module load cmake/3.22.2-c2dw
-module load upcxx/2021.9.0-r4of
+module load gcc/8.5.0-lpgx
+module load cmake/3.31.6-qm2s
+module load upcxx/2022.3.0-yrwd
+export CXX=$(dirname $(dirname $(which upcxx-meta)))/openmpi-3.1.6-psvczpcxkv3y5vn7btswoy4kmxr5aexh/bin/mpic++
 ```
 Run the build script:
 ```
@@ -29,29 +30,29 @@ cd simcov
 The config files are in ~/simcov and end with ".config". You can edit them with a text editor.
 
 ## Submit a SimCov Job 
-A wheeler PBS script is provided for you. We have submitted the script below to the simcov developers - so hopefully by the time you pull simcov the code below will already be in the wheeler_simcov_run.pbs. If not update the script to contain the following: 
- 
-This PBS submission script will run simcov on a compute node using covid_default.config:
+This Slurm submission script will run simcov on a compute node using covid_default.config:
 ```
 #!/bin/bash
 
-#PBS -q normal
-#PBS -l nodes=2:ppn=8
-#PBS -l walltime=01:00:00
-#PBS -N simcov_test
-#PBS -j oe
+#SBATCH --job-name simcov_test
+#SBATCH --partition general
+#SBATCH --nodes 2
+#SBATCH --ntasks-per-node 8
+#SBATCH --time 01:00:00
+#SBATCH --output simcov_test.out
+#SBATCH --error simcov_test.err
 
-module load gcc/11.2.0-otgt
-module load upcxx/2021.9.0-r4of
-module load cmake/3.22.2-c2dw
+module load gcc/8.5.0-lpgx
+module load upcxx/2022.3.0-yrwd
+module load cmake/3.31.6-qm2s
 
-cd $PBS_O_WORKDIR
+cd $SLURM_SUBMIT_DIR
 
-upcxx-run -n $PBS_NP -N $PBS_NUM_NODES -- install/bin/simcov --config=covid_default.config --output=results
+upcxx-run -n $SLURM_NTASKS -N $SLURM_NNODES -- install/bin/simcov --config=covid_default.config --output=results
 ``` 
 To run simcov on a compute node enter
 ```
-qsub wheeler_simcov_run.pbs
+sbatch hopper_simcov_run.sh
 ```
 
 Outputs will be in a results folder by default
