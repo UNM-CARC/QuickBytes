@@ -47,16 +47,13 @@ Since your home directory is shared across all machines at CARC you only need to
 To make logging in to CARC even easier we also recommend setting up a ssh config file which allows you to simply type `ssh machinename` instead of your username at the machine address. To set up this file simply copy the example below and save it to a text document in your `ssh` folder, which is found at `~/.ssh/`. Change the user to your CARC username and you are set to log in quickly and efficiently. You can add machines based on which ones you have access to. 
 
 
-    Host wheeler
-        hostname wheeler.alliance.unm.edu
+    Host easley
+        hostname easley.alliance.unm.edu
         user CHANGEME
+        ForwardX11 yes
         port 22
     Host hopper
         hostname hopper.alliance.unm.edu
-        user CHANGEME
-        port 22
-    Host xena
-        hostname xena.alliance.unm.edu
         user CHANGEME
         ForwardX11 yes
         port 22
@@ -71,7 +68,7 @@ Note that on the CARC clusters by default, your ssh configuration file will cont
     IdentityFile ~/.ssh/cluster
     StrictHostKeyChecking=no
 
-This helps ensure you're able to connect freely across all of the CARC clusters, for example while logged in to hopper you can just type `ssh xena`.
+This helps ensure you're able to connect freely across all of the CARC clusters, for example while logged in to hopper you can just type `ssh easley`.
 
 The issue here will arise if you need to add a new ssh key for some reason, say, you need to add an ssh key so you're able to make edits to a git repository from the CARC clusters. If this is the case, you can start by creating a new ssh key as explained in the previous steps of this tutorial. 
 
