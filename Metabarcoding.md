@@ -22,7 +22,7 @@ There are many different pipelines to process metabarcoding samples. For this tu
 
 
 ### Steps for each pipeline ###
-For eachof them, they will follow these key steps:
+For each of them, they will follow these key steps:
 1. install
       * how to set up the environments. 
 3. join forward and reverse reads
