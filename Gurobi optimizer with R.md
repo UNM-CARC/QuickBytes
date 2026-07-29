@@ -16,7 +16,7 @@ username@easley-sn:~$ R
 ```
 
 Once you have started an R session, you can install packages just as you would in R. If you ever run into issues loading 
-packages in R at CARC, you can reach out for assistance by emailling help@carc.unm.edu. One piece of advice if you are using 
+packages in R at CARC, you can reach out for assistance by emailing help@carc.unm.edu. One piece of advice if you are using 
 JupyterHub to run an R notebook at CARC is you may need to install packages from the terminal window on JupyterHub because 
 the notebook will not let you interactively answer questions installs may need. 
 
