@@ -4,9 +4,9 @@ Whether you're using an already assembled reference genome from a database like 
 
 ## Assessing contiguity with QUAST ##
 
-Although QUAST is fairly easy to run on personal computers, it is much easier to run in the place you already have your reference (which hopefully is CARC!). QUAST is not currently a module on any machine, so we'll install it using conda. First, if conda isn't initialized, you'll need to load a module for miniconda (with this specific module being the one on wheeler). Then, you'll make a new environment with QUAST. Unfortunately, as of writing this QuickByte, QUAST has dependency issues with other programs, and can't be in the same environment as BUSCO:
+Although QUAST is fairly easy to run on personal computers, it is much easier to run in the place you already have your reference (which hopefully is CARC!). QUAST is not currently a module on any machine, so we'll install it using conda. First, if conda isn't initialized, you'll need to load a module for miniconda (with this specific module being the current one on Easley). Then, you'll make a new environment with QUAST. Unfortunately, as of writing this QuickByte, QUAST has dependency issues with other programs, and can't be in the same environment as BUSCO:
 
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	conda create --name quast-env --channel bioconda quast
 
 Now for actually running QUAST! This is simple enough, but there are a few key options to know about (you can read them all [here](http://quast.sourceforge.net/docs/manual.html)). First, if you are working with an assembly over 100 Mbp, you should use the --large option to improve accuracy and speed. It automatically applies some relevant flags, too (e.g. sets the minimum evaluated contig size to 3000). Second, you'll want to use the --threads option to use the built in parallelization. This simplest version would look like:
@@ -17,13 +17,13 @@ Here are two other options that may be of interest. One option for scaffolded ge
 
 	quast /path/to/focal_reference.fa -o /path/to/quast_output -r /path/to/high_qual_refernece --large --glimmer --split-scaffolds --threads 8
 
-We'll run QUAST with a submission script, here using PBS variables. This is also made for Wheeler, being run on one core. We will store the output in a subdirectory in the submission directory. This examples runs the basic stats above on a scaffolded reference genome used [in a different QuickByte](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) borrowed from [a great paper about conservation genomics](https://academic.oup.com/gbe/article/11/7/2023/5499175).
+We'll run QUAST with a submission script, here using Slurm. This is also made for Easley, being run on one core. We will store the output in a subdirectory in the submission directory. This examples runs the basic stats above on a scaffolded reference genome used [in a different QuickByte](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) borrowed from [a great paper about conservation genomics](https://academic.oup.com/gbe/article/11/7/2023/5499175).
 
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	source activate quast-env
 	
 	# sample command using a reference genome
-	quast /projects/shared/tutorials/quickbytes/GATK/sagegrouse_reference.fa -o $PBS_O_WORKDIR/quast_output --large --threads 8
+	quast /projects/shared/tutorials/quickbytes/GATK/sagegrouse_reference.fa -o $SLURM_SUBMIT_DIR/quast_output --large --threads 8
 
 There are a few ways to assess the output in the output directory, with the most convenient being report.txt. A sample report for running the above command is below. Major points of interest include the total length, [N50 and L50](https://en.wikipedia.org/wiki/N50,_L50,_and_related_statistics), total length in scaffolds of given sizes (e.g. >= 50000 bp), and number of contigs (counting scaffolds as contigs) of given lengths. You can also transfer a report PDF (report.pdf) to a desktop to view it some nice figures illustrating important info like cumulative reference size for given numbers of contigs.
 
@@ -322,7 +322,7 @@ The next step will be to assess how complete our genome is by seeing how many si
 
 You then install it like this:
 
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	# commented command is how this was made
 	# conda create --name busco-env --channel bioconda --channel conda-forge busco=5.1.3
 	conda env create -f busco-env.yml
@@ -347,8 +347,8 @@ Then, you'll need to find which dataset of genes you want to use. To do this, ei
 
 Then you'll run BUSCO, which has a manual with full info on options [here](https://busco.ezlab.org/busco_userguide.html). It has the odd quick of requiring modifying a config file to have its output anywhere but the current directory, so we'll just have everything in the submission directory (note that if you already have that directory made, you need the --force or -f flag to overwrite it). The first two flags after our input genome (-i) and output directory (-o) are the number of cores to use (--cpus) and the mode. Because we are evaluating a reference genome, we'll use "--mode genome". Finally, we have the lineage dataset (-l), which is the "aves_odb10" from above.
 
-	cd $PBS_O_WORKDIR
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	cd $SLURM_SUBMIT_DIR
+	module load miniconda3/latest
 	source activate busco-test
 	
 	busco -i /projects/shared/tutorials/quickbytes/GATK/sagegrouse_reference.fa -o busco_test --cpu 8 --mode genome -l aves_odb10
