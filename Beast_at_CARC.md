@@ -38,8 +38,6 @@ beast my_data.xml
 
 Submit it with `sbatch beast_job.sh`.
 
-Note: as of this writing there's also a flat `beast/2.7.7` module listed by `module avail`, but it currently fails to load on Easley ("exist but cannot be loaded as requested") — this looks like a broken module install, not a user error. `beast2/2.7.4-mh57` (loaded via its `llvm/17.0.6` prerequisite, as shown above) is the version confirmed working.
-
 The output should be a job log (joined with any potential error file), and a .tree file for your downstream analysis. For more assistance 
 with BEAST at CARC please email help@carc.unm.edu. 
 
