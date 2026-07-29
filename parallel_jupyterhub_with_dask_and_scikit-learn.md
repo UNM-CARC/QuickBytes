@@ -4,7 +4,7 @@
 
 ### Log in to JupyterHub
 
-On a computer connected to ethernet on main campus, open an internet browser go to https://wheeler.alliance.unm.edu:8000 where you will be asked to log in. Use your carc username and password. This logs you into a compute node where your programs in Jupyter notebook will be running. Because it is beginning an interactive job it may not be instant depending on resources available at the time. Once logged in, you can see all the files in your home directory. 
+Open an internet browser and go to https://easley.alliance.unm.edu/jupyter or https://hopper.alliance.unm.edu/jupyter where you will be asked to log in. Use your carc username and password. This logs you into a compute node where your programs in Jupyter notebook will be running. Because it is beginning an interactive job it may not be instant depending on resources available at the time. Once logged in, you can see all the files in your home directory. 
 
 To be kind to other users when you are finished with JupyterHub for the day, please be sure to go to "control panel" in the top righthand corner and click "stop my server". This will free up the node for other users. Otherwise, the default walltime is 12 hours. 
 
@@ -13,7 +13,7 @@ To be kind to other users when you are finished with JupyterHub for the day, ple
 
 
 ```python
-from dask_jobqueue import PBSCluster
+from dask_jobqueue import SLURMCluster
 ```
 
 
@@ -28,7 +28,7 @@ import time
 
 
 ```python
-cluster = PBSCluster(memory="42GB",cores=8, resource_spec="nodes=1:ppn=8", queue="default", walltime='01:00:00')
+cluster = SLURMCluster(memory="42GB", cores=8, processes=1, queue="general", walltime='01:00:00')
 ```
 
 
@@ -38,13 +38,14 @@ print(cluster.job_script())
 
     #!/usr/bin/env bash
     
-    #PBS -N dask-worker
-    #PBS -q default
-    #PBS -l nodes=1:ppn=8
-    #PBS -l walltime=01:00:00
-    JOB_ID=${PBS_JOBID%%.*}
+    #SBATCH -J dask-worker
+    #SBATCH -p general
+    #SBATCH -n 1
+    #SBATCH --cpus-per-task=8
+    #SBATCH --mem=40G
+    #SBATCH -t 01:00:00
     
-    /opt/local/anaconda3/envs/jupyterhub/bin/python -m distributed.cli.dask_worker tcp://172.16.2.42:46451 --nthreads 8 --memory-limit 42.00GB --name name --nanny --death-timeout 60
+    /users/yourusername/.conda/envs/jupyterhub/bin/python3 -m distributed.cli.dask_worker tcp://129.24.243.21:40581 --name dummy-name --nthreads 8 --memory-limit 39.12GiB --nanny --death-timeout 60
     
 
 
@@ -62,16 +63,16 @@ for x in range(10):
     time.sleep(5)
 ```
 
-    PBSCluster('tcp://172.16.2.42:46451', workers=0, threads=0, memory=0 B)
-    PBSCluster('tcp://172.16.2.42:46451', workers=1, threads=8, memory=42.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
-    PBSCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=0, threads=0, memory=0 B)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=1, threads=8, memory=42.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
+    SLURMCluster('tcp://172.16.2.42:46451', workers=4, threads=32, memory=168.00 GB)
 
 
 
@@ -107,9 +108,7 @@ progress(futures)
 
 
 ```python
-# Scikit-learn bundles joblib, so you need to import from
-# `sklearn.externals.joblib` instead of `joblib` directly
-from sklearn.externals.joblib import parallel_backend
+from joblib import parallel_backend
 from sklearn.datasets import load_digits
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.svm import SVC
@@ -147,8 +146,6 @@ with parallel_backend('dask', scatter=[digits.data, digits.target]):
     [Parallel(n_jobs=-1)]: Done 119 out of 150 | elapsed:    5.3s remaining:    1.4s
     [Parallel(n_jobs=-1)]: Done 135 out of 150 | elapsed:    5.7s remaining:    0.6s
     [Parallel(n_jobs=-1)]: Done 150 out of 150 | elapsed:    6.1s finished
-    /opt/local/anaconda3/envs/jupyterhub/lib/python3.6/site-packages/sklearn/model_selection/_search.py:842: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
-      DeprecationWarning)
 
 
 
@@ -156,18 +153,15 @@ with parallel_backend('dask', scatter=[digits.data, digits.target]):
 print(search)
 ```
 
-    RandomizedSearchCV(cv=3, error_score='raise-deprecating',
-              estimator=SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-      decision_function_shape='ovr', degree=3, gamma='auto_deprecated',
-      kernel='rbf', max_iter=-1, probability=False, random_state=None,
-      shrinking=True, tol=0.001, verbose=False),
-              fit_params=None, iid='warn', n_iter=50, n_jobs=None,
-              param_distributions={'C': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
-           1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06]), 'gamma': array([1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01,
+    RandomizedSearchCV(cv=3, estimator=SVC(),
+                       param_distributions={'C': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
+           1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06]),
+                                            'class_weight': [None, 'balanced'],
+                                            'gamma': array([1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01,
            1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06, 1.e+07,
-           1.e+08]), 'tol': array([0.0001, 0.001 , 0.01  , 0.1   ]), 'class_weight': [None, 'balanced']},
-              pre_dispatch='2*n_jobs', random_state=None, refit=True,
-              return_train_score='warn', scoring=None, verbose=10)
+           1.e+08]),
+                                            'tol': array([0.0001, 0.001 , 0.01  , 0.1   ])},
+                       verbose=10)
 
 
 
