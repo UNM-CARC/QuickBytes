@@ -82,13 +82,13 @@ And we'll add mutations like this, using a yearly rate of 2.3e-9 and a generatio
 
 It is best practice to run many replicates of any simulation you run to assess the robustness of any estimates you make. You can use [GNU Parallel (specifically env_parallel)](https://github.com/UNM-CARC/QuickBytes/blob/master/GNU%20Parallel.md) to run these simulations, and can add these replicates directly to an output file. The following examples your python simulation script takes population size (popsize) and population divergence time (divtime) and have an output file like "$popsize_$divtime.out" that the script writes to. First we'll run 30 replicates. Note that the "echo {}" just to deal with the parallel iterator, so GNU parallel doesn't append it to the end of our python call by default.
 
-	env_parallel --sshloginfile "$CARC_NODEFILE" \
+	env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'echo {}; /path/to/python msprime_script.py --popsize 2000 --divtime 10000 \
 		--output ./outputs/1000_10000.out' ::: {1..30}
 
 You could also use GNU parallel to iterate over multiple parameter combinations, here we test multiple population sizes (2000, 3000, and 5000) and divergence times (1000, 5000, and 10000 generations). We'll assume the script has replicates coded into it.
 
-	env_parallel --sshloginfile "$CARC_NODEFILE" \
+	env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'/path/to/python msprime_script.py --popsize {1} --divtime {2} \
 		--output ./outputs/{1}_{2}' ::: 2000 3000 5000 ::: 1000 5000 10000
 
@@ -161,7 +161,7 @@ Now that we have our scripted simulation, we'll write a Slurm script to run it i
 	# make a shortcut for our working directory, where we assume all scripts are located.	
 	dir=$SLURM_SUBMIT_DIR
 		
-	env_parallel --sshloginfile "$CARC_NODEFILE" \
+	env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'echo {2}; python $dir/island_msp_twopop.py -d1 25 -d2 {1} -o $dir/output/density_{1}.out' \
 		::: 3 4 5 10 15 20 25 30 ::: {1..30}
 		
