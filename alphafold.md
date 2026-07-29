@@ -53,7 +53,7 @@ and move into that directory with
     cd alphafold
 
 ## Running Alphafold ##
-Inside the alphafold directory, you will be able to run the program using the slurm script, this script will differ based on the machine you are using. Xena is the machine at CARC that has GPU resources, so you will need to use xena if you hope to run using the gpus. 
+Inside the alphafold directory, you will be able to run the program using the slurm script, this script will differ based on the machine you are using. Easley is the machine at CARC that has GPU resources, so you will need to use Easley if you hope to run using the gpus. 
 
 Choose one of the scripts below, in this case we will be using Hopper. Create a new file using your favorite editor. For example, 
 
@@ -61,7 +61,7 @@ Choose one of the scripts below, in this case we will be using Hopper. Create a 
     
 then hit `i` to go into insert mode, and past the contents from the below script into this file. You can then add your email to get alerts about the run. When you are finished editing this file, type `ESC` to exit insert mode, followed by `:wq` to write & quite the file, this will save your changes. 
 
-### Xena Script ###
+### Easley Script ###
 Here, we are passing two additional flags when running the script, the first is `--partition=singleGPU` which will make sure we are assigned a node that only has a single gpu. The second is `-G 1` which is what tells the program to use the gpu. 
 While optimizing, you might find that switching to one of the nodes with multiple gpus will increase your speed. You can achieve this by instead adding the `--partition=dualGPU` as well as `-G 2`.
 
@@ -78,7 +78,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
     #SBATCH --mail-user < your email > 
     #SBATCH --mail-type all
     
-    module load singularity
+    module load apptainer
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/
@@ -127,7 +127,7 @@ While optimizing, you might find that switching to one of the nodes with multipl
     #SBATCH --mail-user < your email > 
     #SBATCH --mail-type all
     
-    module load singularity
+    module load apptainer
     
     # Specify input/output paths
     SINGULARITY_IMAGE_PATH=/projects/shared/singularity/

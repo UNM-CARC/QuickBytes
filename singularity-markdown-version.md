@@ -218,11 +218,13 @@ This will produce a singularity image in the /tmp directory that we can upload t
 
 First login to a CARC cluster head node.
 
-Next we will load the singularity module:
+Next we will load the module that provides Singularity:
 
 ```
-$ module load singularity-2.4.1-intel-17.0.4-sjwoqj4 $
+$ module load apptainer
 ```
+
+Note: on Easley, the Singularity project has been renamed/replaced by Apptainer. `module load apptainer` still provides a `singularity` command (a compatibility alias), so all the commands below work unchanged. On Hopper, the module is still named `singularity` (`module load singularity`).
 
 The syntax for executing Singularity images are similar to those we used for docker:
 
@@ -233,9 +235,9 @@ $ singularity exec r_party.simg Rscript test_party.R
 ## Mapping Directories
 
 ```
-$ singularity -B $PBS_O_WORKDIR:/mnt exec r_party.simg Rscript test_party.R
+$ singularity -B $SLURM_SUBMIT_DIR:/mnt exec r_party.simg Rscript test_party.R
 ```
-The Above command maps the directory that that PBS script was submitted from, `$PBS_O_WORKDIR`, to the `/mnt` location within the `r_party.simg` singularity image and then executes the `test_party.R` script. 
+The above command maps the directory that the Slurm script was submitted from, `$SLURM_SUBMIT_DIR`, to the `/mnt` location within the `r_party.simg` singularity image and then executes the `test_party.R` script. 
 
 # Version Issues
 
