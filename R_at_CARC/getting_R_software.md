@@ -104,4 +104,4 @@ Type 'q()' to quit R.
 ```
 ### Option 3
 
-The third option is to use JupyterHub. To do so direct your browser to https://easley.alliance.unm.edu/jupyter (or https://hopper.alliance.unm.edu/jupyter) and log in with your CARC credentials. Click on the "New" drop down menu and select "R". Now you have a R session running through JupyterHub. 
+The third option is to use JupyterHub. To do so direct your browser to https://easley.alliance.unm.edu/jupyter or https://hopper.alliance.unm.edu/jupyter and log in with your CARC credentials. Click on the "New" drop down menu and select "R". Now you have a R session running through JupyterHub. 
