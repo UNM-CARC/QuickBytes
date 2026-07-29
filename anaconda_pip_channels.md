@@ -66,7 +66,7 @@ It is usually best practice to install needed packages and dependencies with `co
 
 #### Adding package repositories (channels)
 
-Sometimes the default channels for Conda do not have the package you are looking for, but that does not mean it is necessarily unavailable entirely. CARC's `miniconda3` module is already configured with these default channels (check yours with `conda config --show channels`):
+Sometimes the default channels for Conda do not have the package you are looking for, but that does not mean it is necessarily unavailable entirely. CARC's `miniconda3` module is already configured with these default channels. Check yours with `conda config --show channels`:
 
 ```bash
 channels:
@@ -75,7 +75,7 @@ channels:
   - bioconda
 ```
 
-Note that BioConda — a large repository of bioinformatics packages — is already a default channel here, unlike a stock Anaconda/Miniconda install. So a package like the Burrows-Wheeler Aligner (bwa), which lives in BioConda, is already found without specifying `-c bioconda`:
+BioConda, a large repository of bioinformatics packages, is already a default channel here, unlike a stock Anaconda/Miniconda install. So a package like the Burrows-Wheeler Aligner (bwa), which lives in BioConda, is already found without specifying `-c bioconda`:
 
 ```bash
 conda search bwa
