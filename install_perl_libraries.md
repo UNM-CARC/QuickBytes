@@ -4,10 +4,9 @@ Perl libraries can be installed to your home directory.
 
 First, load a perl module.
 Use `module spider perl` to view available perl modules on the cluster you are using.
-In this example we will use a perl module available on the Hopper cluster.
+In this example we will use a perl module available on Easley (there's no separate compiler module to load first — Easley's perl modules don't need one).
 ```bash
-$> module load intel/20.0.4
-$> module load perl/5.32.0-sw3s
+$> module load perl/5.40.0-kptf
 ``` 
 
 Next, start an interactive cpan shell:
