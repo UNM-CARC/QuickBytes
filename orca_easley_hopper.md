@@ -36,7 +36,7 @@ Now you can simply submit your job to the queue with `sbatch orca_submission.sh`
 
 ### Submitting an Orca script on Hopper
 
-The Hopper version is identical — check `sinfo` for the partitions you have access to (Hopper's default is `general`, same as Easley):
+The Hopper version is identical — check `sinfo` for the partitions you have access to. Hopper's default is `general`, same as Easley.
 
 ```bash
 #!/usr/bin/bash
