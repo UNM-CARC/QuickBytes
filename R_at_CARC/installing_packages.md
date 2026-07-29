@@ -38,7 +38,7 @@ to install packages into? (yes/No/cancel)
 yes
 ```
 
-(This is with `r/4.5.2-pspo` loaded — see the `libdeflate` known issue in `getting_R_software.md` if you hit a shared-library error before even getting this far.)
+This is with `r/4.5.2-pspo` loaded. See the `libdeflate` known issue in `getting_R_software.md` if you hit a shared-library error before even getting this far.
 Go ahead and say `yes` to both questions and install packages normally. You only need to specify a personal library the first time you use a new major version. 
 
 ## Installing packages using a script

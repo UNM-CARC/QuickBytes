@@ -7,13 +7,10 @@ For example, say you need the library psutil, but you specifically need version 
 ```bash
 $ conda search psutil=5.3
 Loading channels: done
-# Name                  Version           Build  Channel
-psutil                    5.3.1          py27_0  conda-forge
-psutil                    5.3.1  py27h4c169b4_0  pkgs/main
-psutil                    5.3.1          py35_0  conda-forge
-psutil                    5.3.1  py35h6e9e629_0  pkgs/main
-psutil                    5.3.1          py36_0  conda-forge
-psutil                    5.3.1  py36h0e357b8_0  pkgs/main
+# Name                       Version           Build  Channel
+psutil                         5.3.1          py27_0  conda-forge
+psutil                         5.3.1          py35_0  conda-forge
+psutil                         5.3.1          py36_0  conda-forge
 ```
 
 Unfortunately there are no packages built for psutil version 5.3.0. We can use pip to install the version we want however.
@@ -55,78 +52,38 @@ zlib                      1.2.11               ha838bed_2
 ```
 When installing packages using `pip` it is important to first activate the Conda environment that you want to install the package in since pip is strictly a package manager and cannot modify Conda environments from outside that environment. You can see that our psutil package, marked with a double asterisk, is version 5.3.0, just like we wanted. Under the 'build' column however you will see that `conda` is not sure which build it is since it was installed with `pip`, as indicated by the `<pip>` designator.
 #### Performance with Conda versus Pip
-One thing to note when installing packages is that it is always preferable to first install necessary packages with `conda` first, only then use `pip` to install only those packages that were not available through Anaconda repositories. 
+One thing to note when installing packages is that it is always preferable to first install necessary packages with `conda` first, only then use `pip` to install only those packages that were not available through your configured Conda channels. 
 It is usually best practice to install needed packages and dependencies with `conda` and use `pip` to install any remaining packages that were not available instead of vice versa.
 
 #### Adding package repositories (channels)
 
-Sometimes the default repositories, or channels for Conda, do not have the package you are looking for, but that does not mean that it is necessarily unavailable entirely. Say you are working with some Illumina sequence data and need the Burrows-Wheeler Aligner (bwa) in your pipeline, so you activate your bioinformatics environment and type `conda install bwa` which prints the following:
+Sometimes the default channels for Conda do not have the package you are looking for, but that does not mean it is necessarily unavailable entirely. CARC's `miniconda3` module is already configured with these default channels (check yours with `conda config --show channels`):
 
 ```bash
-Solving environment: failed
-
-PackagesNotFoundError: The following packages are not available from current channels:
-
-  - bwa
-
-Current channels:
-
-  - https://repo.anaconda.com/pkgs/main/linux-64
-  - https://repo.anaconda.com/pkgs/main/noarch
-  - https://repo.anaconda.com/pkgs/free/linux-64
-  - https://repo.anaconda.com/pkgs/free/noarch
-  - https://repo.anaconda.com/pkgs/r/linux-64
-  - https://repo.anaconda.com/pkgs/r/noarch
-  - https://repo.anaconda.com/pkgs/pro/linux-64
-  - https://repo.anaconda.com/pkgs/pro/noarch
-
-To search for alternate channels that may provide the conda package you're
-looking for, navigate to
-
-    https://anaconda.org
-
-and use the search bar at the top of the page.
-```
-We can search other channels that may have the package we are interested in with the `-c` flag. For example, BioConda is a large repository that hosts several thousand bioinformatics packages. We can search for our bwa package by specifying that channel.
-
-```bash
-$ conda search -c bioConda bwa
+channels:
+  - conda-forge
+  - nodefaults
+  - bioconda
 ```
 
-Which yields better results:
+Note that BioConda — a large repository of bioinformatics packages — is already a default channel here, unlike a stock Anaconda/Miniconda install. So a package like the Burrows-Wheeler Aligner (bwa), which lives in BioConda, is already found without specifying `-c bioconda`:
 
 ```bash
+$ conda search bwa
 Loading channels: done
 # Name                  Version           Build  Channel
-bwa                       0.5.9               0  bioConda
-bwa                       0.5.9               1  bioConda
-bwa                       0.6.2               0  bioConda
-bwa                       0.6.2               1  bioConda
-bwa                      0.7.3a               0  bioConda
-bwa                      0.7.3a               1  bioConda
-bwa                      0.7.3a      ha92aebf_2  bioConda
-bwa                       0.7.4      ha92aebf_0  bioConda
-bwa                       0.7.8               0  bioConda
-bwa                       0.7.8               1  bioConda
-bwa                       0.7.8      ha92aebf_2  bioConda
-bwa                      0.7.12               0  bioConda
-bwa                      0.7.12               1  bioConda
-bwa                      0.7.13               0  bioConda
-bwa                      0.7.13               1  bioConda
-bwa                      0.7.15               0  bioConda
-bwa                      0.7.15               1  bioConda
-bwa                      0.7.16      pl5.22.0_0  bioConda
-bwa                      0.7.17      ha92aebf_3  bioConda
-bwa                      0.7.17      pl5.22.0_0  bioConda
-bwa                      0.7.17      pl5.22.0_1  bioConda
-bwa                      0.7.17      pl5.22.0_2  bioConda
+bwa                       0.7.17      hed695b0_6  bioconda
+bwa                       0.7.17      hed695b0_7  bioconda
+bwa                       0.7.17      pl5.22.0_0  bioconda
+bwa                       0.7.18      h577a1d6_2  bioconda
+bwa                       0.7.19      h577a1d6_0  bioconda
 ```
 
-We can then install our bwa package using `conda install -c bioConda bwa` and continue with our analyses. You can permanently add channels by appending your `.condarc` file either directly in a text editor, or with `conda` by using the `config` command:
+If you do need a package from a channel that isn't in that default list, add it with `-c <channel>`, for example `conda search -c nvidia <package>`. You can permanently add a channel to your configuration with:
 
 ```bash
-$ conda config --append channels bioconda
+$ conda config --append channels <channel-name>
 ```
-This will permanently add the BioConda channel to your configuration file meaning Conda will automatically search BioConda as well as the default channels when looking for packages.
+This will permanently add that channel to your `.condarc` file, meaning Conda will automatically search it alongside conda-forge/bioconda when looking for packages.
 
 For more information on managing channels and installing with pip please refer to the Conda support documentation at this [link](https://conda.io/docs/user-guide/tasks/manage-channels.html).
