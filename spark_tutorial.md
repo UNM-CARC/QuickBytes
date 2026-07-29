@@ -66,7 +66,7 @@ Spark's own scripts (`start-master.sh`, `spark-submit`, etc.) expect `$SPARK_HOM
 ## Step 3: Match Driver and Worker Python Versions
 
 ```bash
-module load miniforge3
+module load miniconda3/latest
 conda create -n spark-env python=3.11 numpy scipy pandas matplotlib pyarrow -y
 conda activate spark-env
 export PYSPARK_PYTHON=~/.conda/envs/spark-env/bin/python
