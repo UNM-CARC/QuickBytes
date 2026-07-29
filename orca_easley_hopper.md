@@ -36,7 +36,7 @@ Now you can simply submit your job to the queue with `sbatch orca_submission.sh`
 
 ### Submitting an Orca script on Hopper
 
-The Hopper version is identical — check `sinfo` for the partitions you have access to. Hopper's default is `general`, same as Easley.
+The Hopper version is identical — check `sinfo` for the partitions you have access to (Hopper's default is `general`, same as Easley):
 
 ```bash
 #!/usr/bin/bash
@@ -68,6 +68,6 @@ $full_orca_path $input_file > $output_file
 
 Now you can simply submit your job to the queue with `sbatch orca_submission.sh`.
 
-**Note on scratch space:** older versions of this guide staged input/output through a hardcoded `/taos/scratch/$USER` path. That machine (Taos) is retired, and neither Easley nor Hopper provisions a personal top-level scratch directory by default for every user — attempting to `mkdir` one at the machine-wide scratch mount (e.g. `/easley/scratch/$USER`, `/carc/scratch/$USER`) will fail with a permission error unless CARC has set one up for you. If you need scratch space for large I/O, use your project's allocated path under `/carc/scratch/projects/<pi_username>/<pi_username><project_id>/` (see `storage_permissions_BeeGFS.md`) or just run directly from `$SLURM_SUBMIT_DIR`, as the scripts above do. Contact help@carc.unm.edu if you need a dedicated scratch allocation.
+Neither Easley nor Hopper provisions a personal top-level scratch directory by default for every user. If you need scratch space for large I/O, use your project's allocated path under `/carc/scratch/projects/<pi_username>/<pi_username><project_id>/` (see `storage_permissions_BeeGFS.md`) or just run directly from `$SLURM_SUBMIT_DIR`, as the scripts above do. Contact help@carc.unm.edu if you need a dedicated scratch allocation.
 
 *Module and paths verified against `orca/6.1.1` on both Easley and Hopper.*
