@@ -6,7 +6,7 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on wheeler takes about 5.5 hours. If you run this script, note that it should output a filtered VCF file that's ~350 Mb.
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on Easley takes about 5.5 hours. If you run this script, note that it should output a filtered VCF file that's ~350 Mb.
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -44,7 +44,7 @@ Please note that you must cite any program you use in a paper. At the end of thi
 
 We will be using conda to make an environment to load within our PBS script. First, if you haven’t already, set up conda as follows:
 
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	# can also use other conda modules
 	conda init bash
 	<exit and re-log or restart shell>
@@ -53,17 +53,17 @@ This following line will create an environment and install the most recent versi
 
 	conda create -n gatk-env -c bioconda -c conda-forge gatk4 bwa samtools picard trimmomatic
 
-Alternatively, you can load these as modules if you are on Wheeler (Xena only has Samtools now), but they may not be the most recent versions:
+Alternatively, you can load these as modules on Easley, though samtools is currently only available as a module on Hopper, not Easley:
 
-	module load bwa-0.7.17-intel-18.0.2-7jvpfu2
-	module load samtools-1.9-gcc-7.3.0-tnzvvzt
-	module load picard-2.20.8-gcc-4.8.5-3yh2dzv
-	module load gatk-4.1.4.1-gcc-4.8.5-python3-fqiavji
-	module load trimmomatic-0.36-gcc-4.8.5-q3gx4rj
+	module load bwa/0.7.17-zvtr
+	module load samtools/1.16.1-3ojn
+	module load picard/3.1.1-lsaf
+	module load gatk/4.5.0.0-ukon
+	module load trimmomatic/0.39-66mw
 
 If you are parallelizing (see “Scatter-gather Parallel” and sample PBS script), you'll need this:
 
-	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	module load parallel/20240822-ao2z
 	source $(which env_parallel.bash)
 
 The directories we will need (other than the home directory) are a raw_reads directory for the demultiplexed reads and the following for various intermediate files to go into. Alternatively, if you don’t want to move around all your reads, just replace the path in the BWA call with that path. Note that a few of these are only used with scatter-gather parallelization (reccomended for larger datasets).
@@ -423,12 +423,12 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	# it is named "gatk_tutorial" and sends an email to "youremail@school.edu" when done
 
 	# load your conda environment
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	eval "$(conda shell.bash hook)"
 	conda activate gatk-env
 	
 	# load GNU parallel, get env_parallel
-	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	module load parallel/20240822-ao2z
 	source $(which env_parallel.bash)
 	
 	src=$PBS_O_WORKDIR
