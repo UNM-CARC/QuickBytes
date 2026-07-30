@@ -35,3 +35,5 @@ Julia should now appear as an option in JupyterHub.
 1. Start a JupyterHub job.
 2. In the upper right portion of the screen, click on the 'new' drop-down menu.
 3. Select the Julia option.
+
+*This quickbyte was validated on 7/30/2026*
