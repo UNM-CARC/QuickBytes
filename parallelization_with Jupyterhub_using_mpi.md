@@ -2,52 +2,45 @@
 
 The following steps will show you the steps to use MPI through ipython's ipyparallel interface. 
 
-### Create a PBS profile on CARC 
+### Create a Slurm profile on CARC 
 
 Once you are logged in at carc run these steps:
 
 ```console
-cd /projects/systems/shared/ipython_cluster_profiles
-cp -r profile_pbs ~/.ipython/
+ipython profile create --parallel --profile=slurm
 ```
 
-Then check the files copied. 
+Edit `~/.ipython/profile_slurm/ipcontroller_config.py` and add the following line. This tells the controller to listen on all network interfaces, not just localhost — without it, engines launched on a separate compute node from the controller can't connect back, and will fail with a "controller and engines are not on the same machine" error:
+
+```python
+c.IPController.ip = "0.0.0.0"
+```
+
+Then start the cluster, requesting however many engines you want (8 in this example):
 
 ```console
-cd ~/.ipython/profile_pbs
+ipcluster start --profile=slurm --engines=Slurm -n 8
 ```
 
-Now on JupyterHub go to the IPython Clusters tab (refresh if already open) and you should see a pbs profile now available to you. Click the JupyterHub icon in the upper left of your screen if you can't see the clusters tab.
-
-You can start a job by setting number of engine in the 'pbs' cluster profile and clicking start under actions. For this example we will request 8 ipython compute engines.
-
-[Optional] Since ipython's ipyparallel system is requesting compute nodes through the torque PBS system you will have to wait until the nodes are running before you can run 
+[Optional] Since this is requesting compute nodes through Slurm, you will have to wait until the nodes are running before you can run 
 code on them. Check that the job is running in terminal with 
 
 ```console
-watch qstat -tn -u <username>
-
+watch squeue -u <username>
+```
 
 You should see something like the following:
 
-Every 2.0s: qstat -t -n -u $USER     Wed Oct 23 09:15:14 2019                                                                                      
-wheeler-sn.alliance.unm.edu:
-                                                                                  Req'd       Req'd	  Elap
-Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
------------------------ ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
-258370.wheeler-sn.alli  mfricke     default  jupyterhub        21730     1	1	--   08:00:00 R  00:06:45
-   wheeler291/1
-258371.wheeler-sn.alli  mfricke     default  ipython_controll  22553     1	1	--   01:00:00 R  00:06:11
-   wheeler291/2
-258372.wheeler-sn.alli  mfricke     default  ipython_engine	3213     2     16	--   01:00:00 R  00:06:11
-   wheeler176/0-7+wheeler175/0-7
+```
+Every 2.0s: squeue -u hfricke     Wed Jul 29 12:47:37 2026
+
+ JOBID  PARTITION     NAME     USER ST   TIME  NODES NODELIST(REASON)
+1034174   general  ipengine  hfricke  R  00:33      1  easley048
 ```
 
-Notice the ipython engines are running with status 'R'. You can also check to see whether the compute engines are ready in your python notebook (see below).
+Notice the ipengine job is running with status 'R'. You can also check to see whether the compute engines are ready in your python notebook (see below).
 
 To exit the watch command use control-C 
-
-To change the walltime of your profile, in the ~/.ipython/profile_pbs directory edit the pbs.engine.template and the pbs.controller.template to fit the requirments for your job. By editing these files you can also change from the default to debug queue as you are testing your program. 
 
 Now you can open a Jupyter notebook and follow the remainder of this tutorial.
 
@@ -83,16 +76,16 @@ from mpi4py import MPI
 import numpy as np
 ```
 
-## Create a cluster to use the CPUs allocated thrugh PBS
+## Create a cluster to use the CPUs allocated through Slurm
 
 
 ```python
-cluster = ipp.Client(profile='pbs')
+cluster = ipp.Client(profile='slurm')
 ```
 
 ## Check if the cluster is ready. We are looking for 8 ids since we asked for 8 engines.
 
-Engines in ipparallel parlence are the same as processes or workers in other parallel systems.
+Engines in ipyparallel parlance are the same as processes or workers in other parallel systems.
 
 
 ```python
@@ -176,7 +169,7 @@ view['a']
      array([28., 29., 30., 31.])]
 
 ## Execute the psum function on all the compute engines and store the result in totalsum
-MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by running calling the psum function on all the compute engines simultaniosly. MPI will allow them to communicate with each other to calculate the sum. 
+MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by calling the psum function on all the compute engines simultaneously. MPI will allow them to communicate with each other to calculate the sum. 
 ```python
 status_psum_call=%px totalsum = psum(a)
 ```
@@ -241,4 +234,3 @@ inlinesum()
      array(496.),
      array(496.),
      array(496.)]
-
