@@ -17,7 +17,7 @@ print(num_taxa)
 out_dir<-getwd()
 out_pre<-paste("treesims", num_taxa, lamb_var, mu_var, sep="_")
 
-# Simulate a bunch of trees cuz because it takes a while and demonstrates speedup
+# Simulate a bunch of trees because it takes a while and demonstrates speedup
 sim_trees<-sim.bd.taxa(num_taxa, 10000, lambda=lamb_var, mu=mu_var, complete=F)
 
 # make a species tree and plot it
