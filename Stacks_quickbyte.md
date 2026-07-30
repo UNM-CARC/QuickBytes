@@ -56,7 +56,15 @@ We'll assume you demultiplex your reads before running the pipeline described be
 	mkdir stacks_out
 	mkdir populations_out
 
-The modules you need are stacks, bwa, and samtools. All are available on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not (it's only a module on Hopper) - use conda for samtools on Easley, or run this on Hopper if you'd rather use modules for all three:
+The modules you need are stacks, bwa, and samtools. All are available on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not, since it's only a module on Hopper. Use conda for samtools on Easley:
+
+	module load stacks/2.53-ftxb
+	module load bwa/0.7.17-zvtr
+	module load miniconda3/latest
+	conda create -n samtools_env -c bioconda -c conda-forge samtools
+	source activate samtools_env
+
+Or run this on Hopper if you'd rather use modules for all three:
 
 	module load stacks/2.53-ftxb
 	module load bwa/0.7.17-zvtr
