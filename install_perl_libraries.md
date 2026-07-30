@@ -4,7 +4,7 @@ Perl libraries can be installed to your home directory.
 
 First, load a perl module.
 Use `module spider perl` to view available perl modules on the cluster you are using.
-In this example we will use a perl module available on Easley (there's no separate compiler module to load first — Easley's perl modules don't need one).
+In this example we will use a perl module available on Easley. Easley's perl modules don't need a separate compiler module loaded first.
 ```bash
 $> module load perl/5.40.0-kptf
 ``` 
