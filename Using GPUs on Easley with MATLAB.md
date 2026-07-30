@@ -26,7 +26,7 @@ The following sections show how to access and utilize a GPU on Easley.
 
 ### Use GPU in Interactive Session <a name="1.1"></a>
 
-First, we will open MATLAB in an interactive session on an Easley compute node. Easley's GPU partitions are `h100` and `l40s` (H100 and L40S GPUs respectively) — request one with `--gres=gpu:<type>:<count>`.
+First, we will open MATLAB in an interactive session on an Easley compute node. Easley's GPU partitions are `h100` and `l40s`, giving you H100 and L40S GPUs respectively. Request one with `--gres=gpu:<type>:<count>`.
 
 #### Identify and Select GPU <a name="1.1.1"></a>
 
@@ -76,7 +76,7 @@ ans =
       1      "NVIDIA L40S"          "8.9"               true              false
 ```
 
-Next, you can tell MATLAB which GPU to use (pass in the desired index from the above table).
+Next, you can tell MATLAB which GPU to use. Pass in the desired index from the above table.
 If you do not do this, MATLAB will automatically grab the lowest index GPU when you try to use one.
 ```
 >> gpuDevice(1)
