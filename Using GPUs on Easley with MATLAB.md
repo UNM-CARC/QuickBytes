@@ -145,7 +145,7 @@ This confirms that array A is not on the GPU, but array B is.
 ##### Retrieve Array from GPU <a name="1.1.5"></a>
 In order to retrieve an array from the GPU and put it back in the MATLAB workspace, use the `gather` function.
 It will copy the contents of an array on the GPU into a normal array.
-This is neccesary if you want to to perform non-GPU actions on your data after using the GPU.
+This is necessary if you want to perform non-GPU actions on your data after using the GPU.
 ```
 >> C = gather(B)
 ```
@@ -194,7 +194,7 @@ We will then create a Slurm script that schedules a job with a GPU to run the MA
 
 #### MATLAB Script <a name="1.2.1"></a>
 We will perform the `sqrt` function on a 5000x5000 array.
-The use of `tic` and `toc` allow us to time the seperate applications of `sqrt`.
+The use of `tic` and `toc` allow us to time the separate applications of `sqrt`.
 
 Create the following script with the name `gpu_matlab.m`:
 
