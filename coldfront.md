@@ -4,18 +4,18 @@ Mokey is web application that provides self-service user account management for 
 ## ColdFront WebUI
 
 ### Projects: 
-Projects are acontainer that includes users, allocations, publications, grants, and other research information. 
+Projects are a container that includes users, allocations, publications, grants, and other research information. 
 ### Allocation: 
-Allocations provides access the users to a resource.
+Allocations provide users access to a resource.
 ### Resources:
-The resources list is everything that CARC maintains and provides services/access for to carc community. These can be shared resources such as clusters, storage or individual servers that single user or small group has access to.
+The resources list is everything that CARC maintains and provides services/access for to the CARC community. These can be shared resources such as clusters, storage or individual servers that a single user or small group has access to.
 
 ## ColdFront: CARC Allocation Management System
 **coldfront.alliance.unm.edu**
 
 CARC's central portal for administration, reporting, and measuring scientific impact of cyberinfrastructure resources. 
 
-### * PI's
+### PIs
 <details>
 <summary>Submitting a project</summary>
 </details>
@@ -23,7 +23,7 @@ CARC's central portal for administration, reporting, and measuring scientific im
 <summary>Adding users to a project</summary>
 </details>
 
-### * CARC User's
+### CARC Users
 <details>
 <summary>Resources Allocation for Users</summary>
 </details>
