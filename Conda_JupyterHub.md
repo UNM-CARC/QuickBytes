@@ -4,7 +4,7 @@ Custom environments created by users can also be used on JupyterHub. This QuickB
 
 ## In Terminal 
 
-If you are creating a conda environment from scrach that you know you will want to use on JupyterHub, as you are creating the environment add the ipykernel to the packages you want included.
+If you are creating a conda environment from scratch that you know you will want to use on JupyterHub, as you are creating the environment add the ipykernel to the packages you want included.
 
 For example, if you were making a natural language processing libraries environment, you could create an environment like this:
 
@@ -13,19 +13,21 @@ module load miniconda3
 conda create -n nltk nltk ipykernel
 ```
 
-Alternatively, if you already have an environment created and would like it to be available on JupyterHub, then add the ipykernal. 
+Alternatively, if you already have an environment created and would like it to be available on JupyterHub, then add the ipykernel. 
 
 ``` 
 source activate nltk
 conda install ipykernel
 ```
 
-Remember that you can also access the terminal though JupyterHub. To do this click Terminal under the New dropdown menu. 
+Remember that you can also access the terminal through JupyterHub. To do this click Terminal under the New dropdown menu. 
 
 ![term_Jup](https://github.com/UNM-CARC/QuickBytes/blob/master/JuphuB_terminal.png)
 
 ## On JupyterHub
 
-After your environments have been modified to include the ipykernal, you can open notebooks on JupyterHub by opening a New Notebook under File and selecting the environment. 
+After your environments have been modified to include the ipykernel, you can open notebooks on JupyterHub by opening a New Notebook under File and selecting the environment. 
 
 ![term_Jup](https://github.com/UNM-CARC/QuickBytes/blob/master/JupHub_envi.png)
+
+*This quickbyte was validated on 7/30/2026*
