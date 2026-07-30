@@ -198,4 +198,4 @@ When you are finished, type `exit` to release the node back to the pool.
 
 > **Note:** CARC recommends submitting jobs via `sbatch` wherever possible, as job submission will catch errors in resource requests before the job runs. Reserve interactive sessions for debugging and development.
 
-*This quickbyte was validated on 6/17/2026*
+*This quickbyte was validated on 7/30/2026*

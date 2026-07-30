@@ -9,7 +9,7 @@ Quickbytes are tutorials designed to help CARC users.
       * [SSH keys and Config file](https://github.com/UNM-CARC/QuickBytes/blob/table-of-contents-readme/ssh_keygen_config.md)
       * [Transferring data](https://github.com/UNM-CARC/QuickBytes/blob/master/transfer_data.md)
       * [PBS/TORQUE](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs-torque.md)
-      * [Submitting Slurm Scripts with SBatch](https://github.com/UNM-CARC/QuickBytes/blob/master/submitting_sbtach_jobs.md)
+      * [Submitting Slurm Scripts with SBatch](https://github.com/UNM-CARC/QuickBytes/blob/master/submitting_sbatch_jobs.md)
       * [Check running jobs](https://github.com/UNM-CARC/QuickBytes/blob/master/checking_on_running_jobs.md) 
       * [Managing modules](https://github.com/UNM-CARC/QuickBytes/blob/master/module_management.md)
       * [Intro to Slurm](https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md)
