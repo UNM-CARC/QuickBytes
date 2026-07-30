@@ -25,9 +25,13 @@ Type 'contributors()' for more information and
 Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
+```
 
+```r
+install.packages("ape", dependencies=T, repos="https://cran.r-project.org")
+```
 
-> install.packages("ape", dependencies=T, repos="https://cran.r-project.org")
+```
 Warning in install.packages("ape", dependencies = T, repos = "https://cran.r-project.org",  :
   'lib = "/opt/spack/opt/spack/linux-sapphirerapids/r-4.5.2-pspoemzrzcxde2luqrubfnbfq7higpsr/rlib/R/library"' is not writable
 Would you like to use a personal library instead? (yes/No/cancel) 
@@ -56,7 +60,7 @@ dir.create(Sys.getenv("R_LIBS_USER", recursive=T, mode="0777"))
 #The above steps are only necessary the first time you are installing packages. Remove or comment out if you have already created a persional library.
 
 #Now install packages normally
-> install.packages("ape", dependencies=T, lib=Sys.getenv("R_LIBS_USER"), repos="https://cran.r-project.org")
+install.packages("ape", dependencies=T, lib=Sys.getenv("R_LIBS_USER"), repos="https://cran.r-project.org")
 ```
 
 The first two lines are only necessary when you have not created a personal library for that major version of R yet, otherwise you just need to specify the repos you are downloading packages from and specify your personal library as the install location. You shouldn't need to specify the library since you have appended your library path, but it doesn't hurt to be explicit.
