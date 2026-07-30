@@ -224,7 +224,7 @@ Next we will load the module that provides Singularity:
 $ module load apptainer
 ```
 
-Note: on Easley, the Singularity project has been renamed/replaced by Apptainer. `module load apptainer` still provides a `singularity` command (a compatibility alias), so all the commands below work unchanged. On Hopper, the module is still named `singularity` (`module load singularity`).
+Note: on Easley, the Singularity project has been renamed/replaced by Apptainer. `module load apptainer` still provides a `singularity` command as a compatibility alias, so all the commands below work unchanged. On Hopper, the module is still named `singularity`. Load it with `module load singularity`.
 
 The syntax for executing Singularity images are similar to those we used for docker:
 

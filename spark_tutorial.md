@@ -291,17 +291,6 @@ Since the dataset is generated with a fixed seed, the counts are deterministic �
 
 ---
 
-## Known Issues on Easley
-
-| Symptom | Cause | Fix |
-|---|---|---|
-| `NoClassDefFoundError: org/slf4j/Logger` | Default `module load spark` loads the Hadoop-less `sewd` build | `module load spark/3.5.1-kn2k` |
-| Spark scripts can't find their install | Module sets `$SPARK_ROOT`, not `$SPARK_HOME` | `export SPARK_HOME=$SPARK_ROOT` |
-| `PYTHON_VERSION_MISMATCH` | conda env Python ≠ system Python (3.9) used by workers | Set both `PYSPARK_PYTHON` and `PYSPARK_DRIVER_PYTHON` |
-| Worker/master logs look empty | Logging config quirk in this build | Check `ps aux` / `ss -tlnp` instead of logs |
-
----
-
 ## Further Reading
 
 - **Spark Streaming** — same transformation/action model applied to continuously-arriving data in time-windowed batches.
