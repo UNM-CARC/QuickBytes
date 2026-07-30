@@ -24,7 +24,7 @@ Your command line prompt should now show the environment name:
 
 ### Test the installation on a GPU
 
-Easley's GPU partitions are `h100` and `l40s` (H100 and L40S GPUs respectively) — request GPUs with `--gres=gpu:<type>:<count>`. Here's a small Slurm script requesting 2 L40S GPUs:
+Easley's GPU partitions are `h100` and `l40s`, giving you H100 and L40S GPUs respectively. Request GPUs with `--gres=gpu:<type>:<count>`. Here's a small Slurm script requesting 2 L40S GPUs:
 
 ```
 #!/bin/bash
