@@ -66,7 +66,7 @@ Spark's own scripts (`start-master.sh`, `spark-submit`, etc.) expect `$SPARK_HOM
 ## Step 3: Match Driver and Worker Python Versions
 
 ```bash
-module load miniforge3
+module load miniconda3/latest
 conda create -n spark-env python=3.11 numpy scipy pandas matplotlib pyarrow -y
 conda activate spark-env
 export PYSPARK_PYTHON=~/.conda/envs/spark-env/bin/python
@@ -288,17 +288,6 @@ ls -la monthly-counts.pdf
 ```
 
 Since the dataset is generated with a fixed seed, the counts are deterministic — grouping by `Month` should come out near `5000/12 ≈ 417` per month every run.
-
----
-
-## Known Issues on Easley
-
-| Symptom | Cause | Fix |
-|---|---|---|
-| `NoClassDefFoundError: org/slf4j/Logger` | Default `module load spark` loads the Hadoop-less `sewd` build | `module load spark/3.5.1-kn2k` |
-| Spark scripts can't find their install | Module sets `$SPARK_ROOT`, not `$SPARK_HOME` | `export SPARK_HOME=$SPARK_ROOT` |
-| `PYTHON_VERSION_MISMATCH` | conda env Python ≠ system Python (3.9) used by workers | Set both `PYSPARK_PYTHON` and `PYSPARK_DRIVER_PYTHON` |
-| Worker/master logs look empty | Logging config quirk in this build | Check `ps aux` / `ss -tlnp` instead of logs |
 
 ---
 
