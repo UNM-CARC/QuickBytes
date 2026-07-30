@@ -176,26 +176,36 @@ salloc: Granted job allocation 156469
 salloc: Nodes easley004 are ready for job
 ```
 
-Once on the node, load your modules and run your script normally:
+Once on the node, load your modules and run your script. Note that plain `bash helloworld_parallel.sh` would only ever run the script once, regardless of how many tasks you requested — to actually run it across all 8 tasks you need to launch it with `mpirun`:
 
 ```bash
 module load openmpi
-bash helloworld_parallel.sh
+mpirun -np 8 bash $PWD/helloworld_parallel.sh
 ```
 
 ```
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
-Hello World from host easley004
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
+Job 1035500 running on easley031
+Hello World from host easley031
 ```
+
+`helloworld_parallel.sh` here is the same kind of script as `hello.sh` above, printing a hello message with `$SLURM_JOB_ID` and the hostname. An absolute path (`$PWD/helloworld_parallel.sh`) is used since `mpirun` doesn't necessarily preserve your current directory across every task.
 
 When you are finished, type `exit` to release the node back to the pool.
 
 > **Note:** CARC recommends submitting jobs via `sbatch` wherever possible, as job submission will catch errors in resource requests before the job runs. Reserve interactive sessions for debugging and development.
 
-*This quickbyte was validated on 6/17/2026*
+*This quickbyte was validated on 7/30/2026*
