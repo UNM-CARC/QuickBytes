@@ -14,7 +14,7 @@ We use `conda` to create new environments and install/upgrade packages within en
 
 `conda create --name TensorFlow python=3.11 pandas tensorflow`
 
-Avoid pinning very old Python versions like 3.5 here. Besides being long past end-of-life, asking conda to solve an environment against years of since-released package history can make dependency resolution extremely slow or effectively hang.
+Avoid pinning very old Python versions like 3.5 here. They're long past end-of-life, and asking conda to solve an environment against years of since-released package history can make dependency resolution extremely slow or effectively hang.
 
 The command you are calling here is `conda` and you are telling it you want to `create` a new environment named TensorFlow with the packages python version 3.11 specifically, pandas, and tensorflow. When you enter this command `conda` prints out the plan for this environment to `stdout`:
 
@@ -52,7 +52,7 @@ The following NEW packages will be INSTALLED:
     tensorboard:        conda-forge/noarch::tensorboard-2.19.0-pyhd8ed1ab_0
     tensorflow:         conda-forge/linux-64::tensorflow-2.19.1-cpu_py311h7787b69_55
     tensorflow-base:    conda-forge/linux-64::tensorflow-base-2.19.1-cpu_py311hf06be6a_55
-    ... (plus their shared-library dependencies)
+    ...
 
 Proceed ([y]/n)?
 ```
@@ -76,7 +76,7 @@ Executing transaction: done
 #
 ```
 
-Now we have our machine learning environment created to run our machine learning python script. To activate the environment we just created you use the command `source activate my_environment_name`, which is `source activate TensorFlow` for this example — use `source activate`/`source deactivate` rather than `conda activate`/`conda deactivate` here, since `conda activate` reliably fails on Easley/Hopper with `CondaError: Run 'conda init' before 'conda activate'`, even right after running `conda init`. Remember to include the lines below in your Slurm script when working with Conda environments:
+Now we have our machine learning environment created to run our machine learning python script. To activate the environment we just created you use the command `source activate my_environment_name`, which is `source activate TensorFlow` for this example. Remember to include the lines below in your Slurm script when working with Conda environments:
 
 ```bash
 # load miniconda software module

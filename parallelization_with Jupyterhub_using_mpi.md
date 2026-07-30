@@ -85,7 +85,7 @@ cluster = ipp.Client(profile='slurm')
 
 ## Check if the cluster is ready. We are looking for 8 ids since we asked for 8 engines.
 
-Engines in ipparallel parlence are the same as processes or workers in other parallel systems.
+Engines in ipyparallel parlance are the same as processes or workers in other parallel systems.
 
 
 ```python
@@ -169,7 +169,7 @@ view['a']
      array([28., 29., 30., 31.])]
 
 ## Execute the psum function on all the compute engines and store the result in totalsum
-MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by running calling the psum function on all the compute engines simultaniosly. MPI will allow them to communicate with each other to calculate the sum. 
+MPI code has to be executed on each compute engine so they can each perform the MPI reduce. This is accomplished by calling the psum function on all the compute engines simultaneously. MPI will allow them to communicate with each other to calculate the sum. 
 ```python
 status_psum_call=%px totalsum = psum(a)
 ```

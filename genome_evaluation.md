@@ -4,7 +4,7 @@ Whether you're using an already assembled reference genome from a database like 
 
 ## Assessing contiguity with QUAST ##
 
-Although QUAST is fairly easy to run on personal computers, it is much easier to run in the place you already have your reference (which hopefully is CARC!). QUAST is not currently a module on any machine, so we'll install it using conda. First, if conda isn't initialized, you'll need to load a module for miniconda (with this specific module being the current one on Easley). Then, you'll make a new environment with QUAST. Unfortunately, as of writing this QuickByte, QUAST has dependency issues with other programs, and can't be in the same environment as BUSCO:
+Although QUAST is fairly easy to run on personal computers, it is much easier to run in the place you already have your reference (which hopefully is CARC!). QUAST is not currently a module on any machine, so we'll install it using conda. First, if conda isn't initialized, you'll need to load a module for miniconda (`miniconda3/latest` on Easley). Then, you'll make a new environment with QUAST. Unfortunately, as of writing this QuickByte, QUAST has dependency issues with other programs, and can't be in the same environment as BUSCO:
 
 	module load miniconda3/latest
 	conda create --name quast-env --channel bioconda quast
@@ -13,9 +13,9 @@ Now for actually running QUAST! This is simple enough, but there are a few key o
 
 	quast /path/to/focal_reference.fa -o /path/to/quast_output --large --threads 8
 
-Here are two other options that may be of interest. One option for scaffolded genomes it "--split scaffolds", where it will add a second output directory evaluating contigs instead of scaffolds in your reference. Also, if you'd like to compare to a better, preexisting reference genome (needed for some functions like putative missassemblies), use the -r flag to specify the path to a different reference. One final option that is more computationally intensive is gene finding with --glimmer, which uses [GlimmerHMM](https://ccb.jhu.edu/software/glimmerhmm/) to identify possible protein coding genes. Note that the options using GeneMark (e.g. --gene-finding) are not availible on the bioconda distribution of this software. This advanced version would look like:
+Here are two other options that may be of interest. One option for scaffolded genomes it "--split scaffolds", where it will add a second output directory evaluating contigs instead of scaffolds in your reference. Also, if you'd like to compare to a better, preexisting reference genome (needed for some functions like putative missassemblies), use the -r flag to specify the path to a different reference. One final option that is more computationally intensive is gene finding with --glimmer, which uses [GlimmerHMM](https://ccb.jhu.edu/software/glimmerhmm/) to identify possible protein coding genes. Note that the options using GeneMark (e.g. --gene-finding) are not available on the bioconda distribution of this software. This advanced version would look like:
 
-	quast /path/to/focal_reference.fa -o /path/to/quast_output -r /path/to/high_qual_refernece --large --glimmer --split-scaffolds --threads 8
+	quast /path/to/focal_reference.fa -o /path/to/quast_output -r /path/to/high_qual_reference --large --glimmer --split-scaffolds --threads 8
 
 We'll run QUAST with a submission script, here using Slurm. This is also made for Easley, being run on one core. We will store the output in a subdirectory in the submission directory. This examples runs the basic stats above on a scaffolded reference genome used [in a different QuickByte](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) borrowed from [a great paper about conservation genomics](https://academic.oup.com/gbe/article/11/7/2023/5499175).
 
@@ -54,7 +54,7 @@ There are a few ways to assess the output in the output directory, with the most
 
 ## Assessing completeness with BUSCO ##
 
-The next step will be to assess how complete our genome is by seeing how many single-copy orthologs are detected. This is important, because obviously if our genome is missing important portions, those regions won't be detected in analyses. For this, we will use BUSCO. As it stands, there are some issues installing BUSCO with conda (new versions fail to solve), and it doesn't work well as a spack module, so I'll provide a conda .yml for you. First, copy the file from our shared tutorial directory like "cp /projects/shared/tutorials/quickbytes/busco-env.yml ~/path/to/directory" or exapand this bit and manually copy its contents:
+The next step will be to assess how complete our genome is by seeing how many single-copy orthologs are detected. This is important, because obviously if our genome is missing important portions, those regions won't be detected in analyses. For this, we will use BUSCO. As it stands, there are some issues installing BUSCO with conda (new versions fail to solve), and it doesn't work well as a spack module, so I'll provide a conda .yml for you. First, copy the file from our shared tutorial directory like "cp /projects/shared/tutorials/quickbytes/busco-env.yml ~/path/to/directory" or expand this bit and manually copy its contents:
 
 <details>
 	<summary> Text for the .yml file </summary>
@@ -327,7 +327,7 @@ You then install it like this:
 	# conda create --name busco-env --channel bioconda --channel conda-forge busco=5.1.3
 	conda env create -f busco-env.yml
 
-Then, you'll need to find which dataset of genes you want to use. To do this, either activate the conda environment (if you have it) or load the module and run "busco --list-datasets". You'll see an output like this, with a taxonomic hierarchy. You should choose the one most representative of your dataset. We'll do an example for our Sage Grouse genome again. First, we'll scroll down to eurkaryotes (eukaryota_odb10), then animals (metazoa_odb10), and then vertrabrates (vertabrata_odb10) below. The smallest group for us to use is the set for all birds, which is "aves_odb10". You can see it used in our sample command below.
+Then, you'll need to find which dataset of genes you want to use. To do this, either activate the conda environment (if you have it) or load the module and run "busco --list-datasets". You'll see an output like this, with a taxonomic hierarchy. You should choose the one most representative of your dataset. We'll do an example for our Sage Grouse genome again. First, we'll scroll down to eukaryotes (eukaryota_odb10), then animals (metazoa_odb10), and then vertebrates (vertabrata_odb10) below. The smallest group for us to use is the set for all birds, which is "aves_odb10". You can see it used in our sample command below.
 
 	- vertebrata_odb10
              - actinopterygii_odb10
@@ -345,7 +345,7 @@ Then, you'll need to find which dataset of genes you want to use. To do this, ei
                      - aves_odb10
                          - passeriformes_odb10
 
-Then you'll run BUSCO, which has a manual with full info on options [here](https://busco.ezlab.org/busco_userguide.html). It has the odd quick of requiring modifying a config file to have its output anywhere but the current directory, so we'll just have everything in the submission directory (note that if you already have that directory made, you need the --force or -f flag to overwrite it). The first two flags after our input genome (-i) and output directory (-o) are the number of cores to use (--cpus) and the mode. Because we are evaluating a reference genome, we'll use "--mode genome". Finally, we have the lineage dataset (-l), which is the "aves_odb10" from above.
+Then you'll run BUSCO, which has a manual with full info on options [here](https://busco.ezlab.org/busco_userguide.html). It has the odd quirk of requiring modifying a config file to have its output anywhere but the current directory, so we'll just have everything in the submission directory (note that if you already have that directory made, you need the --force or -f flag to overwrite it). The first two flags after our input genome (-i) and output directory (-o) are the number of cores to use (--cpus) and the mode. Because we are evaluating a reference genome, we'll use "--mode genome". Finally, we have the lineage dataset (-l), which is the "aves_odb10" from above.
 
 	cd $SLURM_SUBMIT_DIR
 	module load miniconda3/latest

@@ -8,9 +8,12 @@ First login to one of the CARC machines via SSH.
 
 `ssh -X user@machine_name.alliance.unm.edu`
 
-Once logged into the machine, you have to load the module which has R program files. 
+Once logged into the machine, you have to load the module which has R program files. On Easley, `r/4.5.2-pspo` is missing a runtime dependency on `libdeflate`, so load that too and add its lib directory to `LD_LIBRARY_PATH`:
 
-`module load r-3.5.0-gcc-4.8.5-python2-khqxja7`
+```bash
+module load libdeflate/1.14-2pby r/4.5.2-pspo
+export LD_LIBRARY_PATH=$LIBDEFLATE_LIB:$LD_LIBRARY_PATH
+```
 
 After loading the R module, begin R programming by typing
 
@@ -20,8 +23,8 @@ This will shows
 
 ```bash
 
-R version 3.5.0 (2018-04-23) -- "Joy in Playing"
-Copyright (C) 2018 The R Foundation for Statistical
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical
 Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
