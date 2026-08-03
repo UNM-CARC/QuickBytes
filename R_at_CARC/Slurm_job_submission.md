@@ -68,7 +68,7 @@ The next chunk of lines are the flags to `sbatch` asking for specific resources.
 At the very least you should always specify the walltime, nodes, and tasks-per-node for each job. For an exhaustive list of `sbatch` options you can type `man sbatch` on the head node of any CARC system. 
 
 ### Calling your code
-The rest of the Slurm script are usually bash commands (or whatever shell you prefer to use, which can be specified with the `--wrap` option or a different shebang) that tells the compute node where your data is, loads the software you want, and then executes your job. 
+The rest of the Slurm script is usually bash commands, or whatever shell you prefer. The shell can be specified with the `--wrap` option or a different shebang. These commands tell the compute node where your data is, load the software you want, and then execute your job. 
 
 ```
 ## There are many job specific variables that are created when Slurm starts a job, including $SLURM_SUBMIT_DIR. The
