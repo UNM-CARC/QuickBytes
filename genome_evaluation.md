@@ -349,7 +349,7 @@ Then you'll run BUSCO, which has a manual with full info on options [here](https
 
 	cd $SLURM_SUBMIT_DIR
 	module load miniconda3/latest
-	source activate busco-test
+	source activate busco-env
 	
 	busco -i /projects/shared/tutorials/quickbytes/GATK/sagegrouse_reference.fa -o busco_test --cpu 8 --mode genome -l aves_odb10
 	
