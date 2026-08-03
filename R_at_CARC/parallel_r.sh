@@ -3,7 +3,7 @@
 #SBATCH --partition debug
 #SBATCH --nodes 2
 #SBATCH --ntasks-per-node 8
-#SBATCH --time 00:10:00
+#SBATCH --time 00:30:00
 #SBATCH --output job.out
 #SBATCH --error job.err
 #SBATCH --mail-type begin,end,fail
