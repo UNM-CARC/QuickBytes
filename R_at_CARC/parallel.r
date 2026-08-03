@@ -21,8 +21,14 @@ out_pre<-paste("treesims", num_taxa, lamb_var, mu_var, sep="_")
 sim_trees<-sim.bd.taxa(num_taxa, 10000, lambda=lamb_var, mu=mu_var, complete=F)
 
 # make a species tree and plot it
+# with mu>0 and complete=F, some replicates simulate trees that aren't ultrametric,
+# which speciesTree() can't handle. Skip those replicates rather than crashing the whole job.
 
-species_tree<-speciesTree(sim_trees)
+species_tree<-tryCatch(speciesTree(sim_trees), error=function(e) NULL)
+if (is.null(species_tree)) {
+	write(paste("Skipped", num_taxa, "taxa, lambda", lamb_var, "mu", mu_var, "- simulated trees were not ultrametric", sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
+	quit(save="no", status=0)
+}
 pdf(file=paste(out_dir,"/",out_pre, ".pdf", sep=""))
 plot(species_tree)
 dev.off()
