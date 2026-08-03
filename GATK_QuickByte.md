@@ -107,7 +107,7 @@ We will use this sample list in two ways. The first way is loops, and second is 
 
 And this is what GNU parallel looks like (note it's different for BWA, as we need to specify a specific number of jobs). Remember, we need to use env_parallel if we are using conda.
 	
-	cat $src/sample_list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'RunTask -input {}.file'
 
 For clarity, in most cases the commands are written as they would be for a for loop (i.e. with $sample instead of {}).
@@ -238,7 +238,7 @@ The simplest way is individually going through BAM files and calling SNPs on the
 
 One issue with HaplotypeCaller is that it takes a long time, but is not programmed to be parallelized by default. We can use GNU parallel to solve that problem in two ways. If you have many small inputs and don't want to do scatter-gather parallel, you can run one instance of HaplotypeCaller per core. Note that we restrict the memory such that each job can only max out the core it's on (you'll want to change from 6g based on the machine you're running this on):
 
-	cat $src/sample_list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" HaplotypeCaller \
 		-R ${reference}.fa \
 		-I $src/bams/{}_recal.bam \
@@ -335,7 +335,7 @@ Scatter-gather is the process of breaking a job into intervals (i.e. contigs or 
 	
 	while read sample; do
 		mkdir ${src}/gvcfs/${sample}
-		cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+		cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 			'gatk --java-options "-Xmx6g" HaplotypeCaller \
 			-R ${reference}.fa \
 			-I $src/bams/${sample}_recal.bam \
@@ -346,7 +346,7 @@ Scatter-gather is the process of breaking a job into intervals (i.e. contigs or 
 	
 You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF file paths for each sample you're including (the while loop below).
 
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'interval_list=""
 		# loop to generate list of sample-specific intervals to combine
 		while read sample; do
@@ -359,7 +359,7 @@ You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF 
 			
 Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists needed!
 
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 			-R ${reference}.fa \
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
@@ -367,7 +367,7 @@ Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists nee
 			
 If you have many samples, it may be best to use GenomicsDBImport. It is very similar, with both that step and the genotyping below. Note that the directory for --genomicsdb-workspace-path can't exist (unless you're updating it):
 
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'mkdir $src/gendb_temp/{}
    	 	interval_list=""
     		# loop to generate list of sample-specific intervals
@@ -381,7 +381,7 @@ If you have many samples, it may be best to use GenomicsDBImport. It is very sim
 			--tmp-dir $src/gendb_temp/{} \
 			-L {}'
 
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 		-R ${reference}.fa \
 		-V gendb://$src/genomics_databases/{} \
@@ -445,7 +445,7 @@ Here is a sample Slurm script combining everything we have above, with as much p
 	
 	# Trimming section
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
-	cat $src/sample_list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'read1=$src/raw_reads/{}_1.fastq.gz
 		read2=$src/raw_reads/{}_2.fastq.gz
 		paired_r1=$src/clean_reads/{}_paired_R1.fastq.gz
@@ -483,7 +483,7 @@ Here is a sample Slurm script combining everything we have above, with as much p
 	# Remember to change from _recal to _dedup if you can’t do base recalibration.
 	# Also, depth will take A LOT of room up, so you may not want to run it until you know what to do with it.
 
-	cat $src/sample_list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'picard CollectAlignmentSummaryMetrics \
 			R=${reference}.fa \
 			I=$src/bams/{}_dedup.bam \
@@ -504,7 +504,7 @@ Here is a sample Slurm script combining everything we have above, with as much p
 	
 	while read sample; do
 		mkdir ${src}/gvcfs/${sample}
-		cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+		cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 			'gatk --java-options "-Xmx6g" HaplotypeCaller \
 			-R ${reference}.fa \
 			-I $src/bams/${sample}_dedup.bam \
@@ -514,7 +514,7 @@ Here is a sample Slurm script combining everything we have above, with as much p
 	done < $src/sample_list
 
 	# Run CombineGVCFs per interval, each step combines all samples into one interval-specific GVCF
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'interval_list=""
 		# loop to generate list of sample-specific intervals to combine
 		while read sample; do
@@ -526,7 +526,7 @@ Here is a sample Slurm script combining everything we have above, with as much p
 			-O $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz'
 	
 	# Run GenotypeGVCFs on each interval GVCF
-	cat $src/intervals.list | env_parallel --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 			-R ${reference}.fa \
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
