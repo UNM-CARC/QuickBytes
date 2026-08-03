@@ -1,9 +1,21 @@
 # Project Storage, Group Ownership, and BeeGFS Quotas
 
-CARC Scratch project directories are located under paths like:
+CARC Scratch project directories are located under `/carc/scratch/projects/`, but the exact layout depends on how your project was provisioned. Most projects live directly there:
 
 ```text
 /carc/scratch/projects/<pi_username><project_id>
+```
+
+Some PIs, typically ones with multiple projects, instead have a container directory holding one or more project subdirectories:
+
+```text
+/carc/scratch/projects/<pi_username>/<pi_username><project_id>
+```
+
+If you're not sure which applies to you, check both:
+
+```bash
+ls -d /carc/scratch/projects/<pi_username>*
 ```
 
 These directories are on BeeGFS, where quotas are enforced by **group ownership**.
