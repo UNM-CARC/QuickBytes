@@ -25,7 +25,7 @@ Node Access Policy | Multiple users' jobs can share the same compute node, alloc
 | Partition | Max CPUs/User | Max Memory/User | Walltime |
 | --- | --- | --- | --- |
 | general (default) | 128 | ~380 GB | 2-00:00:00 |
-| debug | 8 | 25 GB | 2-00:00:00 |
+| debug | 8 | 25 GB | 04:00:00 |
 
 Node Access Policy | Multiple users' jobs can share the same compute node, allocated by CPU/memory rather than whole nodes.
 --- | ---
