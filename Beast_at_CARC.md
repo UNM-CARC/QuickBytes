@@ -33,8 +33,15 @@ cd $SLURM_SUBMIT_DIR
 module load llvm/17.0.6-ahyd
 module load beast2/2.7.4-mh57
 
+# Compute nodes don't have Java installed, and the beast2 module doesn't pull it in
+# for you, so you need to bring your own. Get one from conda:
+module load miniconda3/latest
+source activate java_env
+
 beast my_data.xml
 ```
+
+Set up `java_env` once beforehand with `conda create -n java_env -c conda-forge openjdk=17`.
 
 Submit it with `sbatch beast_job.sh`.
 
