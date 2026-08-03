@@ -162,7 +162,7 @@ Mothur uses a unique syntax in which each command begins is structured liek this
  module load miniconda3/latest
    
       
-conda env create -n mothur
+conda create -n mothur
 conda install -n mothur -c bioconda mothur
 
  
