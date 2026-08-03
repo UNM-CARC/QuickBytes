@@ -56,7 +56,7 @@ We'll assume you demultiplex your reads before running the pipeline described be
 	mkdir stacks_out
 	mkdir populations_out
 
-The modules you need are stacks, bwa, and samtools. All are available on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not. Use conda for samtools on Easley:
+The modules you need are stacks, bwa, and samtools. All are available on Conda. On Easley, `stacks` and `bwa` are also available as modules, but `samtools` isn't. Use conda to get samtools there:
 
 	module load stacks/2.53-ftxb
 	module load bwa/0.7.17-zvtr
@@ -70,7 +70,7 @@ On Hopper, only `samtools` is available as a module (`samtools/1.16.1-3ojn`). `s
 	conda create -n stacks_env -c bioconda -c conda-forge stacks bwa samtools
 	source activate stacks_env
 
-We'll also set some variables for referring to paths to stuff. We assume that the reference names (ReferenceBaseName):
+We'll also set a few variables for the paths we'll need. We assume the reference name is ReferenceBaseName:
 
 	src=$SLURM_SUBMIT_DIR
 	bwa_ref=$src/ReferenceBaseName
