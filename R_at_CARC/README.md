@@ -2,7 +2,7 @@
 
 The following markdown files contain the introductory workshop material for running R on CARC systems. 
 
-The "tutorials" go basically in this order:
+The "tutorials" go in this order:
 
 1. [Getting R software](https://github.com/UNM-CARC/QuickBytes/blob/master/R_at_CARC/getting_R_software.md)
 2. [Installing packages](https://github.com/UNM-CARC/QuickBytes/blob/master/R_at_CARC/installing_packages.md)
