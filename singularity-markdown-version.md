@@ -19,7 +19,7 @@ If you have used a virtual machine (such as virtualbox, or vmware) the descripti
 
 ## What is Singularity?
 
-Singularity is able to convert and run docker images into a secure form suitable for multiuser machines such as the CARC clusters.
+Singularity converts and runs docker images in a secure form suitable for multiuser machines such as the CARC clusters.
 
 ## Installing Docker
 
