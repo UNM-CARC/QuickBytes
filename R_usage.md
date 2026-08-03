@@ -69,7 +69,7 @@ If you want to generate samples from a normal distribution, you can use the `rno
 print('Hello World')
 
 #Calling the rnorm() function to generate three random numbers from a 
-normal distribution with mean 5 and a standard  deviation of 5
+#normal distribution with mean 5 and a standard deviation of 5
 
 rnorm(3,mean=5,sd=5)
 ```
