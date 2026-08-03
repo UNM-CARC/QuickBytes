@@ -13,13 +13,13 @@ In this guide you will learn how to setup your software to run in a docker conta
 
 Docker allows you to setup a virtual environment for your program that you can configure however you like. You can choose the underlying operating system (so long as it is linux based), install any packages you need, and make any other changes the root user could make. The custom OS environment is stored in a docker image file that can be loaded by any docker installation. Docker has online repositories with many pre-built images available to download.
 
-When loaded, a docker image provides a container that allows the software to have complete control of its environment without effecting the host operating system.
+When loaded, a docker image provides a container that allows the software to have complete control of its environment without affecting the host operating system.
 
 If you have used a virtual machine (such as virtualbox, or vmware) the description of docker images will sound familiar. The main difference is that docker just containerizes the environment but still uses the host operating system's kernel. This means there is very little performance impact.
 
 ## What is Singularity?
 
-Singularity is able to convert and run docker images into a secure form suitable for multiuser machines such as the CARC clusters.
+Singularity converts and runs docker images in a secure form suitable for multiuser machines such as the CARC clusters.
 
 ## Installing Docker
 
@@ -201,7 +201,7 @@ $ docker run -v < path to test_party.R folder > :/mnt r_party Rscript /mnt/test_
 
 # Singularity
 
-## Converting Docker Images to Singularty Images
+## Converting Docker Images to Singularity Images
 
 Once we are happy with the docker image we created we will convert it to a singularity image so we can use it on the CARC clusters.
 
@@ -218,11 +218,13 @@ This will produce a singularity image in the /tmp directory that we can upload t
 
 First login to a CARC cluster head node.
 
-Next we will load the singularity module:
+Next we will load the module that provides Singularity:
 
 ```
-$ module load singularity-2.4.1-intel-17.0.4-sjwoqj4 $
+$ module load apptainer
 ```
+
+Note: on Easley, the Singularity project has been renamed/replaced by Apptainer. `module load apptainer` still provides a `singularity` command as a compatibility alias, so all the commands below work unchanged. On Hopper, the module is still named `singularity`. Load it with `module load singularity`.
 
 The syntax for executing Singularity images are similar to those we used for docker:
 
@@ -233,13 +235,13 @@ $ singularity exec r_party.simg Rscript test_party.R
 ## Mapping Directories
 
 ```
-$ singularity -B $PBS_O_WORKDIR:/mnt exec r_party.simg Rscript test_party.R
+$ singularity -B $SLURM_SUBMIT_DIR:/mnt exec r_party.simg Rscript test_party.R
 ```
-The Above command maps the directory that that PBS script was submitted from, `$PBS_O_WORKDIR`, to the `/mnt` location within the `r_party.simg` singularity image and then executes the `test_party.R` script. 
+The above command maps the directory that the Slurm script was submitted from, `$SLURM_SUBMIT_DIR`, to the `/mnt` location within the `r_party.simg` singularity image and then executes the `test_party.R` script. 
 
 # Version Issues
 
-If you recieve the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. 
+If you receive the following when you try to execute your singularity image there may be a mismatch between the version you used to create the image and the singularity version you loaded at CARC. 
 
 ERROR  : Failed to mount image in (read only): Invalid argument
 
