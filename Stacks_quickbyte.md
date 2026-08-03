@@ -56,7 +56,7 @@ We'll assume you demultiplex your reads before running the pipeline described be
 	mkdir stacks_out
 	mkdir populations_out
 
-The modules you need are stacks, bwa, and samtools. All are available on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not, since it's only a module on Hopper. Use conda for samtools on Easley:
+The modules you need are stacks, bwa, and samtools. All are available on Conda. `stacks` and `bwa` are also available as modules on Easley, but `samtools` currently is not. Use conda for samtools on Easley:
 
 	module load stacks/2.53-ftxb
 	module load bwa/0.7.17-zvtr
@@ -64,11 +64,11 @@ The modules you need are stacks, bwa, and samtools. All are available on Conda. 
 	conda create -n samtools_env -c bioconda -c conda-forge samtools
 	source activate samtools_env
 
-Or run this on Hopper if you'd rather use modules for all three:
+On Hopper, only `samtools` is available as a module (`samtools/1.16.1-3ojn`). `stacks` has no Hopper module at all, and `bwa` is only reachable through an `intel/20.0.4` prerequisite chain under a different version hash, so conda is the simplest way to get all three tools together there too:
 
-	module load stacks/2.53-ftxb
-	module load bwa/0.7.17-zvtr
-	module load samtools/1.16.1-3ojn
+	module load miniconda3/latest
+	conda create -n stacks_env -c bioconda -c conda-forge stacks bwa samtools
+	source activate stacks_env
 
 We'll also set some variables for referring to paths to stuff. We assume that the reference names (ReferenceBaseName):
 
