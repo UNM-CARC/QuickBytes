@@ -49,7 +49,7 @@ Generating input is essentially a simplified version of [GATK's widely used pipe
 	
 	# pipeline combining bcftool's mpileup and call (consensus mode) using 8 threads, then samtools's vcfutils.pl
 	# the latter filters variants with a depth less than 10 or greater than 50, and those with quality score under 30
-	bcftools mpileup -Q 30 -q 30 -Ovu -f reference.fa sorted_alignment.bam --threads 8 | \
+	bcftools mpileup -Q 30 -q 30 -Ou -f reference.fa sorted_alignment.bam --threads 8 | \
 		bcftools call -c --threads 8 | \
 		vcfutils.pl vcf2fq -d 10 -D 50 -Q 30 > variant_consensus.fq
 	
