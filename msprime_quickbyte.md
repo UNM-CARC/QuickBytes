@@ -134,16 +134,16 @@ First, we have to write our python script. We'll use the argparse module to hand
 		mutations = msp.sim_mutations(trees, rate=5.9e-9)
 		
 		# get haplotypes from simulation
-    		haplotypes = np.array(mutations.genotype_matrix())
-    		genotypes = allel.HaplotypeArray(haplotypes).to_genotypes(ploidy=2)
+		haplotypes = np.array(mutations.genotype_matrix())
+		genotypes = allel.HaplotypeArray(haplotypes).to_genotypes(ploidy=2)
 
-   		# calculate fst, assumes even sample size
-    		fst = allel.stats.fst.average_weir_cockerham_fst(genotypes,[list(range(0,samples)),list(range(samples,samples*2))],10)[0]
+		# calculate fst, assumes even sample size
+		fst = allel.stats.fst.average_weir_cockerham_fst(genotypes,[list(range(0,samples)),list(range(samples,samples*2))],10)[0]
 		
 		# write output to file
 		output = open(outfile, "a")
-    		output.write(str(int(size1))+"\t"+str(int(size2))+"\t"+str(fst)+"\n")
-    		output.close()
+		output.write(str(int(size1))+"\t"+str(int(size2))+"\t"+str(fst)+"\n")
+		output.close()
 	
 	if __name__ == '__main__':
 		main()
