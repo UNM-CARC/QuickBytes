@@ -34,7 +34,13 @@ plot(species_tree)
 dev.off()
 
 # compare the distances of all the gene trees to the species tree
-tree_distances<-lapply(sim_trees, treedist, tree2=species_tree)
+# occasionally a gene tree's tip set doesn't match the species tree's (differential extinction
+# across independently-simulated loci), which treedist() can't handle. Skip those too.
+tree_distances<-tryCatch(lapply(sim_trees, treedist, tree2=species_tree), error=function(e) NULL)
+if (is.null(tree_distances)) {
+	write(paste("Skipped", num_taxa, "taxa, lambda", lamb_var, "mu", mu_var, "- a gene tree's tip labels didn't match the species tree", sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
+	quit(save="no", status=0)
+}
 
 # calculate the mean and median
 
