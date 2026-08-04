@@ -19,7 +19,8 @@ export UPCXX_CODEMODE=opt
 module load gcc/8.5.0-lpgx
 module load cmake/3.31.6-qm2s
 module load upcxx/2022.3.0-yrwd
-export CXX=$(dirname $(dirname $(which upcxx-meta)))/openmpi-3.1.6-psvczpcxkv3y5vn7btswoy4kmxr5aexh/bin/mpic++
+module load openmpi/3.1.6-qpl3
+export CXX=$(which mpic++)
 ```
 Run the build script:
 ```
