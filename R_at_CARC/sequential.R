@@ -10,7 +10,7 @@ sim_trees<-sim.bd.taxa(20, 10000, lambda=2, mu=0.5, complete=F)
 # make a species tree and plot it
 
 species_tree<-speciesTree(sim_trees)
-pdf("~/wheeler-scratch/R-workshop/all_the_species_trees.pdf")
+pdf("all_the_species_trees.pdf")
 plot(species_tree)
 dev.off()
 

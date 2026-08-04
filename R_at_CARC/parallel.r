@@ -17,18 +17,30 @@ print(num_taxa)
 out_dir<-getwd()
 out_pre<-paste("treesims", num_taxa, lamb_var, mu_var, sep="_")
 
-# Simulate a bunch of trees cuz because it takes a while and demonstrates speedup
+# Simulate a bunch of trees because it takes a while and demonstrates speedup
 sim_trees<-sim.bd.taxa(num_taxa, 10000, lambda=lamb_var, mu=mu_var, complete=F)
 
 # make a species tree and plot it
+# with mu>0 and complete=F, some replicates simulate trees that aren't ultrametric,
+# which speciesTree() can't handle. Skip those replicates rather than crashing the whole job.
 
-species_tree<-speciesTree(sim_trees)
+species_tree<-tryCatch(speciesTree(sim_trees), error=function(e) NULL)
+if (is.null(species_tree)) {
+	write(paste("Skipped", num_taxa, "taxa, lambda", lamb_var, "mu", mu_var, "- simulated trees were not ultrametric", sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
+	quit(save="no", status=0)
+}
 pdf(file=paste(out_dir,"/",out_pre, ".pdf", sep=""))
 plot(species_tree)
 dev.off()
 
 # compare the distances of all the gene trees to the species tree
-tree_distances<-lapply(sim_trees, treedist, tree2=species_tree)
+# occasionally a gene tree's tip set doesn't match the species tree's (differential extinction
+# across independently-simulated loci), which treedist() can't handle. Skip those too.
+tree_distances<-tryCatch(lapply(sim_trees, treedist, tree2=species_tree), error=function(e) NULL)
+if (is.null(tree_distances)) {
+	write(paste("Skipped", num_taxa, "taxa, lambda", lamb_var, "mu", mu_var, "- a gene tree's tip labels didn't match the species tree", sep=" "), file=paste(out_dir,"/", "distances.txt", sep=""), append=T)
+	quit(save="no", status=0)
+}
 
 # calculate the mean and median
 
