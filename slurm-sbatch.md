@@ -11,4 +11,4 @@ To submit jobs at CARC you submit a Slurm batch script to the Slurm resource man
 
 After your Slurm instructions, you then load your software modules (refer to the help page 'Managing software modules' for more information) followed by software specific instructions. All Slurm batch scripts take this same basic structure for job submission. For some example scripts refer to the help page 'Example Slurm Scripts' to help you get started with computing at CARC.
 
-*This QuickByte was validated on 6/22/2026*
+*This QuickByte was validated on 8/3/2026*
