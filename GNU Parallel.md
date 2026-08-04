@@ -20,24 +20,26 @@ Typical use cases include:
 
 ### Converting Files in Parallel
 
-> **Known issue:** the `imagemagick` module is currently unavailable on Easley. A fix is expected within a day — until then, skip this example.
-
-The following example converts all `.csv` files into `.txt` files.
+The following example converts all `.png` files in the current directory into `.jpg` files, using ImageMagick's `convert` for the actual per-file conversion and GNU Parallel to run many conversions at once.
 
 ```bash
 module load parallel
 module load imagemagick
 
-find . -name "*.csv" | parallel convert {} {.}.txt
+find . -name "*.png" | parallel convert {} {.}.jpg
 ```
 
 This command:
 
-1. Finds all files ending in `.csv`
+1. Finds all files ending in `.png`
 2. Passes each file to GNU Parallel
 3. Executes conversions concurrently
 
 `{}` represents the full filename and `{.}` removes the extension.
+
+Note: ImageMagick's `convert` only understands image formats — it can't be used to turn arbitrary files like `.csv` into `.txt`. For converting non-image data between formats in parallel, replace `convert {} {.}.jpg` with whatever conversion command is appropriate for your file type (e.g. a script or a different CLI tool); GNU Parallel itself doesn't care what command it's fanning out.
+
+`convert` prints a one-time deprecation warning in this version of ImageMagick (IMv7) suggesting `magick` instead — both work identically here, but `magick {} {.}.jpg` is the more future-proof spelling if you're starting fresh.
 
 ---
 
@@ -358,4 +360,4 @@ sbatch python_parallel.slurm
 
 ---
 
-*This QuickByte was updated and validated on June 23, 2026.*
+*This QuickByte was updated and validated on August 3, 2026.*
