@@ -2,7 +2,7 @@
 
 ### Where is your data?
 
-Your home directory, `/users/your-user-name/`, is shared across all CARC machines, meaning that once your data has been uploaded to your home directory, it is accessible regardless of which machine you are logged in to. Refer to our [CARC Systems documentation page](#) for details on CARC systems.
+Your home directory, `/users/your-user-name/`, is shared across all CARC machines, meaning that once your data has been uploaded to your home directory, it is accessible regardless of which machine you are logged in to.
 
 ### Graphical User Interface (GUI) options
 
