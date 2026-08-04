@@ -48,6 +48,8 @@ Then log out and back in before continuing.
 srun --x11 --pty bash
 ```
 
+> **Note:** `srun --x11` requires `DISPLAY` to already be set in your shell (i.e. you must have connected with `ssh -Y`/`-X` first, as in step 1) — if you run it from a plain SSH session without X11 forwarding, you'll get `srun: error: No DISPLAY variable set, cannot setup x11 forwarding.` That error means your local terminal isn't forwarding X11, not that anything is wrong with Slurm.
+
 ### 3. Load and launch MATLAB
 
 Once you have been assigned a node, load the MATLAB module and start MATLAB. The GUI should automatically open on your local machine.
@@ -76,4 +78,4 @@ https://www.youtube.com/watch?v=-5ic9JWHuqI&list=PLvr5gRBLi7VAzEB_t5aXOLHLfdIu2s
 
 If you have any trouble at any point, please reach out to us at help@carc.unm.edu
 
-*This quickbyte was validated on 6/17/2026*
+*This quickbyte was validated on 8/3/2026: `ssh -Y` to Easley correctly forwards a `DISPLAY` (confirmed via a real XQuartz session), `srun --x11 --pty bash` is accepted by Slurm and forwards a fresh `DISPLAY` to the compute node, `module load matlab` succeeds there, and MATLAB launches cleanly (prints its banner and runs a test command) with no early fatal errors. Whether the MATLAB window actually renders on your local screen could not be confirmed by this validation pass, since it was run from an environment with no way to view a display — that step still depends on your own local X server (XQuartz/MobaXterm) working correctly.*
