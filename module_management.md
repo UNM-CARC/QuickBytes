@@ -16,35 +16,52 @@ To load a module, use the `module load` command. For example, to load the module
 module load intel-oneapi-compilers
 ```
 
-Note that there's no plain `intel` module on Easley — `module load intel` fails with "The following module(s) are unknown." Easley's Intel software all lives under the `intel-oneapi-*` family instead (`intel-oneapi-compilers`, `intel-oneapi-mkl`, `intel-oneapi-mpi`, etc.).
+Easley also has a legacy `intel` module family (`intel/18.0.4`, `intel/19.0.5`, `intel/20.0.4`), but these exist without being directly loadable — `module load intel/20.0.4` fails with:
+
+```
+Lmod has detected the following error: These module(s) or extension(s) exist
+but cannot be loaded as requested: "intel/20.0.4"
+   Try: "module spider intel/20.0.4" to see how to load the module(s).
+```
+
+Easley's actively supported Intel software lives under the `intel-oneapi-*` family instead (`intel-oneapi-compilers`, `intel-oneapi-mkl`, `intel-oneapi-mpi`, etc.), which loads normally with `module load intel-oneapi-compilers` as shown above.
 
 Another useful command related to module management is `module spider`. For example, if you issue the command:
 
 ```bash
-module spider intel
+module spider intel-oneapi
 ```
 
 you will see output similar to:
 
 ```
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------
   intel-oneapi-advisor:
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------
      Versions:
         intel-oneapi-advisor/2025.2.0-asm7
         intel-oneapi-advisor/2025.2.0-omxu
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  For detailed information about a specific "intel-oneapi-advisor" package (including how to load the modules) use the module's full name.
-  ...
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  intel-oneapi-compilers: intel-oneapi-compilers/2025.1.1-b3qi
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    This module can be loaded directly: module load intel-oneapi-compilers/2025.1.1-b3qi
+----------------------------------------------------------------------------
+  For detailed information about a specific "intel-oneapi-advisor" package (including how to load the modules) use the module's full name.
+  Note that names that have a trailing (E) are extensions provided by other modules.
+  For example:
+
+     $ module spider intel-oneapi-advisor/2025.2.0-omxu
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+  intel-oneapi-compilers:
+----------------------------------------------------------------------------
+     Versions:
+        intel-oneapi-compilers/2023.1.0-tpvj
+        intel-oneapi-compilers/2023.2.0-lhhm
+        ...
+        intel-oneapi-compilers/2025.1.1-b3qi
 ...
 ```
 
-`spider` matches on partial names, so searching `intel` surfaces the entire `intel-oneapi-*` family at once — you can see there are multiple related Intel packages available, each with its own version(s), as is the case for most software installed on CARC systems.
+`spider` matches on partial names, so searching `intel-oneapi` surfaces the entire `intel-oneapi-*` family at once — you can see there are multiple related Intel packages available, each with its own version(s), as is the case for most software installed on CARC systems. (Searching just `intel` instead matches the legacy `intel` family shown above, and lists the `intel-oneapi-*` packages as "Other possible module matches" rather than expanding them.)
 
 To see all currently loaded modules, use the command `module list`. As an example, let's load the software modules for OpenMPI and GCC, then use `module list`:
 
@@ -58,8 +75,8 @@ module list
 
 ```
 Currently Loaded Modules:
-  1) miniconda3/latest             3) gcc/14.2.0-j33x             5) openmpi/4.1.7-762w
-  2) binutils/2.43.1-ifi2qjn (H)   4) openssh/9.9p1-d4o73h6 (H)
+  1) binutils/2.43.1-ifi2qjn (H)   3) openssh/9.9p1-d4o73h6 (H)
+  2) gcc/14.2.0-j33x               4) openmpi/4.1.7-762w
   Where:
    H:  Hidden Module
 ```
@@ -97,4 +114,4 @@ To unload all modules at once, use the command:
 module purge
 ```
 
-*This quickbyte was validated on 6/22/2026*
+*This quickbyte was validated on 8/3/2026*
