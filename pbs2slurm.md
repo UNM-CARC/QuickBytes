@@ -13,7 +13,7 @@ To submit jobs on Slurm-based systems, you must submit a Slurm job script. If yo
 
 Additional references:
 
-* PBS job submission: http://carc.unm.edu/user-support-2/using-carc-systems1/running-jobs/submitting-jobs.html
+* PBS job submission: https://carc.unm.edu/user-support-2/running-jobs/submitting-jobs.html
 * Slurm QuickBytes: https://github.com/UNM-CARC/QuickBytes/blob/master/Intro_to_slurm.md
 
 ---
@@ -127,7 +127,7 @@ The equivalent Slurm script is:
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=00:05:00
+#SBATCH --time=01:00:00
 #SBATCH --job-name=test
 #SBATCH --output=test.out
 #SBATCH --error=test.err
@@ -145,4 +145,4 @@ Submit the job with:
 sbatch job_script.slurm
 ```
 
-*This quickbyte was validated on 6/25/2026*
+*This quickbyte was validated on 8/3/2026*
