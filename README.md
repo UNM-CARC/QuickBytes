@@ -1,6 +1,10 @@
 # QuickBytes
 Quickbytes are tutorials designed to help CARC users.  
     
+   * Getting Started at CARC
+      * [Welcome to CARC](https://github.com/UNM-CARC/QuickBytes/blob/master/welcome_to_carc.md)
+      * [Getting Access: Accounts and Projects](https://github.com/UNM-CARC/QuickBytes/blob/master/getting_access.md)
+
    * [Linux-Intro](https://github.com/UNM-CARC/QuickBytes/blob/master/linux_intro.md)
 
    * Running jobs
