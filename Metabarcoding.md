@@ -10,7 +10,7 @@ This tutorial is designed to give you an example of how to take the sequences yo
 
 One point of contention for metabarcoding projects is how to define which sequences are unique. The traditional view was to  cluster any sequences that diverged by less than 3% of sequence similarity into a species known as an OTU (operational taxon unit). However, other people reject the clustering step as being arbitrary and define any divergence as noteworthy. This approach is known as ASVs, (amplicon sequence variants). While the debate between clustering to OTUs or using ASVs remains contentious, for most community analyses, each will give you the same biological answer. The right choice will depend on your question and your system. For example, fungal metabarcoding studies use a highly variable region called the internal transcribed spacer (ITS) which is known to diverge by 3% within an individual (they have many copies of the ITS region) and among members of the same species. Thus, clustering to OTUs is more logical for fungal taxa to avoid oversplitting species. However, if you were using a conserved gene such as the 18S, ASV's might give you a better approximation of species.
 
- Final note: make sure you are runing the commands in a pbs script or on an interactive node!
+ Final note: make sure you are running the commands in a slurm script or on an interactive node!
  
 ### Different pipelines ###
 There are many different pipelines to process metabarcoding samples. For this tutorial we will focus on the three main ones:
@@ -22,7 +22,7 @@ There are many different pipelines to process metabarcoding samples. For this tu
 
 
 ### Steps for each pipeline ###
-For eachof them, they will follow these key steps:
+For each of them, they will follow these key steps:
 1. install
       * how to set up the environments. 
 3. join forward and reverse reads
@@ -73,31 +73,19 @@ For QIIME2, every file created is either uses a .qsv or .qsa extension. the .qsv
 
 
 ### install ###
-We will create a conda environment called qiime2-2021.4. 
+CARC maintains a shared, pre-built QIIME2 environment, so you don't need to build your own from a distro yml file. Load Miniconda and activate it:
 ```
-   # To install QIIME2 on the Wheeler, Xena, or Hopper clusters, use the following command:
-   module load miniconda3
-   
-   # To do a similar installation on the Taos cluster, use the following command instead:
-   module load miniconda3-4.10.3-gcc-10.2.0-gu6ytpa
-   
-   #download the yml
-   wget https://data.qiime2.org/distro/core/qiime2-2021.4-py38-linux-conda.yml
-   
-   # create conda environment called qiime2-2020.8
-   conda env create -n qiime2-2021.4 --file qiime2-2021.4-py38-linux-conda.yml
-   
-   # delete yml
-   rm qiime2-2020.8-py36-linux-conda.yml
-   
+module load miniconda3/latest
+source activate /projects/shared/conda/envs/qiime2-amplicon-2026.1
 ```
+If you need a different QIIME2 version or release track, you can still build your own from a distro yml, following the [official QIIME2 install instructions](https://docs.qiime2.org/).
 
 
 ### join forward and reverse reads ###
 
 
 ```
-conda activate qiime2-2021.4
+source activate /projects/shared/conda/envs/qiime2-amplicon-2026.1
 cd $scr
 
 mkdir qiime2_tutorial
@@ -171,10 +159,10 @@ Mothur uses a unique syntax in which each command begins is structured liek this
 
 ```
  # load miniconda
- module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+ module load miniconda3/latest
    
       
-conda env create -n mothur
+conda create -n mothur
 conda install -n mothur -c bioconda mothur
 
  
@@ -184,7 +172,7 @@ conda install -n mothur -c bioconda mothur
 ### join forward and reverse reads ###
 
 ```
-conda activate mothur
+source activate mothur
 cd $src
 mkdir mothur_tutorial 
 
