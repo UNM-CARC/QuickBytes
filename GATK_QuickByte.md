@@ -6,7 +6,7 @@ The goal of this pipeline is to output Single Nucleotide Polymorphisms (SNPs) an
 
 The basic steps are aligning and processing raw reads into binary alignment map (BAM) files, optionally getting descriptive metrics about the samples’ sequencing and alignment, calling variants to produce genomic variant call format (GVCF) files, genotyping those GVCFs to produce VCFs, and filtering those variants for analysis.
 
-For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A .pbs script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on wheeler takes about 5.5 hours. If you run this script, note that it should output a filtered VCF file that's ~350 Mb.
+For CARC users, we have provided some test data to run this on from a paper on [the conservation genomics of sagegrouse](https://academic.oup.com/gbe/article/11/7/2023/5499175). It is two sets of gzipped fastq files per species (i.e. eight total, 4 read and 4 read 2), a file with adapter sequences to trim, and a reference genome. They are located at /projects/shared/tutorials/GATK/. Copy them into your space like "cp /projects/shared/tutorials/quickbytes/GATK/* ~/path/to/directory". A Slurm script for running the pipeline (seen below) is also included, but you may learn more by running each step individually. The whole process with the script with 4 nodes on Easley takes about 5.5 hours. If you run this script, note that it should output a filtered VCF file that's ~350 Mb.
 
 Please note that you must cite any program you use in a paper. At the end of this, we have provided citations you would include for the programs we ran here.
 
@@ -30,9 +30,9 @@ Please note that you must cite any program you use in a paper. At the end of thi
 	
 - [Scatter-gather parallel](#parallel)
 
-- [Sample Scatter-gather PBS script](#script)
+- [Sample Scatter-gather Slurm script](#script)
 
-- [Trobuleshooting](#tshoot)
+- [Troubleshooting](#tshoot)
 
 - [Citations](#cite)	
 
@@ -42,9 +42,9 @@ Please note that you must cite any program you use in a paper. At the end of thi
 
 ### Module and directories ###
 
-We will be using conda to make an environment to load within our PBS script. First, if you haven’t already, set up conda as follows:
+We will be using conda to make an environment to load within our Slurm script. First, if you haven’t already, set up conda as follows:
 
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	# can also use other conda modules
 	conda init bash
 	<exit and re-log or restart shell>
@@ -53,20 +53,22 @@ This following line will create an environment and install the most recent versi
 
 	conda create -n gatk-env -c bioconda -c conda-forge gatk4 bwa samtools picard trimmomatic
 
-Alternatively, you can load these as modules if you are on Wheeler (Xena only has Samtools now), but they may not be the most recent versions:
+Alternatively, you can load these as modules on Easley, though samtools is currently only available as a module on Hopper, not Easley. Use conda for samtools on Easley instead:
 
-	module load bwa-0.7.17-intel-18.0.2-7jvpfu2
-	module load samtools-1.9-gcc-7.3.0-tnzvvzt
-	module load picard-2.20.8-gcc-4.8.5-3yh2dzv
-	module load gatk-4.1.4.1-gcc-4.8.5-python3-fqiavji
-	module load trimmomatic-0.36-gcc-4.8.5-q3gx4rj
+	module load bwa/0.7.17-zvtr
+	module load picard/3.1.1-lsaf
+	module load gatk/4.5.0.0-ukon
+	module load trimmomatic/0.39-66mw
+	module load miniconda3/latest
+	conda create -n samtools_env -c bioconda -c conda-forge samtools
+	source activate samtools_env
 
-If you are parallelizing (see “Scatter-gather Parallel” and sample PBS script), you'll need this:
+If you are parallelizing (see “Scatter-gather Parallel” and sample Slurm script), you'll need this:
 
-	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	module load parallel/20240822-ao2z
 	source $(which env_parallel.bash)
 
-The directories we will need (other than the home directory) are a raw_reads directory for the demultiplexed reads and the following for various intermediate files to go into. Alternatively, if you don’t want to move around all your reads, just replace the path in the BWA call with that path. Note that a few of these are only used with scatter-gather parallelization (reccomended for larger datasets).
+The directories we will need (other than the home directory) are a raw_reads directory for the demultiplexed reads and the following for various intermediate files to go into. Alternatively, if you don’t want to move around all your reads, just replace the path in the BWA call with that path. Note that a few of these are only used with scatter-gather parallelization (recommended for larger datasets).
 
 	mkdir clean_reads
 	mkdir alignments
@@ -85,7 +87,7 @@ The directories we will need (other than the home directory) are a raw_reads dir
 
 We will be using a few variables throughout this that we can set now. These are shortcuts for the path to our working directory and reference.
 
-	src=$PBS_O_WORKDIR
+	src=$SLURM_SUBMIT_DIR
 	reference=$src/reference
 
 ### Sample Names ###
@@ -97,7 +99,7 @@ To keep our script short, and outputs easy to understand, we will use consistent
 	GUSG_GGS1
 	GUSG_GGS2
 	
-We will use this sample list in two ways. The first way is loops, and second is GNU parallel. You can see some examples in the PBS script at the end of the document. Here's a basic demonstration of how to us the list in a loop:
+We will use this sample list in two ways. The first way is loops, and second is GNU parallel. You can see some examples in the Slurm script at the end of the document. Here's a basic demonstration of how to us the list in a loop:
 
 	while read sample; do
 		RunTask -input ${sample}
@@ -105,7 +107,7 @@ We will use this sample list in two ways. The first way is loops, and second is 
 
 And this is what GNU parallel looks like (note it's different for BWA, as we need to specify a specific number of jobs). Remember, we need to use env_parallel if we are using conda.
 	
-	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'RunTask -input {}.file'
 
 For clarity, in most cases the commands are written as they would be for a for loop (i.e. with $sample instead of {}).
@@ -163,7 +165,7 @@ This section prepares BAM files for variant calling. First, we need to index our
        		R=${reference}.fa \
        		O=${reference}.dict
 
-Then, we need to align demultiplexed reads to a reference. For this step, we will use the Burrough-Wheeler Aligner’s (BWA) mem algorithm. Another common option is [Bowtie](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). One important flag here is the -R flag, which is the read group and sample ID for a given sample. We assume that these samples are in the same read group. We can get a node's worth of parallelization with the -t command (it can't work across nodes). Therefore, in the sample script at the end we will show you how to further parallelize BWA. The base command looks like this:
+Then, we need to align demultiplexed reads to a reference. For this step, we will use the Burrows-Wheeler Aligner’s (BWA) mem algorithm. Another common option is [Bowtie](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml). One important flag here is the -R flag, which is the read group and sample ID for a given sample. We assume that these samples are in the same read group. We can get a node's worth of parallelization with the -t command (it can't work across nodes). Therefore, in the sample script at the end we will show you how to further parallelize BWA. The base command looks like this:
 
 	bwa mem \
 		-t [# threads] -M \
@@ -182,7 +184,7 @@ The next step is to mark PCR duplicates to remove bias, sort the file, and conve
 		-O $src/bams/${sample}_dedup.bam \
 		 --conf "spark.executor.cores=8"
 
-We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_debup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
+We recommend combining these steps per sample for efficiency and smoother troubleshooting. One issue is that we do not want large SAM files piling up. This can either be done by piping BWA output directly to MarkDuplicatesSpark or removing the SAM file after each loop. In case you want to save the SAM files, we did the latter (this isn’t a bad idea if you have the space, in case there is a problem with generating BAM files). If you are doing base recalibration, you can also add “rm ${sample}\_dedup.bam” to get rid of needless BAM files. Later in the pipeline, we assume you did base recalibration, so will use the {sample}\_recal.bam file. If you did not use base recalibration, use {sample}\_dedup.bam file in its place.
 
 #### Base Quality Score Recalibration (model organisms)
 
@@ -236,7 +238,7 @@ The simplest way is individually going through BAM files and calling SNPs on the
 
 One issue with HaplotypeCaller is that it takes a long time, but is not programmed to be parallelized by default. We can use GNU parallel to solve that problem in two ways. If you have many small inputs and don't want to do scatter-gather parallel, you can run one instance of HaplotypeCaller per core. Note that we restrict the memory such that each job can only max out the core it's on (you'll want to change from 6g based on the machine you're running this on):
 
-	cat $src/sample_list | env_parallel --sshloginfline $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" HaplotypeCaller \
 		-R ${reference}.fa \
 		-I $src/bams/{}_recal.bam \
@@ -299,7 +301,7 @@ This first step is optional, but here we separate out indels and SNPs. Note that
 	gatk SelectVariants \
 		-R ${reference}.fa \
 		-V $src/combined_vcfs/combined_vcf.vcf.gz \
-		-select-yype SNP \
+		-select-type SNP \
 		-O $src/combined_vcfs/raw_snps.vcf.gz
 
 	gatk SelectVariants \
@@ -326,14 +328,14 @@ This will give us our final VCF! Note that the filtered SNPs are still included,
 
 ## Scatter-gather Parallel
 
-Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the invervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
+Scatter-gather is the process of breaking a job into intervals (i.e. contigs or scaffolds in a reference) and running HaplotypeCaller, CombineGVCFs, and GenotypeGVCFs on each interval in parallel. Then, at the end, all the intervals are gathered together with GatherGVCFs. This results in a massive speed-up due to the parallelization. This is fully implemented in the sample script below, with each step outlined here. The output of GatherVcfs is the same as what comes from GenotypeGVCFs in the non-parallel version. Here is how we run HaplotypeCaller, note that this is only one sample, see the sample script for running this on all samples:
 	
 	# make our interval list
 	cut -f 1 ${reference}.fa.fai > $src/intervals.list
 	
 	while read sample; do
 		mkdir ${src}/gvcfs/${sample}
-		cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 			'gatk --java-options "-Xmx6g" HaplotypeCaller \
 			-R ${reference}.fa \
 			-I $src/bams/${sample}_recal.bam \
@@ -344,7 +346,7 @@ Scatter-gather is the process of breaking a job into intervals (i.e. contigs or 
 	
 You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF file paths for each sample you're including (the while loop below).
 
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'interval_list=""
 		# loop to generate list of sample-specific intervals to combine
 		while read sample; do
@@ -357,7 +359,7 @@ You'll run then run CombineGVCFs. For each interval, you'll make a list of GVCF 
 			
 Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists needed!
 
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 			-R ${reference}.fa \
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
@@ -365,7 +367,7 @@ Next, you run GenotypeGVCFs to get VCFs to gather afterwards. No fancy lists nee
 			
 If you have many samples, it may be best to use GenomicsDBImport. It is very similar, with both that step and the genotyping below. Note that the directory for --genomicsdb-workspace-path can't exist (unless you're updating it):
 
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'mkdir $src/gendb_temp/{}
    	 	interval_list=""
     		# loop to generate list of sample-specific intervals
@@ -379,7 +381,7 @@ If you have many samples, it may be best to use GenomicsDBImport. It is very sim
 			--tmp-dir $src/gendb_temp/{} \
 			-L {}'
 
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 		-R ${reference}.fa \
 		-V gendb://$src/genomics_databases/{} \
@@ -404,34 +406,33 @@ The final (gather) step uses GatherVcfs, for which we'll make a file containing 
 
 <a name="script"/>
 
-## Sample PBS Script ##
+## Sample Slurm Script ##
 
-Here is a sample PBS script combining everything we have above, with as much parallelization as possible. One reason to break up steps like we did is for improved checkpointing (without having to write code checking if files are already present). Once you are finished running a block of code, you can just comment it out. Similarly, if you can only get part way through your sample list, you can copy it and remove samples that have already completed a given step.
+Here is a sample Slurm script combining everything we have above, with as much parallelization as possible. One reason to break up steps like we did is for improved checkpointing (without having to write code checking if files are already present). Once you are finished running a block of code, you can just comment it out. Similarly, if you can only get part way through your sample list, you can copy it and remove samples that have already completed a given step.
 
-To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refer to [this conversion guide](https://github.com/UNM-CARC/QuickBytes/blob/master/pbs2slurm.md) for the rest.
-	
 	#!/bin/bash
 
-	#PBS -q default
-	#PBS -l nodes=4:ppn=8
-	#PBS -l walltime=10:00:00
-	#PBS -N gatk_tutorial
-	#PBS -m ae
-	#PBS -M youremail@school.edu
+	#SBATCH --partition general
+	#SBATCH --nodes 4
+	#SBATCH --ntasks-per-node 8
+	#SBATCH --time 10:00:00
+	#SBATCH --job-name gatk_tutorial
+	#SBATCH --mail-type end,fail
+	#SBATCH --mail-user youremail@school.edu
 	
-	# the PBS lines are for the default queue, using 4 nodes, and has a conservative 10 hour wall time
+	# the Slurm lines are for the general partition, using 4 nodes, and have a conservative 10 hour wall time
 	# it is named "gatk_tutorial" and sends an email to "youremail@school.edu" when done
 
 	# load your conda environment
-	module load miniconda3-4.7.12.1-gcc-4.8.5-lmtvtik
+	module load miniconda3/latest
 	eval "$(conda shell.bash hook)"
 	conda activate gatk-env
 	
 	# load GNU parallel, get env_parallel
-	module load parallel-20170322-gcc-4.8.5-2ycpx7e
+	module load parallel/20240822-ao2z
 	source $(which env_parallel.bash)
 	
-	src=$PBS_O_WORKDIR
+	src=$SLURM_SUBMIT_DIR
 	# this is "sagegrouse_reference" in the tutorial
 	reference=${src}/reference
 	
@@ -444,7 +445,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	
 	# Trimming section
 	adapters=~/.conda/pkgs/trimmomatic-0.39-1/share/trimmomatic-0.39-1/adapters/TruSeq3-PE.fa
-	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'read1=$src/raw_reads/{}_1.fastq.gz
 		read2=$src/raw_reads/{}_2.fastq.gz
 		paired_r1=$src/clean_reads/{}_paired_R1.fastq.gz
@@ -462,7 +463,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	# Note we parallelize such that BWA uses exactly one node.
 	# Then, we have a number of jobs equal to the number of nodes requested.
 
-	cat $src/sample_list | env_parallel -j 1 --sshloginfile $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j 1 --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'bwa mem \
 			-t 8 -M \
 			-R "@RG\tID:{}\tPL:ILLUMINA\tLB:{}\tSM:{}" \
@@ -482,7 +483,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	# Remember to change from _recal to _dedup if you can’t do base recalibration.
 	# Also, depth will take A LOT of room up, so you may not want to run it until you know what to do with it.
 
-	cat $src/sample_list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/sample_list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'picard CollectAlignmentSummaryMetrics \
 			R=${reference}.fa \
 			I=$src/bams/{}_dedup.bam \
@@ -503,7 +504,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	
 	while read sample; do
 		mkdir ${src}/gvcfs/${sample}
-		cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+		cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 			'gatk --java-options "-Xmx6g" HaplotypeCaller \
 			-R ${reference}.fa \
 			-I $src/bams/${sample}_dedup.bam \
@@ -513,7 +514,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 	done < $src/sample_list
 
 	# Run CombineGVCFs per interval, each step combines all samples into one interval-specific GVCF
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'interval_list=""
 		# loop to generate list of sample-specific intervals to combine
 		while read sample; do
@@ -525,7 +526,7 @@ To convert this to Slurm, replace $PBS_O_WORKDIR with $SLURM_SUBMIT_DIR and refe
 			-O $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz'
 	
 	# Run GenotypeGVCFs on each interval GVCF
-	cat $src/intervals.list | env_parallel --sshloginfile $PBS_NODEFILE \
+	cat $src/intervals.list | env_parallel -j "$SLURM_NTASKS_PER_NODE" --sshloginfile "$CARC_NODEFILE" --workdir "$SLURM_SUBMIT_DIR" \
 		'gatk --java-options "-Xmx6g" GenotypeGVCFs \
 			-R ${reference}.fa \
 			-V $src/gvcfs/combined_intervals/{}_raw.g.vcf.gz \
