@@ -1,9 +1,21 @@
 # Project Storage, Group Ownership, and BeeGFS Quotas
 
-CARC Scratch project directories are located under paths like:
+CARC Scratch project directories are located under `/carc/scratch/projects/`, but the exact layout depends on how your project was provisioned. Most projects live directly there:
+
+```text
+/carc/scratch/projects/<pi_username><project_id>
+```
+
+Some PIs, typically ones with multiple projects, instead have a container directory holding one or more project subdirectories:
 
 ```text
 /carc/scratch/projects/<pi_username>/<pi_username><project_id>
+```
+
+If you're not sure which applies to you, check both:
+
+```bash
+ls -d /carc/scratch/projects/<pi_username>*
 ```
 
 These directories are on BeeGFS, where quotas are enforced by **group ownership**.
@@ -23,7 +35,7 @@ A user copies files into a project directory and assumes the files now count aga
 For example:
 
 ```text
-/carc/scratch/projects/smith/smith12345/data/
+/carc/scratch/projects/smith12345/data/
 ```
 
 But if the files are owned by the user's personal group rather than the project group, BeeGFS may charge that storage to the user's personal group quota instead.
@@ -77,7 +89,7 @@ In this example, the file belongs to the `smith12345` group, so it should count 
 Suppose your project directory is:
 
 ```text
-/carc/scratch/projects/smith/smith12345
+/carc/scratch/projects/smith12345
 ```
 
 and the project group is:
@@ -119,13 +131,13 @@ ls -ld .
 To check the ownership of a project directory:
 
 ```bash
-ls -ld /carc/scratch/projects/<pi_username>/<pi_username><project_id>
+ls -ld /carc/scratch/projects/<pi_username><project_id>
 ```
 
 Example:
 
 ```text
-drwxrws--- 25 root smith12345 4096 Jun 10 14:00 /carc/scratch/projects/smith/smith12345
+drwxrws--- 25 smith smith12345 4096 Jun 10 14:00 /carc/scratch/projects/smith12345
 ```
 
 The group owner here is:
@@ -267,13 +279,13 @@ For Linux-to-Linux transfers, `rsync` is usually preferred.
 Basic example:
 
 ```bash
-rsync -av source/ /carc/scratch/projects/smith/smith12345/data/
+rsync -av source/ /carc/scratch/projects/smith12345/data/
 ```
 
 If the user has permission to set the group ownership, `rsync` can explicitly assign ownership during transfer:
 
 ```bash
-rsync -av --chown=$USER:smith12345 source/ /carc/scratch/projects/smith/smith12345/data/
+rsync -av --chown=$USER:smith12345 source/ /carc/scratch/projects/smith12345/data/
 ```
 
 Replace `smith12345` with the actual project group.
@@ -281,7 +293,7 @@ Replace `smith12345` with the actual project group.
 After transfer, verify:
 
 ```bash
-ls -l /carc/scratch/projects/smith/smith12345/data/
+ls -l /carc/scratch/projects/smith12345/data/
 ```
 
 For large transfers, this is often safer than copying files and fixing ownership afterward.
@@ -352,7 +364,7 @@ For large or repeated transfers from Windows, the most reliable options are usua
 Example using WSL with `rsync`:
 
 ```bash
-rsync -av --chown=$USER:smith12345 /mnt/c/Users/jsmith/data/ username@cluster:/carc/scratch/projects/smith/smith12345/data/
+rsync -av --chown=$USER:smith12345 /mnt/c/Users/jsmith/data/ username@cluster:/carc/scratch/projects/smith12345/data/
 ```
 
 If `--chown` is not permitted, transfer the files and then run `chgrp` on the cluster.
@@ -366,7 +378,7 @@ After copying data into project storage:
 1. Go to the project directory.
 
 ```bash
-cd /carc/scratch/projects/<pi_username>/<pi_username><project_id>
+cd /carc/scratch/projects/<pi_username><project_id>
 ```
 
 2. Check ownership.
@@ -421,4 +433,4 @@ Remember:
 - When using `chgrp`, make sure to copy your data in chunks where each chunk is smaller than your remaining personal scratch quota.
 - You can always check your quotas with the `quotas` command.
 
-*This quickbyte was validated on 6/17/2026*
+*This quickbyte was validated on 7/30/2026*
