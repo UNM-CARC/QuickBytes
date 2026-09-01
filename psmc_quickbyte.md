@@ -2,14 +2,14 @@
 
 The [pairwise sequentially Markovian coalescent model](https://www.nature.com/articles/nature10231) is a popular method of leveraging single high-quality diploid genomes to infer the demographic history of a lineage over thousands to hundreds of thousands of years. It can be a great exploratory tool for genomic data, and can help you understand and generate biogeographic and evolutionary hypotheses. It leverages heterozygosity information to estimate local times of most recent common ancestor across the genome, which is then used to reconstruct demographic "stairway plots".
 
-It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a seperate job with more nodes.
+It is implemented [by the authors of the original paper on GitHub](https://github.com/lh3/psmc), but the documentation is difficult to understand and the method of calling variants is a bit outdated. Here I'll outline a simple pipeline for generating a consensus sequence using [high coverage (>18x) reads and sites with a depth of at least 10 reads](https://onlinelibrary.wiley.com/doi/10.1111/mec.13540) and a reference genome. Then, I'll go over how to run PSMC and perform bootstrapping. Note that nothing but the bootstrapping can work across different nodes, so if you find bootstrapping takes too long you can run it as a separate job with more nodes.
 
-The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Wheeler will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
+The runtime and resource requirements will vary based on genome, but the only step that can work across nodes is bootstrap generation. Easley will work for some samples, but nodes with more cores may be needed for others due to wall time limits.
 
 
 ## Installation and setup
 
-Due to the inavailibility of PSMC on conda, high number of included utilities, and ease of installing locally, we suggest you install PSMC as shown below. You can install it anywhere, but we'll assume it's in the working directory you're using to run everything:
+Due to the unavailability of PSMC on conda, high number of included utilities, and ease of installing locally, we suggest you install PSMC as shown below. You can install it anywhere, but we'll assume it's in the working directory you're using to run everything:
 
 	git clone https://github.com/lh3/psmc.git
 	cd psmc
@@ -25,8 +25,7 @@ Then we'll install some dependencies with conda as below.
 At the top of any scripts used for this, change to your working directory and activate the environment like:
 
 	cd $SLURM_SUBMIT_DIR
-	# if using PBS, 'cd $PBS_O_WORKDIR'
-	module load miniconda3/4.8.2-pilj
+	module load miniconda3/latest
 	eval "$(conda shell.bash hook)"
 	conda activate psmc-env
 
@@ -34,7 +33,7 @@ Then, we'll make a subdirectory for future bootstraps with "mkdir boot". If you 
 
 ## Generating input
 
-Generating input is essentially a simplified version of [GATK's widely used pipeline](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) using [bcftools](http://samtools.github.io/bcftools/bcftools.html) to leverage its simplicity and ability to generate a consensus FASTA file with heterozygosity. First, reads are alligned to the reference with BWA. Then, bcftools' mpileup and call are used to obtain variant calls, which are filtered using bcftools' view command. Finally, a consensus sequence is generated and converted to a "PSMC FASTA" for use in PSMC itself. Code for running these steps is below, assuming your reference is "reference.fa" and read files are called "sample_R1.fastq.gz" and "sample_R2.fastq.gz".
+Generating input is essentially a simplified version of [GATK's widely used pipeline](https://github.com/UNM-CARC/QuickBytes/blob/master/GATK_QuickByte.md) using [bcftools](http://samtools.github.io/bcftools/bcftools.html) to leverage its simplicity and ability to generate a consensus FASTA file with heterozygosity. First, reads are aligned to the reference with BWA. Then, bcftools' mpileup and call are used to obtain variant calls, which are filtered using bcftools' view command. Finally, a consensus sequence is generated and converted to a "PSMC FASTA" for use in PSMC itself. Code for running these steps is below, assuming your reference is "reference.fa" and read files are called "sample_R1.fastq.gz" and "sample_R2.fastq.gz".
 
 	# Align with BWA
 	bwa index -p reference reference.fa
@@ -50,7 +49,7 @@ Generating input is essentially a simplified version of [GATK's widely used pipe
 	
 	# pipeline combining bcftool's mpileup and call (consensus mode) using 8 threads, then samtools's vcfutils.pl
 	# the latter filters variants with a depth less than 10 or greater than 50, and those with quality score under 30
-	bcftools mpileup -Q 30 -q 30 -Ovu -f reference.fa sorted_alignment.bam --threads 8 | \
+	bcftools mpileup -Q 30 -q 30 -Ou -f reference.fa sorted_alignment.bam --threads 8 | \
 		bcftools call -c --threads 8 | \
 		vcfutils.pl vcf2fq -d 10 -D 50 -Q 30 > variant_consensus.fq
 	
@@ -87,7 +86,7 @@ Next, we want to bootstrap our results and plot them.
 
 Bootstrapping is a step that can fortunately be run in parallel. There's no set number of bootstraps needed, but we'll do 50 here. We'll run this with GNU parallel. First, you'll need to load a parallel module. Then, you'll run what is essentially the same command as before, but with the -b flag:
 
-	module load parallel/20190222-wsvg
+	module load parallel/20240822-ao2z
 	
 	parallel '$SLURM_SUBMIT_DIR/psmc/psmc -N25 -t10 -r5 -b -p "8*1+30*2+4+6" \
 		-o $SLURM_SUBMIT_DIR/boot/sample_r{}.psmc $SLURM_SUBMIT_DIR/sample.psmcfa' \
