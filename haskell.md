@@ -1,33 +1,47 @@
 ## Haskell at CARC
 
-Haskell is a strongly typed functional language. In this QuickByte you will learn how to use the GHCUP module to install ghc versions and run a simple stack program in haskell.
+Haskell is a strongly typed functional language. In this QuickByte, you will learn how to use the GHCup module to install GHC versions and run a simple Stack program in Haskell.
 
-### Stack setup on Hopper
+## Stack setup on Hopper
 
-1) `module load ghcup`
+Once logged in, load the GHCup module
 
-2) `ghcup install ghc 9.10.1`
+`module load ghcup`
 
-`ghcup` is the Glasglow haskell compiler upgrader. You can download as many ghc versions as you want, and they will be stored in your home directory under the `~/.ghcup/ghc/` directory.
+After loading the module, install the recommended version of GHC with:
 
-Now create a new stack project:
+`ghcup install ghc`
 
-4) `stack new matmul new-template`
+If you need a specific version of GHC, install the version with:
 
-5) `cd matmul`
+`ghcup install ghc <version number>`
 
-Edit the main source file with your preferred text editor:
+`ghcup` is the Glasgow Haskell Compiler upgrader. You can download as many GHC versions as you want, and they will be stored in your home directory under the `~/.ghcup/ghc/` directory. Each version of GHC only needs to be installed once and doesn't require constant installations every user session.
 
-6) `vim app/Main.hs`
+## Running a simple Stack program in Haskell
+
+First, create a new Stack project
+
+`stack new matmul new-template`
+
+Once the project is created, change into the "matmul" directory with:
+
+`cd matmul`
+
+Then, edit the main source file with your preferred text editor:
+
+`vim app/Main.hs`
 
 The following code creates and multiplies two 4x4 matrices:
 
-	module Main where
+	module Main (main) where
 
-	import Lib
 	import Data.Matrix
 
 	main :: IO ()
+
+	m1, m2 :: Matrix Int
+	test :: Matrix Int
 
 	m1 = matrix 4 4 $ \(i,j) -> 2*i - j
 	m2 = matrix 4 4 $ \(i,j) -> 2*i - j
@@ -35,37 +49,41 @@ The following code creates and multiplies two 4x4 matrices:
 	test = multStd m1 m2
 
 	main = do
-		putStrLn (show test)
+        putStrLn (show test)
 
-Add the dependency on the matrix package to the project:
+Using your preferred text editor, add the dependency on the matrix package to the project
 
-7) `vim package.yaml`
+`vim package.yaml`
 
-8) Add `- matrix` under dependencies in the executables section so it reads:
+Add `- matrix` under dependencies in the executables section so that you have the following portion in your `package.yaml` file:
 
+```
+executables:
+  matmul-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - matmul
+    - matrix
+```
 
-		dependencies:		
-			- matmul
-			- matrix
+Build the project with:
 
+`stack build`
 
-Build your project:
+For future reference, the name of the executable depends on the section under `executables:` in `package.yaml` (In this case, it's `matmul-exe:`). Now that your program has been compiled, you can run it with:
 
-9) `stack build`
+`stack exec matmul-exe`
 
-now that your program has been compiled, you can search for the location the executable file was created;
+You shoud get an output similar to:
 
-	[rdscher@hopper matmul]$ find . -type f -name matmul-exe
-	./.stack-work/dist/x86_64-linux/ghc-9.6.5/build/matmul-exe/matmul-exe
-
-And now we can run our program;
-
-	[rdscher@hopper matmul]$ ./.stack-work/dist/x86_64-linux/ghc-9.6.5/build/matmul-exe/matmul-exe
 	┌                 ┐
 	│ -18 -16 -14 -12 │
 	│  14   8   2  -4 │
 	│  46  32  18   4 │
 	│  78  56  34  12 │
 	└                 ┘
-
-*This quickbyte was validated on 6/10/2024*
